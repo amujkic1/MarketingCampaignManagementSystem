@@ -1,10 +1,10 @@
 # MarketingCampaignManagementSystem
 
-##About
+## About
 System designed to manage marketing campaigns by serving HTML files or
 images to API calls coming from displays, facilitating the positioning of certain products via visual ads.
 
-##Functional requirements
+## Functional requirements
 1. Campaign Creation
 2. Content Management
 3. Campaign Scheduling
