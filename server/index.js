@@ -1,15 +1,17 @@
-const express = require('express');
+const express = require("express");
+const authRouter = require("./routes/authRouter");
+const bodyParser = require("body-parser");
+const { Pool } = require("pg");
 
-// Create an Express application
 const app = express();
+app.use(bodyParser.json());
+app.use("/user", authRouter);
 
-// Define a route handler for the root URL
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
+app.get("/", (req, res) => {
+  res.send("Hello, world!");
 });
 
-// Start the server and listen on port 3000
-const port = 3002;
+const port = 8080;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
