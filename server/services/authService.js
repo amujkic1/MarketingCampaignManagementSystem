@@ -1,6 +1,6 @@
 const { query } = require("express");
 const { Pool } = require("pg");
-const pool = require("../database");
+const { pool } = require("../database");
 
 async function findUser(emailOrPhone) {
   try {
