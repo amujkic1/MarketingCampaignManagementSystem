@@ -9,7 +9,6 @@ async function findUser(emailOrPhone) {
     const user = await client.query(
       `SELECT * FROM  users WHERE email='${emailOrPhone}' OR phone='${emailOrPhone}'`
     );
-    console.log('serviceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
     console.log("User: ", user);
     return user.rows[0];
   } catch (error) {

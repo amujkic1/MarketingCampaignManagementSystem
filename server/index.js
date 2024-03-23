@@ -20,17 +20,23 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/users', async (req, res) => {
-    try {
+  try {
+      console.log('Attempting to fetch users...');
       const client = await pool.connect();
+      console.log('Connected to the database.');
+
       const result = await client.query('SELECT * FROM users');
+      console.log('Query executed successfully.');
+
       const users = result.rows;
       res.json(users);
       client.release();
-    } catch (error) {
+  } catch (error) {
       console.error('Error fetching users:', error);
       res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  }
+});
+
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
