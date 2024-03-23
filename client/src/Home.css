@@ -1,1 +1,55 @@
 /*Sytle*/
+
+.home-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff; 
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+  }
+  
+  .logo {
+    height: 40px; 
+  }
+  
+  .menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu ul li {
+    display: inline-block;
+    margin-right: 20px;
+  }
+  
+  .visual {
+    height: 500px; 
+    background-image: url('https://img.pikbest.com/origin/09/19/74/20cpIkbEsT2Qv.jpg!w700wp'); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .contact {
+    background-color: #f2f2f2; 
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .social-icons img {
+    width: 30px; 
+    margin: 0 10px;
+  }
+  
