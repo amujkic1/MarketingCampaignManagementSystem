@@ -1,7 +1,6 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Configure the connection pool
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL ,
   })
@@ -12,7 +11,7 @@ const checkDatabase = async () => {
     const client = await pool.connect();
     const result = await client.query('SELECT NOW() AS current_time');
     console.log('Database is working fine. Current time in the database:', result.rows[0].current_time);
-    client.release(); // Release the client back to the pool
+    client.release(); 
   } catch (error) {
     console.error('Error connecting to the database:', error);
   } finally {
@@ -42,9 +41,11 @@ const createTable = async () => {
       await pool.end();
     }
   };
-  
-  // Call the function to create the table
-//  createTable();
 
-// Call the function to check the database
-checkDatabase();
+  
+//  createTable();
+//checkDatabase();
+
+module.exports = {
+  pool
+};
