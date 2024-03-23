@@ -2,6 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const { pool } = require('./database');
 
+const authRouter = require("./routes/authRouter");
+const bodyParser = require("body-parser");
+const { Pool } = require("pg");
+
+app.use(bodyParser.json());
+app.use("/user", authRouter);
+
+
 const app = express();
 const port = 3002;
 
@@ -25,6 +33,9 @@ app.get('/users', async (req, res) => {
     }
   });
 
+app.get("/", (req, res) => {
+  res.send("Hello, world!");
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
