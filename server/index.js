@@ -6,11 +6,10 @@ const authRouter = require("./routes/authRouter");
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
 
+const app = express();
 app.use(bodyParser.json());
 app.use("/user", authRouter);
 
-
-const app = express();
 const port = 3002;
 
 // Allow requests from all origins (you can customize this based on your requirements)

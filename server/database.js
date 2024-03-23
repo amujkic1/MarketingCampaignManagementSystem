@@ -18,6 +18,7 @@ const checkDatabase = async () => {
   }
 };
 
+checkDatabase()
 
 module.exports = {
   pool

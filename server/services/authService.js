@@ -1,6 +1,6 @@
 const { query } = require("express");
 const { Pool } = require("pg");
-const pool = require("../database");
+const { pool } = require("../database");
 
 async function findUser(emailOrPhone) {
   try {
@@ -9,6 +9,7 @@ async function findUser(emailOrPhone) {
     const user = await client.query(
       `SELECT * FROM  users WHERE email='${emailOrPhone}' OR phone='${emailOrPhone}'`
     );
+    console.log('serviceeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
     console.log("User: ", user);
     return user.rows[0];
   } catch (error) {
