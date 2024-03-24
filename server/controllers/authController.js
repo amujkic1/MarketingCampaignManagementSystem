@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const userService = require("../services/authService");
+const generateUserJwtToken = require("./jwtController");
 
 async function login(req, res) {
   const { emailOrPhone, password } = req.body;
@@ -10,9 +11,10 @@ async function login(req, res) {
     if (!user) {
       return res.status(404).json({ message: "User is not found" });
     }
-
+   // const passwordMatch = await bcrypt.compare(password, user.password);
     if (password === user.password) {
-      return res.status(200).json({ message: "Your login is successful" });
+      const authToken = generateUserJwtToken(user);
+      return res.status(200).json({ message: "Your login is successful" ,  emailOrPhone: user.email || user.phone , authToken: authToken});
     } else {
       return res.status(400).json({ message: "Password is not correct" });
     }

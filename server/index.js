@@ -12,6 +12,7 @@ app.use("/user", authRouter);
 
 const port = 3002;
 
+const authMiddleware = require('./middleware/authMiddleware.js');
 // Allow requests from all origins (you can customize this based on your requirements)
 app.use(cors());
 
