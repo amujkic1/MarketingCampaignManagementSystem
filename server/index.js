@@ -1,46 +1,46 @@
 const express = require('express');
 const cors = require('cors');
 const { pool } = require('./database');
-
 const authRouter = require("./routes/authRouter");
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
-
 const app = express();
-app.use(bodyParser.json());
-app.use("/user", authRouter);
+const User = require('./models/user');
+const qrcode = require('qrcode');
+const {authenticator} = require('otplib');
 
 const port = 3002;
 
-// Allow requests from all origins (you can customize this based on your requirements)
+app.use(bodyParser.json());
+app.use("/user", authRouter);
+app.use("/qrimage", authRouter);
 app.use(cors());
 
-app.get('/hello', (req, res) => {
-  res.send('Hello, world!');
-});
+app.get('/user/set2FA', async (req, res) => {
+  try{
+    //hardcoded since JWT will be implemented later
+    const userId = 2
+    //code je hardkodiran, dohvatiti sa klijentske strane kasnije
+    const code =  "987922";
+    const user = await User.getUserById(pool, userId);
+    const tempSecret = user.two_factor_secret;
 
-app.get('/users', async (req, res) => {
-  try {
-      console.log('Attempting to fetch users...');
-      const client = await pool.connect();
-      console.log('Connected to the database.');
+    const verified = authenticator.check(code.toString(), tempSecret.toString())
+    
+    if(!verified) throw false;
 
-      const result = await client.query('SELECT * FROM users');
-      console.log('Query executed successfully.');
+    user.enable2FA();
 
-      const users = result.rows;
-      res.json(users);
-      client.release();
-  } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+    return res.send({
+      success: true
+    })
+
+  }catch{
+    return res.status(500).send({
+      success: false
+    });
   }
-});
-
-
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
-});
+})
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
