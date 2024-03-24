@@ -28,9 +28,7 @@ async function login(req, res) {
 
 async function qrCode(req, res) {
 
-  //app.get('/qrimage', async(req,res) => {
     try{
-  
       //hardcoded since JWT will be implemented later
       const userId = 2
       const user = await User.getUserById(pool, userId);
@@ -53,11 +51,38 @@ async function qrCode(req, res) {
         message: 'Internal server error'
       });
     }
-  //})
+}
+
+async function set2FA(req, res) {
+
+  try{
+    //hardcoded since JWT will be implemented later
+    const userId = 2
+    //code je hardkodiran, dohvatiti sa klijentske strane kasnije
+    const code =  "942134";
+    const user = await User.getUserById(pool, userId);
+    const tempSecret = user.two_factor_secret;
+
+    const verified = authenticator.check(code.toString(), tempSecret.toString())
+    
+    if(!verified) throw false;
+
+    user.enable2FA();
+
+    return res.send({
+      success: true
+    })
+
+  }catch{
+    return res.status(500).send({
+      success: false
+    });
+  }
 
 }
 
 module.exports = {
   login,
-  qrCode
+  qrCode,
+  set2FA
 };
