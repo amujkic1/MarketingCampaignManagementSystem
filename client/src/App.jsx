@@ -13,7 +13,7 @@ function App() {
           <ul>
             <li><a href="#">Home</a></li>
            
-            <li><button>Login</button></li>
+            <li><button>Logout</button></li>
           </ul>
           <img src={logo} alt="Logo" className="logo" />
         </nav>
