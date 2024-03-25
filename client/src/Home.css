@@ -1,55 +1,133 @@
-/*Sytle*/
+.App {
+  text-align: center;
+}
 
-.home-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+.App-header {
+  background: linear-gradient(to bottom, #6cb3c9, #f0f8ff);
+  padding: 20px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center; 
+}
+
+.navbar ul li {
+  margin-right: 20px;
+}
+
+.navbar ul li:last-child {
+  margin-right: auto; 
+}
+
+button {
+  background-color: white;
+  border: 1px solid #add8e6;
+  color: #add8e6;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: absolute; 
+  right: 20px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+}
+
+button:hover {
+  background-color: #add8e6;
+  color: white;
+}
+.content {
+  margin-top: 8px;
+  padding: 80px;
+}
+.logo {
+
+  position: absolute;
+  top: 0px;
+  padding: 0px;
+  margin:0px;
+  left: 0px;
+  width: 250px; 
+  height: auto;
+}
+
+.subtitle {
+  margin-top: 40px; 
+}
+
+.grid-container {
+  display: flex; 
+  justify-content: space-between;
+  margin-top: 20px; 
+  margin-bottom: 70px;
+  background: none; 
+}
+
+.grid-item {
+  background: linear-gradient(to bottom, #add8e6, #f0f8ff); 
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
   
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #fff; 
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-  }
+  flex-basis: calc(33.33% - 10px); 
+  margin-right: 10px; 
   
-  .logo {
-    height: 40px; 
-  }
-  
-  .menu ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .menu ul li {
-    display: inline-block;
-    margin-right: 20px;
-  }
-  
-  .visual {
-    height: 500px; 
-    background-image: url('https://img.pikbest.com/origin/09/19/74/20cpIkbEsT2Qv.jpg!w700wp'); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .contact {
-    background-color: #f2f2f2; 
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .social-icons img {
-    width: 30px; 
-    margin: 0 10px;
-  }
-  
+}
+
+.grid-item:last-child {
+  margin-right: 0; 
+}
+
+.grid-item h2 {
+  font-size: 14px; 
+} 
+
+.footer {
+  background-color: #f0f8ff;
+  padding: 5px;
+  text-align: center;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center; 
+  margin: auto; 
+  margin-right: 0; 
+}
+
+
+.footer span {
+  margin-bottom: 10px; 
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.social-icons a {
+  margin: 0 5px; 
+}
+
+
+.social-icons i {
+  font-size: 24px; 
+}
+
+

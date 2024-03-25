@@ -1,60 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import HomePage from "./HomePage.jsx";
+import React from 'react';
+import './App.css';
+import './Home.css';
+import logo from './logo/logo.png';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Application status
 
-  // // Function to login
-  const login = () => {
-    setIsLoggedIn(true);
-  };
-
-  // Logout feature
-  const logout = () => {
-    setIsLoggedIn(false);
-  };
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-           {/* Show login button if user is not logged in */}
-           {!isLoggedIn && (
-          <button onClick={login}>
-            Login
-          </button>
-        )}
-        {/* Show logout button if user is logged in */}
-        {isLoggedIn && (
-          <button onClick={logout}>
-            Logout
-          </button>
-        )}
-      </div>
-      {/* Show HomePage only if user is logged in */}
-      {isLoggedIn && <HomePage />}
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <header className="App-header">
+        <nav className="navbar">
+          <ul>
+            <li><a href="#">Home</a></li>
+           
+            <li><button>Login</button></li>
+          </ul>
+          <img src={logo} alt="Logo" className="logo" />
+        </nav>
+       
+      </header>
+      <div className="content">
+      
+          <h1>Streamline Your Marketing Campaigns</h1>
+        </div>
+        <div className="grid-container">
+    <div className="grid-item">
+      <h2>Powerful Features for Effective Campaign Management</h2>
+    </div>
+    <div className="grid-item">
+      <h2>Effortlessly manage all your marketing campaigns in one</h2>
+    </div>
+    <div className="grid-item">
+      <h2>Take your marketing campaigns to the next level with our comprehensive tools</h2>
+    </div>
+  </div>
+  <div className="footer">
+  <span>Contact us:</span>
+  <div className="social-icons">
+    <a href="https://www.instagram.com/" target="_blank" rel="noreferrer noopener">
+      <i className="fab fa-instagram"></i>
+    </a>
+    <a href="https://www.facebook.com/" target="_blank" rel="noreferrer noopener">
+      <i className="fab fa-facebook"></i>
+    </a>
+    <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer noopener">
+      <i className="fab fa-linkedin"></i>
+    </a>
+</div>
+
+</div>
+
+    </div>
+  );
 }
 
-export default App
+export default App;
+
+
+
