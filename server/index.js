@@ -10,6 +10,10 @@ const swaggerDocument = require('./swagger-output.json');
 
 const port = 3000;
 
+const authMiddleware = require('./middleware/authMiddleware.js');
+
+app.use(cors());
+
 app.use(bodyParser.json());
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
