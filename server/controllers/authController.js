@@ -9,7 +9,7 @@ const {authenticator} = require('otplib');
 async function login(req, res) {
 
   const { emailOrPhone, password } = req.body;
-  console.log(req.body);
+  
   try {
     user = await userService.findUser(emailOrPhone);
 
@@ -31,12 +31,14 @@ async function login(req, res) {
 async function qrCode(req, res) {
 
     try{
-      //hardcoded since JWT will be implemented later
-      const userId = 2
-      const user = await User.getUserById(pool, userId);
+      
+      const username = "john_doe";
+      const password = "password123"
+      
+      const user = await User.getUser(pool, username, password);
   
       const secret = authenticator.generateSecret();
-      const uri = authenticator.keyuri(userId, "marketing", secret)
+      const uri = authenticator.keyuri(user.id, "marketing", secret)
       const image = await qrcode.toDataURL(uri);
   
       user.updateUserSecret(secret);
@@ -58,11 +60,15 @@ async function qrCode(req, res) {
 async function set2FA(req, res) {
 
   try{
-    //hardcoded since JWT will be implemented later
-    const userId = 2
+   
+    const username = "john_doe";
+    const password = "password123"
     //code je hardkodiran, dohvatiti sa klijentske strane kasnije
-    const code =  "942134";
-    const user = await User.getUserById(pool, userId);
+    const code = "653786";
+    const user = await User.getUser(pool, username, password);
+
+    console.log(user);
+
     const tempSecret = user.two_factor_secret;
 
     const verified = authenticator.check(code.toString(), tempSecret.toString())
