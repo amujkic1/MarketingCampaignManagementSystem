@@ -15,7 +15,8 @@ const authMiddleware = require('./middleware/authMiddleware.js');
 app.use(cors());
 
 app.use(bodyParser.json());
-app.use("/user", authRouter);
+//app.use("/user", authRouter);
+app.use('/', authRouter);
 app.use("/qrimage", authRouter);
 app.use("/set2FA", authRouter);
 app.use(cors());

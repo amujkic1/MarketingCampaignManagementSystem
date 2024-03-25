@@ -12,6 +12,8 @@ async function login(req, res) {
   
   try {
     user = await userService.findUser(emailOrPhone);
+    
+    console.log(req.body);
 
     if (!user) {
       return res.status(404).json({ message: "User is not found" });
