@@ -21,11 +21,11 @@ class User {
     }
   }
 
-  static async getUserById(pool, userId) {
-    const query = 'SELECT * FROM users WHERE id = $1';
+  static async getUser(pool, username, password) {
+    const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
     try {
       const client = await pool.connect();
-      const result = await client.query(query, [userId]);
+      const result = await client.query(query, [username, password]);
       client.release();
       const userData = result.rows[0];
       if (!userData) {
@@ -33,7 +33,7 @@ class User {
       }
       return new User(pool, userData.id, userData.username, userData.email, userData.two_factor_enabled, userData.two_factor_secret);
     } catch (error) {
-      console.error(`Error fetching user with ID ${userId}:`, error);
+      console.error(`Error fetching user with username ${username}:`, error);
       throw error;
     }
   }
