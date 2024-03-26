@@ -19,7 +19,9 @@ async function login(req, res) {
    // const passwordMatch = await bcrypt.compare(password, user.password);
     if (password === user.password) {
       const authToken = generateUserJwtToken(user);
-      return res.status(200).json({ message: "Your login is successful" ,  emailOrPhone: user.email || user.phone , authToken: authToken});
+      return res
+          .cookie('username', user.username, { path: '/' })
+          .cookie('token', authToken, { path: '/' }).status(200).json({ message: "Your login is successful" ,  username: user.username, authToken: authToken});
     } else {
       return res.status(400).json({ message: "Password is not correct" });
     }
@@ -32,11 +34,9 @@ async function qrCode(req, res) {
 
     try{
       
-      const username = "john_doe";
-      const password = "password123"
-      
-      const user = await User.getUser(pool, username, password);
-  
+      const username = req.cookies.username
+      console.log(username)
+      const user = await User.getUser(pool, username);
       const secret = authenticator.generateSecret();
       const uri = authenticator.keyuri(user.id, "marketing", secret)
       const image = await qrcode.toDataURL(uri);

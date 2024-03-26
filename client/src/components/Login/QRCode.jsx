@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'qrcode.react';
+import Cookies from 'js-cookie';
 
 function QRCodeGenerator() {
   const [text, setText] = useState('');
   const [qrValue, setQRValue] = useState('');
-  const [username, setUsername] = useState('user1');
+  const [username, setUsername] = useState('');
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+
+  useEffect(() => {
+    const usernameCookie = Cookies.get('username');
+    setUsername(usernameCookie);
+  }, []);
 
   const handleInputChange = (event) => {
     // Provjera da li je uneseni tekst validan broj i ograničenje na 6 cifara
@@ -14,7 +20,23 @@ function QRCodeGenerator() {
   };
 
   const handleSetQRCode = () => {
-    setQRValue(text);
+    fetch('http://localhost:3000/qrimage', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => {
+        const { success, image} = res.json();
+        if (success) {
+          setQRValue(image);
+        } else {
+          alert('Unable to fetch QR image');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const handleLogout = () => {

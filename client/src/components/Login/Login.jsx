@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import './Login.css'
+import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie';
 
 function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   function handleLogin() {
     fetch('http://localhost:3000/login', {
@@ -14,16 +17,18 @@ function Login() {
       },
       body: JSON.stringify({ emailOrPhone, password })
     })
-      .then(response => {
+      .then( async response => {
         if (response.ok) {
+          const { message, username, token} = await response.json();
           // Ovdje možete obraditi odgovor ako je prijava uspješna
           console.log('Login successful');
           // Resetovanje polja za unos
           setEmailOrPhone('');
           setPassword('');
           setErrorMessage('');
-
-          window.open('./QRCode.jsx', '_blank');
+          Cookies.set('username', username);
+          Cookies.set('token', token);
+          navigate('/2fa');
         } else {
           // Ovdje možete obraditi grešku ako prijava nije uspjela
           return response.json().then(data => {

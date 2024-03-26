@@ -21,11 +21,11 @@ class User {
     }
   }
 
-  static async getUser(pool, username, password) {
-    const query = 'SELECT * FROM users WHERE username = $1 AND password = $2';
+  static async getUser(pool, username) {
+    const query = 'SELECT * FROM users WHERE username = $1';
     try {
       const client = await pool.connect();
-      const result = await client.query(query, [username, password]);
+      const result = await client.query(query, [username]);
       client.release();
       const userData = result.rows[0];
       if (!userData) {
