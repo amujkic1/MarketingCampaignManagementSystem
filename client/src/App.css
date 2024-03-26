@@ -1,54 +1,11 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background-color: #f0f0f0;
-}
-
-.login-form {
-  width: 100%; 
-  max-width: 400px;
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-}
-
-input {
-  width: calc(100% - 16px); 
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  width: calc(100% - 40px); 
-  margin-top: 10px; 
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
+body {
+    /* Fallback for old browsers */
+    background: #6a11cb; /* Fallback boja */
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #DDDEE5, #2B3D5B); /* Svetlo siva do hladno siva */
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #DDDEE5, #2B3D5B); /* Svetlo siva do hladno siva */
+  }
+  
