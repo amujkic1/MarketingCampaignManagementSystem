@@ -1,0 +1,48 @@
+/* Stil za input polja kada su u fokusu */
+.form-control:focus {
+  color: #3a3a3cc6; /* Boja teksta ostaje bijela */
+  background-color: #fefeffc6; /* Boja pozadine ostaje ista */
+}
+
+/* Ostatak CSS-a ostaje nepromijenjen */
+.card {
+  background-color: #dddee5c6;
+  border-radius: 1rem;
+  max-width: 400px;
+}
+
+.card-body {
+  color: #3a3a3cc6;
+}
+
+.form-label {
+  color: #3a3a3cc6;
+}
+
+.form-control {
+  background-color: #dddee5c6;
+  color: #ffffff;
+}
+
+.btn {
+  border-radius: 1rem;
+}
+
+.btn-primary {
+  color: #f3f3f3;
+  border-color: #2B3D5B;
+  background-color: #2B3D5B;
+}
+.btn-primary:hover {
+  color: #ffffff;
+  background-color: #41526f;
+  border-color: #2B3D5B;
+}
+.btn-primary:focus {
+  color: #ffffff;
+  background-color: #2B3D5B;
+  border-color: #2B3D5B;
+}
+.text-muted {
+  color: #3a3a3cc6;
+}
