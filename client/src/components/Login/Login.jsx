@@ -7,7 +7,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
 
   function handleLogin() {
-    fetch('https://localhost:3002/user/login', {
+    fetch('http://localhost:3000/user/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
