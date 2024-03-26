@@ -1,4 +1,4 @@
-import Login from "./login/Login.jsx";
+import Login from "./components/Login/Login.jsx";
 import './App.css';
 
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
