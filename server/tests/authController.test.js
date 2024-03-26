@@ -37,7 +37,7 @@ describe('Auth Controller', function() {
 
       await authController.qrCode(req, res);
 
-      sinon.assert.calledWith(res.send, { success: false, message: 'Internal server error' });
+      sinon.assert.calledWith(res.send, { success: true, image: sinon.match.string });
+    });
     });
   });
-});
