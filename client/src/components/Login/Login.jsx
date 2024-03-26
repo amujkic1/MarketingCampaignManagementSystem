@@ -22,6 +22,8 @@ function Login() {
           setEmailOrPhone('');
           setPassword('');
           setErrorMessage('');
+
+          window.open('./QRCode.jsx', '_blank');
         } else {
           // Ovdje možete obraditi grešku ako prijava nije uspjela
           return response.json().then(data => {

@@ -8,7 +8,9 @@ function QRCodeGenerator() {
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 
   const handleInputChange = (event) => {
-    setText(event.target.value);
+    // Provjera da li je uneseni tekst validan broj i ograničenje na 6 cifara
+    const inputText = event.target.value.replace(/\D/g, '').slice(0, 6);
+    setText(inputText);
   };
 
   const handleSetQRCode = () => {
@@ -16,7 +18,6 @@ function QRCodeGenerator() {
   };
 
   const handleLogout = () => {
-    
     console.log("Korisnik se odjavio");
   };
 
@@ -24,59 +25,66 @@ function QRCodeGenerator() {
     setTwoFactorEnabled(!twoFactorEnabled);
   };
 
-  const pageStyle = {
+  const cardStyle = {
+    backgroundColor: '#dddee5c6',
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    padding: '24px',
+    maxWidth: '400px',
+    margin: 'auto', // Horizontalno centriranje
+    position: 'fixed', // Fiksni položaj
+    top: '50%', // Vertikalno na sredinu
+    left: '50%', // Horizontalno na sredinu
+    transform: 'translate(-50%, -50%)', // Podešavanje na tačnu sredinu
     textAlign: 'center',
-    backgroundColor: '#a6e3e9', 
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    overflow: 'hidden' // Sakrivanje mogućnosti scroll-a
+  };
+
+  const buttonStyle = {
+    fontSize: '18px',
+    margin: '10px',
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    border: 'none',
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    transition: 'background-color 0.3s ease',
   };
 
   const logoutButtonStyle = {
-    fontSize: '24px',
-    margin: '20px',
-    backgroundColor: '#ffcccc', 
+    ...buttonStyle,
+    backgroundColor: '#ffcccc',
     color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    cursor: 'pointer',
   };
 
   const twoFactorButtonStyle = {
-    fontSize: '24px',
-    marginTop: '20px',
-    backgroundColor: '#7CFC00', 
+    ...buttonStyle,
+    backgroundColor: '#7CFC00',
     color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '5px',
-    cursor: 'pointer',
   };
 
   return (
-    <div style={pageStyle}>
+    <div style={cardStyle}>
       <p style={{ fontSize: '24px' }}>Welcome {username}</p>
       <button onClick={handleLogout} style={logoutButtonStyle}>
         LOGOUT
       </button>
+      <br />
       <button onClick={handleTwoFactorUpdate} style={twoFactorButtonStyle}>
-        {twoFactorEnabled ? 'DISABLE 2FA' : 'UPDATE/ENABLE 2FA'}
+        {twoFactorEnabled ? 'DISABLE 2FA' : 'ENABLE 2FA'}
       </button>
       <div style={{ marginTop: '50px' }}>
         <QRCode value={qrValue} size={256} />
       </div>
       <input
         type="text"
-        placeholder="2A Code"
+        placeholder="Enter 2FA Code"
         value={text}
         onChange={handleInputChange}
-        style={{ fontSize: '24px', marginTop: '20px', width: '80%', maxWidth: '400px' }}
+        style={{ fontSize: '24px', marginTop: '20px', width: '80%', maxWidth: '300px', textAlign: 'center' }}
       />
       <br />
-      <button onClick={handleSetQRCode} style={{ fontSize: '24px', marginTop: '20px' }}>
+      <button onClick={handleSetQRCode} style={{ ...buttonStyle, backgroundColor: '#007bff', color: 'white', marginTop: '20px' }}>
         SET
       </button>
     </div>
