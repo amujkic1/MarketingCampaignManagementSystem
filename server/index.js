@@ -14,7 +14,7 @@ app.use(cors({
   origin: 'http://localhost:5173',
 }));
 
-app.use("/user", authRouter);
+app.use("/", authRouter);
 
 const port = 3000;
 
