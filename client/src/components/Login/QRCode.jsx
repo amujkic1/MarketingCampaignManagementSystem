@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
 import Cookies from 'js-cookie';
 
@@ -8,10 +8,15 @@ function QRCodeGenerator() {
   const [username, setUsername] = useState('');
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 
+  useEffect(() => {
+    // Pozivanje handleSetQRCode funkcije prilikom prvog prikaza komponente
+    handleSetQRCode();
+  }, []); // Prilikom prvog prikaza, [] će se izvršiti samo jednom
 
   const handleInputChange = (event) => {
     // Provjera da li je uneseni tekst validan broj i ograničenje na 6 cifara
     const inputText = event.target.value.replace(/\D/g, '').slice(0, 6);
+    console.log(inputText)
     setText(inputText);
   };
 
@@ -24,8 +29,8 @@ function QRCodeGenerator() {
       },
       credentials: 'include'
     })
-      .then( async res => {
-        const { success, image} =  await res.json();
+      .then(async res => {
+        const { success, image } = await res.json();
         if (success) {
           setQRValue(image);
         } else {
@@ -37,6 +42,47 @@ function QRCodeGenerator() {
       });
   };
 
+
+  const handleAuthenticate = () => {
+    // Dohvati korisničko ime iz Cookie-a
+    const username = Cookies.get('uname');
+  
+    // Ako korisničko ime postoji
+    if (username) {
+      // Stvori objekt s podacima koji će se poslati u tijelu zahtjeva
+      const requestBody = {
+        code: text, // Tekst iz input polja
+        username: username // Korisničko ime iz Cookie-a
+      };
+  
+      // Pošalji zahtjev na server
+      fetch('http://localhost:3000/set2FA', {
+        method: 'POST', // Metod POST
+        headers: {
+          'Content-Type': 'application/json' // Postavke zaglavlja
+        },
+        credentials: 'include', // Uključi kolačiće
+        body: JSON.stringify(requestBody) // Pretvori objekt u JSON format i pošalji u tijelu zahtjeva
+      })
+      .then(response => response.json()) // Pretvori odgovor u JSON format
+      .then(data => {
+        if (data.success) {
+          // Obrada uspješne autentifikacije
+          console.log('Authentication successful');
+        } else {
+          // Obrada neuspješne autentifikacije
+          console.log('Authentication failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error during authentication:', error);
+      });
+    } else {
+      console.error('Username not found in cookies');
+    }
+  };
+  
+
   const handleLogout = () => {
     console.log("Korisnik se odjavio");
   };
@@ -46,7 +92,7 @@ function QRCodeGenerator() {
   };
 
   const cardStyle = {
-    backgroundColor: '#dddee5c6',
+    backgroundColor: 'white',
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
     borderRadius: '8px',
     padding: '24px',
@@ -86,26 +132,26 @@ function QRCodeGenerator() {
   return (
     <div style={cardStyle}>
       <p style={{ fontSize: '24px' }}>Welcome {username}</p>
-      <button onClick={handleLogout} style={logoutButtonStyle}>
-        LOGOUT
-      </button>
-      <br />
-      <button onClick={handleTwoFactorUpdate} style={twoFactorButtonStyle}>
-        {twoFactorEnabled ? 'DISABLE 2FA' : 'ENABLE 2FA'}
-      </button>
       <div style={{ marginTop: '50px' }}>
-      <img src={qrValue} alt="QR Code" style={{ width: '256px', height: '256px' }} />
+        {/* Prikazujemo QR kod */}
+        <img src={qrValue} alt="QR Code" style={{ width: '256px', height: '256px' }} />
       </div>
       <input
         type="text"
         placeholder="Enter 2FA Code"
         value={text}
         onChange={handleInputChange}
-        style={{ fontSize: '24px', marginTop: '20px', width: '80%', maxWidth: '300px', textAlign: 'center' }}
+        maxLength={6} // Postavljamo maksimalnu dužinu na 6 cifara
+        style={{
+          fontSize: '24px',
+          marginTop: '20px',
+          width: 'calc(100% - 20px)', // Promijenili smo širinu input polja tako da se uklapa u 6 mjesta
+          maxWidth: '300px',
+          textAlign: 'center'
+        }}
       />
-      <br />
-      <button onClick={handleSetQRCode} style={{ ...buttonStyle, backgroundColor: '#007bff', color: 'white', marginTop: '20px' }}>
-        SET
+      <button onClick={handleAuthenticate} style={{ ...buttonStyle, backgroundColor: '#007bff', color: 'white', marginTop: '20px' }}>
+        AUTHENTICATE
       </button>
     </div>
   );
