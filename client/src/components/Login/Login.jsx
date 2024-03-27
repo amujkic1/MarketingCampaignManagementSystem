@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
-import './Login.css'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
+  const [authCode, setAuthCode] = useState('');
   const navigate = useNavigate();
 
-  function handleLogin() {
+  const handleLogin = () => {
     fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
@@ -17,31 +18,80 @@ function Login() {
       },
       body: JSON.stringify({ emailOrPhone, password })
     })
-      .then( async response => {
+      .then(async response => {
         if (response.ok) {
-          const { message, username, token} = await response.json();
-          // Ovdje možete obraditi odgovor ako je prijava uspješna
+          const { message, username, token } = await response.json();
           console.log('Login successful');
-          // Resetovanje polja za unos
-          setEmailOrPhone('');
-          setPassword('');
           setErrorMessage('');
           Cookies.set('uname', username);
           Cookies.set('token', token);
-          navigate('/2fa');
+          handleTwoFACheck();
         } else {
-          // Ovdje možete obraditi grešku ako prijava nije uspjela
           return response.json().then(data => {
             throw new Error(data.message);
           });
         }
       })
       .catch(error => {
-        // Ovdje se hvataju sve vrste grešaka
         console.error('Login error:', error);
         setErrorMessage('Failed to login. Please try again.');
       });
-  }
+  };
+
+  const handleAuthenticate = () => {
+    fetch('http://localhost:3000/set2FA?code=' + authCode, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+      },
+      credentials: 'include'
+    })
+      .then(async res => {
+        const { success } = await res.json();
+        if (success) {
+          alert('Authentication successful');
+        } else {
+          setErrorMessage('Authentication code is invalid.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleTwoFACheck = () => {
+    fetch('http://localhost:3000/getUser', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+      },
+      credentials: 'include'
+    })
+      .then(async res => {
+        const { success, enabled } = await res.json();
+        if (success) {
+          if (enabled) {
+            console.log('2FA enabled');
+            setShowAuthCodeInput(true);
+          } else {
+            console.log('2FA not enabled');
+            navigate('/2fa');
+          }
+        } else {
+          console.log('2FA check failed');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleAuthCodeChange = (e) => {
+    const value = e.target.value.replace(/\D/g, '').slice(0, 6); // Uklanja sve osim brojeva
+    setAuthCode(value);
+  };
 
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center vh-100">
@@ -60,11 +110,26 @@ function Login() {
                 <label className='form-label' htmlFor='password'>Password</label>
                 <input className='form-control' id='password' type='password' value={password} onChange={e => setPassword(e.target.value)} />
               </div>
+           
+              {showAuthCodeInput && (
+                <div className='mb-4 mx-5 w-100'>
+                  <label className='form-label' htmlFor='auth-code'>Authentication Code</label>
+                  <div className="text-center"> {/* Dodali smo text-center na ovaj div */}
+                    <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
+                    <button className='btn btn-primary mx-2 px-5 mt-3' type='button' onClick={handleAuthenticate}>
+                      Log in
+                    </button>
+                  </div>
+                </div>
+              )}
 
-              <p className="small mb-3 pb-lg-2"><a className="text-muted" href="#!">Forgot password?</a></p>
-              <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin}>
-                Log in
-              </button>
+
+            
+              {!showAuthCodeInput && (
+                <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin}>
+                  Log in
+                </button>
+              )}
               {errorMessage && <p className="text-danger">{errorMessage}</p>}
               <div className='d-flex flex-row mt-3 mb-5'></div>
               <div>
