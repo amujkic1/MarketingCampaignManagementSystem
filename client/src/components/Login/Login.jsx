@@ -26,7 +26,7 @@ function Login() {
           setEmailOrPhone('');
           setPassword('');
           setErrorMessage('');
-          Cookies.set('username', username);
+          Cookies.set('uname', username);
           Cookies.set('token', token);
           navigate('/2fa');
         } else {

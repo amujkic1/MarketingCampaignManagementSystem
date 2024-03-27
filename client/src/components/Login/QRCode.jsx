@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import QRCode from 'qrcode.react';
 import Cookies from 'js-cookie';
 
@@ -8,10 +8,6 @@ function QRCodeGenerator() {
   const [username, setUsername] = useState('');
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 
-  useEffect(() => {
-    const usernameCookie = Cookies.get('username');
-    setUsername(usernameCookie);
-  }, []);
 
   const handleInputChange = (event) => {
     // Provjera da li je uneseni tekst validan broj i ograničenje na 6 cifara
@@ -23,11 +19,13 @@ function QRCodeGenerator() {
     fetch('http://localhost:3000/qrimage', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+      },
+      credentials: 'include'
     })
-      .then(res => {
-        const { success, image} = res.json();
+      .then( async res => {
+        const { success, image} =  await res.json();
         if (success) {
           setQRValue(image);
         } else {
@@ -96,7 +94,7 @@ function QRCodeGenerator() {
         {twoFactorEnabled ? 'DISABLE 2FA' : 'ENABLE 2FA'}
       </button>
       <div style={{ marginTop: '50px' }}>
-        <QRCode value={qrValue} size={256} />
+      <img src={qrValue} alt="QR Code" style={{ width: '256px', height: '256px' }} />
       </div>
       <input
         type="text"
