@@ -20,8 +20,8 @@ async function login(req, res) {
     if (password === user.password) {
       const authToken = generateUserJwtToken(user);
       return res
-          .cookie('username', user.username, { path: '/' })
-          .cookie('token', authToken, { path: '/' }).status(200).json({ message: "Your login is successful" ,  username: user.username, authToken: authToken});
+          .cookie('uname', user.username)
+          .cookie('token', authToken).status(200).json({ message: "Your login is successful" ,  username: user.username, authToken: authToken});
     } else {
       return res.status(400).json({ message: "Password is not correct" });
     }
@@ -34,14 +34,15 @@ async function qrCode(req, res) {
 
     try{
       
-      const username = req.cookies.username
+      const username = req.cookies.uname
       console.log(username)
       const user = await User.getUser(pool, username);
+      console.log(user);
       const secret = authenticator.generateSecret();
       const uri = authenticator.keyuri(user.id, "marketing", secret)
       const image = await qrcode.toDataURL(uri);
-  
-      user.updateUserSecret(secret);
+      
+      await user.updateUserSecret(secret);
   
       return res.send({
         success: true,
