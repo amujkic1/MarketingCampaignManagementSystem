@@ -144,7 +144,7 @@ function QRCodeGenerator() {
 
   return (
     <div style={cardStyle}>
-      <p style={{ fontSize: '24px' }}>Welcome {username}</p>
+      <p style={{ fontSize: '24px' }}>Set up Two-factor Authentication {username}</p>
       <div style={{ marginTop: '50px' }}>
         {/* Prikazujemo QR kod */}
         <img src={qrValue} alt="QR Code" style={{ width: '256px', height: '256px' }} />
