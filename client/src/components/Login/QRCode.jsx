@@ -44,42 +44,26 @@ function QRCodeGenerator() {
 
 
   const handleAuthenticate = () => {
-    // Dohvati korisničko ime iz Cookie-a
-    const username = Cookies.get('uname');
-  
-    // Ako korisničko ime postoji
-    if (username) {
-      // Stvori objekt s podacima koji će se poslati u tijelu zahtjeva
-      const requestBody = {
-        code: text, // Tekst iz input polja
-        username: username // Korisničko ime iz Cookie-a
-      };
-  
-      // Pošalji zahtjev na server
-      fetch('http://localhost:3000/set2FA', {
-        method: 'POST', // Metod POST
-        headers: {
-          'Content-Type': 'application/json' // Postavke zaglavlja
-        },
-        credentials: 'include', // Uključi kolačiće
-        body: JSON.stringify(requestBody) // Pretvori objekt u JSON format i pošalji u tijelu zahtjeva
-      })
-      .then(response => response.json()) // Pretvori odgovor u JSON format
-      .then(data => {
-        if (data.success) {
-          // Obrada uspješne autentifikacije
-          console.log('Authentication successful');
+    fetch('http://localhost:3000/set2FA?code=' + text, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+      },
+      credentials: 'include'
+    })
+      .then( async res => {
+        const { success } =  await res.json();
+        if (success) {
+          alert('Authentication successful');
         } else {
-          // Obrada neuspješne autentifikacije
-          console.log('Authentication failed');
+          alert('Authentication failed');
         }
       })
       .catch(error => {
-        console.error('Error during authentication:', error);
+        console.error(error);
       });
-    } else {
-      console.error('Username not found in cookies');
-    }
+
   };
   
 

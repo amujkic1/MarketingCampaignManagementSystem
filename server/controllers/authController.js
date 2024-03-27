@@ -62,21 +62,16 @@ async function set2FA(req, res) {
 
   try{
    
-    const username = "john_doe";
-    const password = "password123"
-    //code je hardkodiran, dohvatiti sa klijentske strane kasnije
-    const code = "653786";
-    const user = await User.getUser(pool, username, password);
+    const username = await req.cookies.uname;
+    const code = await req.query.code
 
-    console.log(user);
-
+    const user = await User.getUser(pool, username);
     const tempSecret = user.two_factor_secret;
-
-    const verified = authenticator.check(code.toString(), tempSecret.toString())
+    const verified = authenticator.check(code, tempSecret)
     
     if(!verified) throw false;
 
-    user.enable2FA();
+    await user.enable2FA();
 
     return res.send({
       success: true
@@ -89,6 +84,7 @@ async function set2FA(req, res) {
   }
 
 }
+
 
 module.exports = {
   login,
