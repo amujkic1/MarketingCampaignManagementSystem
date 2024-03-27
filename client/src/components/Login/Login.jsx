@@ -20,11 +20,11 @@ function Login() {
     })
       .then(async response => {
         if (response.ok) {
-          const { message, username, token } = await response.json();
+          const { message, username, authToken } = await response.json();
           console.log('Login successful');
           setErrorMessage('');
           Cookies.set('uname', username);
-          Cookies.set('token', token);
+          Cookies.set('token', authToken);
           handleTwoFACheck();
         } else {
           return response.json().then(data => {

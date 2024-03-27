@@ -1,24 +1,20 @@
-const { pool } = require('../database');
-const bcrypt = require('bcrypt');
-
 class User {
-  constructor(pool, id, username, password, email, two_factor_enabled, two_factor_secret) {
+  constructor(pool, id, username, email, two_factor_enabled, two_factor_secret) {
     this.pool = pool;
     this.id = id;
     this.username = username;
-    this.password = password;
     this.email = email;
     this.two_factor_enabled = two_factor_enabled;
     this.two_factor_secret = two_factor_secret;
   }
 
   static async getAllUsers(pool) {
-    const query = 'SELECT id, username, email, password, two_factor_enabled, two_factor_secret FROM users'; 
+    const query = 'SELECT * FROM users';
     try {
       const client = await pool.connect();
       const result = await client.query(query);
       client.release();
-      return result.rows.map(row => new User(pool, row.id, row.username, row.password, row.email, row.two_factor_enabled, row.two_factor_secret)); 
+      return result.rows.map(row => new User(pool, row.id, row.username, row.email, row.two_factor_enabled, row.two_factor_secret));
     } catch (error) {
       console.error('Error fetching users:', error);
       throw error;
@@ -84,43 +80,6 @@ class User {
       throw error;
     }
   }
-
-  static async hashAllPasswords() {
-    try {
-      const users = await User.getAllUsers(pool);
-      
-      console.log(users);
-
-      await Promise.all(users.map(async (user) => {
-        const hashedPassword = await bcrypt.hash(user.password, 10);
-        await user.updatePassword(hashedPassword);
-      }));
-
-      console.log("All passwords hashed successfully.");
-    } catch (error) {
-      console.error('Error hashing passwords:', error);
-      throw error;
-    }
-  }
-
-  async updatePassword(hashedPassword) {
-    try {
-      const query = `
-        UPDATE users
-        SET password = $1
-        WHERE id = $2
-      `;
-      const values = [hashedPassword, this.id];
-  
-      const client = await this.pool.connect();
-      await client.query(query, values);
-      client.release();
-    } catch (error) {
-      console.error('Error updating password for user:', error);
-      throw error;
-    }
-  }
-
 }
 
 module.exports = User;

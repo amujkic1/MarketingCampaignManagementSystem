@@ -8,8 +8,6 @@ const { Pool } = require("pg");
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
-const User = require('./models/user');
-const bcrypt = require('bcrypt');
 
 const authMiddleware = require('./middleware/authMiddleware.js');
 
@@ -32,16 +30,7 @@ app.use("/", authRouter);
 
 const port = 3000;
 
-/*(async () => {
-  try {
-    await User.hashAllPasswords();
-    console.log("All passwords hashed successfully.");
-  } catch (error) {
-    console.error('Error hashing passwords:', error);
-  } finally {
-    await pool.end();
-  }
-})();*/
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
