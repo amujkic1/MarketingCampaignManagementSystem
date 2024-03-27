@@ -10,7 +10,7 @@ function QRCodeGenerator() {
 
   useEffect(() => {
     // Pozivanje handleSetQRCode funkcije prilikom prvog prikaza komponente
-    handleSetQRCode();
+    handleTwoFACheck();
   }, []); // Prilikom prvog prikaza, [] će se izvršiti samo jednom
 
   const handleInputChange = (event) => {
@@ -66,6 +66,35 @@ function QRCodeGenerator() {
 
   };
   
+
+  const handleTwoFACheck = () => {
+    fetch('http://localhost:3000/getUser', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+      },
+      credentials: 'include'
+    })
+      .then(async res => {
+        const { success, enabled } = await res.json();
+        if (success) {
+          if(enabled){
+            console.log('2FA enabled');
+             // Call handleSetQRCode if 2FA is enabled
+          }else{
+            handleSetQRCode();
+          }
+          
+        } else {
+          console.log('2FA not enabled');
+          alert('Two-factor authentication is not enabled');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   const handleLogout = () => {
     console.log("Korisnik se odjavio");

@@ -85,9 +85,35 @@ async function set2FA(req, res) {
 
 }
 
+async function getUser(req, res){
+  
+  try{
+
+      const username = await req.cookies.uname;
+      //const username = "john_doe";
+
+      const user = await User.getUser(pool, username);
+      const enabled = user.two_factor_enabled;
+
+      return res.status(200).send({
+        success: true,
+        enabled: enabled
+      });
+
+    } catch(error) {
+      console.error('Error fetching user from database:', error);
+      return res.status(500).send({
+        success: false,
+        message: 'Internal server error'
+    });
+  }
+
+}
+
 
 module.exports = {
   login,
   qrCode,
-  set2FA
+  set2FA,
+  getUser
 };

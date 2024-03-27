@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
 app.use("/set2FA", authRouter);
+app.use("/getUser", authRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
