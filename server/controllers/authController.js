@@ -7,26 +7,30 @@ const qrcode = require('qrcode');
 const {authenticator} = require('otplib');
 
 async function login(req, res) {
-
   const { emailOrPhone, password } = req.body;
   
   try {
-    user = await userService.findUser(emailOrPhone);
+    const user = await userService.findUser(emailOrPhone);
 
     if (!user) {
       return res.status(404).json({ message: "User is not found" });
     }
-   // const passwordMatch = await bcrypt.compare(password, user.password);
-    if (password === user.password) {
+   
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (passwordMatch) {
       const authToken = generateUserJwtToken(user);
       return res
           .cookie('uname', user.username)
-          .cookie('token', authToken).status(200).json({ message: "Your login is successful" ,  username: user.username, authToken: authToken});
+          .cookie('token', authToken)
+          .status(200)
+          .json({ message: "Your login is successful", username: user.username, authToken: authToken });
     } else {
       return res.status(400).json({ message: "Password is not correct" });
     }
   } catch (error) {
-    throw error;
+    console.error('Error during login:', error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
