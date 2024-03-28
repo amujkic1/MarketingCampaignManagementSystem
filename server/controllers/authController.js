@@ -90,9 +90,12 @@ async function getUser(req, res){
 
       const username = await req.cookies.uname;
       //const username = "john_doe";
+      console.log(username);
 
       const user = await User.getUser(pool, username);
       const enabled = user.two_factor_enabled;
+
+      console.log(user.username);
 
       return res.status(200).send({
         success: true,
