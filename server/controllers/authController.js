@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const userService = require("../services/authService");
 const generateUserJwtToken = require("./jwtController");
 const User = require('../models/user');
