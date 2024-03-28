@@ -82,10 +82,11 @@ async function qrCode(req, res) {
 
 async function set2FA(req, res) {
   try {
-    const { email, code } = req.body; // Get email and code from request body
+    const { emailOrPhone } = req.body; // Get email and code from request body
     
-    const user = await userService.findUser(email);
-      
+    const user = await userService.findUser(emailOrPhone);
+    const code = await req.query.code
+    
     //const user = await User.getUser(pool, email); // Fetch user using email
 
     const tempSecret = user.two_factor_secret;

@@ -67,7 +67,7 @@ function Login() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email }), // Pass email in the request body
+      body: JSON.stringify({ emailOrPhone }), // Pass email in the request body
       credentials: 'include'
     })
       .then(async res => {
