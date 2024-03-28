@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -8,10 +8,10 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
   const [authCode, setAuthCode] = useState('');
-
+  const navigate = useNavigate();
 
   const handleLogin = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
+    fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -25,7 +25,7 @@ function Login() {
           setErrorMessage('');
           Cookies.set('uname', username);
           Cookies.set('token', authToken);
-          await handleTwoFACheck(username); // Pass username to handleTwoFACheck
+          handleTwoFACheck();
         } else {
           return response.json().then(data => {
             throw new Error(data.message);
@@ -37,11 +37,10 @@ function Login() {
         setErrorMessage('Failed to login. Please try again.');
       });
   };
-  
 
-/*  const handleAuthenticate = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
-      method: 'POST',
+  const handleAuthenticate = () => {
+    fetch('http://localhost:3000/set2FA?code=' + authCode, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
@@ -51,29 +50,8 @@ function Login() {
       .then(async res => {
         const { success } = await res.json();
         if (success) {
-          alert('Authentication successful');
-        } else {
-          setErrorMessage('Authentication code is invalid.');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };*/
-
-  const handleAuthenticate = (email) => { // Accept email as parameter
-    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ emailOrPhone }), // Pass email in the request body
-      credentials: 'include'
-    })
-      .then(async res => {
-        const { success } = await res.json();
-        if (success) {
-          alert('Authentication successful');
+          navigate('/home')
+          //alert('successful auth');
         } else {
           setErrorMessage('Authentication code is invalid.');
         }
@@ -83,13 +61,13 @@ function Login() {
       });
   };
 
-  const handleTwoFACheck = (username) => { // Accept username as parameter
-    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
-      method: 'POST',
+  const handleTwoFACheck = () => {
+    fetch('http://localhost:3000/getUser', {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
       },
-      body: JSON.stringify({ username }), // Include username in the request body
       credentials: 'include'
     })
       .then(async res => {
@@ -110,9 +88,6 @@ function Login() {
         console.error(error);
       });
   };
-
-
-  const navigate = useNavigate();
 
   const handleAuthCodeChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6); // Uklanja sve osim brojeva
@@ -140,9 +115,9 @@ function Login() {
               {showAuthCodeInput && (
                 <div className='mb-4 mx-5 w-100'>
                   <label className='form-label' htmlFor='auth-code'>Authentication Code</label>
-                  <div className="text-center">
+                  <div className="text-center"> {/* Dodali smo text-center na ovaj div */}
                     <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
-                    <button className='btn btn-primary mx-2 px-5 mt-3' type='button' onClick={() => handleAuthenticate(emailOrPhone)}> {/* Pass emailOrPhone to handleAuthenticate */}
+                    <button className='btn btn-primary mx-2 px-5 mt-3' type='button' onClick={handleAuthenticate}>
                       Log in
                     </button>
                   </div>
