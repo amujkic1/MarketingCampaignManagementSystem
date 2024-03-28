@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    fetch('http://localhost:3000/login', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -39,7 +39,7 @@ function Login() {
   };
 
   const handleAuthenticate = () => {
-    fetch('http://localhost:3000/set2FA?code=' + authCode, {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ function Login() {
   };
 
   const handleTwoFACheck = () => {
-    fetch('http://localhost:3000/getUser', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
