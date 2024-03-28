@@ -61,7 +61,7 @@ function Login() {
       });
   };*/
 
-  const handleAuthenticate = (email) => { // Accept email as parameter
+  const handleAuthenticate = (emailOrPhone) => { // Accept email as parameter
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
