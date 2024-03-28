@@ -40,7 +40,7 @@ function Login() {
 
   const handleAuthenticate = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
@@ -62,7 +62,7 @@ function Login() {
 
   const handleTwoFACheck = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
