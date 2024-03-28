@@ -23,7 +23,7 @@ function QRCodeGenerator() {
   };
 
   const handleSetQRCode = () => {
-    fetch('http://localhost:3000/qrimage', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/qrimage', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ function QRCodeGenerator() {
 
 
   const handleAuthenticate = () => {
-    fetch('http://localhost:3000/set2FA?code=' + text, {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + text, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ function QRCodeGenerator() {
   
 
   const handleTwoFACheck = () => {
-    fetch('http://localhost:3000/getUser', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
