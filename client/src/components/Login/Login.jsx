@@ -8,7 +8,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showAuthCodeInput, setShowAuthCodeInput] = useState(false);
   const [authCode, setAuthCode] = useState('');
-  const navigate = useNavigate();
+
 
   /*const handleLogin = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
@@ -53,24 +53,19 @@ function Login() {
           setErrorMessage('');
           Cookies.set('uname', username);
           Cookies.set('token', authToken);
-          return Promise.resolve(); // Resolve the promise after setting cookies
+          await handleTwoFACheck(username); // Pass username to handleTwoFACheck
         } else {
           return response.json().then(data => {
             throw new Error(data.message);
           });
         }
       })
-      .then(() => {
-        // After setting cookies, call handleTwoFACheck
-        return handleTwoFACheck();
-      })
       .catch(error => {
         console.error('Login error:', error);
         setErrorMessage('Failed to login. Please try again.');
       });
   };
-
-
+  
 
   const handleAuthenticate = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
@@ -94,14 +89,13 @@ function Login() {
       });
   };
 
-
-  const handleTwoFACheck = () => {
+  const handleTwoFACheck = (username) => { // Accept username as parameter
     fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+        'Content-Type': 'application/json'
       },
+      body: JSON.stringify({ username }), // Include username in the request body
       credentials: 'include'
     })
       .then(async res => {
@@ -150,6 +144,8 @@ function Login() {
         console.error(error);
       });
   };*/
+
+  const navigate = useNavigate();
 
   const handleAuthCodeChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6); // Uklanja sve osim brojeva
