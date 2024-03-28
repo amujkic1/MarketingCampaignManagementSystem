@@ -10,7 +10,7 @@ function Login() {
   const [authCode, setAuthCode] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  /*const handleLogin = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
       method: 'POST',
       headers: {
@@ -36,7 +36,41 @@ function Login() {
         console.error('Login error:', error);
         setErrorMessage('Failed to login. Please try again.');
       });
+  };*/
+
+  const handleLogin = () => {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ emailOrPhone, password })
+    })
+      .then(async response => {
+        if (response.ok) {
+          const { message, username, authToken } = await response.json();
+          console.log('Login successful');
+          setErrorMessage('');
+          Cookies.set('uname', username);
+          Cookies.set('token', authToken);
+          return Promise.resolve(); // Resolve the promise after setting cookies
+        } else {
+          return response.json().then(data => {
+            throw new Error(data.message);
+          });
+        }
+      })
+      .then(() => {
+        // After setting cookies, call handleTwoFACheck
+        return handleTwoFACheck();
+      })
+      .catch(error => {
+        console.error('Login error:', error);
+        setErrorMessage('Failed to login. Please try again.');
+      });
   };
+
+
 
   const handleAuthenticate = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
@@ -59,6 +93,7 @@ function Login() {
         console.error(error);
       });
   };
+
 
   const handleTwoFACheck = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
@@ -87,6 +122,34 @@ function Login() {
         console.error(error);
       });
   };
+
+  /*const handleTwoFACheck = () => {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+      },
+      credentials: 'include'
+    })
+      .then(async res => {
+        const { success, enabled } = await res.json();
+        if (success) {
+          if (enabled) {
+            console.log('2FA enabled');
+            setShowAuthCodeInput(true);
+          } else {
+            console.log('2FA not enabled');
+            navigate('/2fa');
+          }
+        } else {
+          console.log('2FA check failed');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };*/
 
   const handleAuthCodeChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6); // Uklanja sve osim brojeva
