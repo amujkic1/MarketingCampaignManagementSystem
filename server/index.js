@@ -13,6 +13,7 @@ const authMiddleware = require('./middleware/authMiddleware.js');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(cors());
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
 app.use("/set2FA", authRouter);
@@ -21,17 +22,6 @@ app.use("/getUser", authRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 
-const allowedOrigins = ['https://marketing-campaign-management-system-client.vercel.app', 'http://localhost:5173'];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
 
 app.use("/", authRouter);
 
