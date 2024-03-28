@@ -81,6 +81,34 @@ async function qrCode(req, res) {
 }
 
 async function set2FA(req, res) {
+  try {
+    const { email, code } = req.body; // Get email and code from request body
+    
+    const user = await userService.findUser(email);
+      
+    //const user = await User.getUser(pool, email); // Fetch user using email
+
+    const tempSecret = user.two_factor_secret;
+    const verified = authenticator.check(code, tempSecret);
+
+    if (!verified) throw false;
+
+    await user.enable2FA();
+
+    return res.send({
+      success: true
+    });
+  } catch (error) {
+    console.error('Error setting up 2FA:', error);
+    return res.status(500).send({
+      success: false
+    });
+  }
+}
+
+
+
+/*async function set2FA(req, res) {
 
   try{
    
@@ -105,7 +133,7 @@ async function set2FA(req, res) {
     });
   }
 
-}
+}*/
 
 async function getUser(req, res) {
   try {

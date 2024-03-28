@@ -10,34 +10,6 @@ function Login() {
   const [authCode, setAuthCode] = useState('');
 
 
-  /*const handleLogin = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ emailOrPhone, password })
-    })
-      .then(async response => {
-        if (response.ok) {
-          const { message, username, authToken } = await response.json();
-          console.log('Login successful');
-          setErrorMessage('');
-          Cookies.set('uname', username);
-          Cookies.set('token', authToken);
-          await handleTwoFACheck();
-        } else {
-          return response.json().then(data => {
-            throw new Error(data.message);
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Login error:', error);
-        setErrorMessage('Failed to login. Please try again.');
-      });
-  };*/
-
   const handleLogin = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
       method: 'POST',
@@ -67,13 +39,35 @@ function Login() {
   };
   
 
-  const handleAuthenticate = () => {
+/*  const handleAuthenticate = () => {
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
       },
+      credentials: 'include'
+    })
+      .then(async res => {
+        const { success } = await res.json();
+        if (success) {
+          alert('Authentication successful');
+        } else {
+          setErrorMessage('Authentication code is invalid.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };*/
+
+  const handleAuthenticate = (email) => { // Accept email as parameter
+    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email }), // Pass email in the request body
       credentials: 'include'
     })
       .then(async res => {
@@ -117,33 +111,6 @@ function Login() {
       });
   };
 
-  /*const handleTwoFACheck = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
-      },
-      credentials: 'include'
-    })
-      .then(async res => {
-        const { success, enabled } = await res.json();
-        if (success) {
-          if (enabled) {
-            console.log('2FA enabled');
-            setShowAuthCodeInput(true);
-          } else {
-            console.log('2FA not enabled');
-            navigate('/2fa');
-          }
-        } else {
-          console.log('2FA check failed');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };*/
 
   const navigate = useNavigate();
 
@@ -173,9 +140,9 @@ function Login() {
               {showAuthCodeInput && (
                 <div className='mb-4 mx-5 w-100'>
                   <label className='form-label' htmlFor='auth-code'>Authentication Code</label>
-                  <div className="text-center"> {/* Dodali smo text-center na ovaj div */}
+                  <div className="text-center">
                     <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
-                    <button className='btn btn-primary mx-2 px-5 mt-3' type='button' onClick={handleAuthenticate}>
+                    <button className='btn btn-primary mx-2 px-5 mt-3' type='button' onClick={() => handleAuthenticate(emailOrPhone)}> {/* Pass emailOrPhone to handleAuthenticate */}
                       Log in
                     </button>
                   </div>
