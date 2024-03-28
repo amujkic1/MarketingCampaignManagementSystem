@@ -25,7 +25,7 @@ function Login() {
           setErrorMessage('');
           Cookies.set('uname', username);
           Cookies.set('token', authToken);
-          handleTwoFACheck();
+          await handleTwoFACheck();
         } else {
           return response.json().then(data => {
             throw new Error(data.message);
