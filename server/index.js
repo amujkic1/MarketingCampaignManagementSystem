@@ -21,7 +21,7 @@ app.use("/getUser", authRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 
-const allowedOrigins = ['https://marketing-campaign-management-system-client.vercel.app', 'http://localhost:5173'];
+const allowedOrigins = ['https://marketing-campaign-management-system-client.vercel.app'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
