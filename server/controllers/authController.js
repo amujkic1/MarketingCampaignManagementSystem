@@ -5,7 +5,7 @@ const { pool } = require('../database');
 const qrcode = require('qrcode');
 const {authenticator} = require('otplib');
 
-async function login(req, res) {
+/*async function login(req, res) {
 
   const { emailOrPhone, password } = req.body;
   
@@ -26,6 +26,29 @@ async function login(req, res) {
     }
   } catch (error) {
     throw error;
+  }
+}*/
+
+async function login(req, res) {
+  const { emailOrPhone, password } = req.body;
+  try {
+    const user = await userService.findUser(emailOrPhone);
+    if (!user) {
+      return res.status(404).json({ message: "User is not found" });
+    }
+    if (password === user.password) {
+      const authToken = generateUserJwtToken(user);
+      return res
+        .cookie('uname', user.username) // Set 'uname' cookie with the username
+        .cookie('token', authToken)
+        .status(200)
+        .json({ message: "Your login is successful", username: user.username, authToken: authToken });
+    } else {
+      return res.status(400).json({ message: "Password is not correct" });
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -84,7 +107,25 @@ async function set2FA(req, res) {
 
 }
 
-async function getUser(req, res){
+async function getUser(req, res) {
+  try {
+    const { username } = req.body; // Expect username in the request body
+    const user = await User.getUser(pool, username);
+    const enabled = user.two_factor_enabled;
+    return res.status(200).send({
+      success: true,
+      enabled: enabled
+    });
+  } catch (error) {
+    console.error('Error fetching user from database:', error);
+    return res.status(500).send({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+}
+
+/*async function getUser(req, res){
   
   try{
 
@@ -110,7 +151,7 @@ async function getUser(req, res){
     });
   }
 
-}
+}*/
 
 
 module.exports = {
