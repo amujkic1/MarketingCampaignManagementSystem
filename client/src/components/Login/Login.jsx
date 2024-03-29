@@ -14,7 +14,7 @@ function Login() {
     fetch('https://marketing-campaign-management-system-f5w7.vercel.app/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ emailOrPhone, password })
     })
