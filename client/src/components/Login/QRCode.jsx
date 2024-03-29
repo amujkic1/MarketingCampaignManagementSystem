@@ -23,7 +23,8 @@ function QRCodeGenerator() {
   };
 
   const handleSetQRCode = () => {
-    fetch('https://marketing-campaign-management-system-f5w7.vercel.app/qrimage', {
+    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/qrimage', {
+
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -46,7 +47,7 @@ function QRCodeGenerator() {
 
 
   const handleAuthenticate = () => {
-    fetch('https://marketing-campaign-management-system-f5w7.vercel.app/set2FA?code=' + text, {
+    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + text, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -71,7 +72,7 @@ function QRCodeGenerator() {
   
 
   const handleTwoFACheck = () => {
-    fetch('https://marketing-campaign-management-system-f5w7.vercel.app/getUser', {
+    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/getUser', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
