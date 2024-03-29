@@ -13,7 +13,7 @@ const authMiddleware = require('./middleware/authMiddleware.js');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({origin:true}));
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
 app.use("/set2FA", authRouter);
