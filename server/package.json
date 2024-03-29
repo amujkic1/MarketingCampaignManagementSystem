@@ -12,6 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "proxy": "https://marketing-campaign-management-system-client.vercel.app",
   "dependencies": {
     "@vercel/postgres": "^0.7.2",
     "cookie-parser": "^1.4.6",
