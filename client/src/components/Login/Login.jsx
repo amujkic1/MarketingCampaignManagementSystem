@@ -12,7 +12,7 @@ function Login() {
 
   const handleLogin = () => {
 
-    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/login', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/jsonp'
@@ -44,7 +44,7 @@ function Login() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + authCode, {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/jsonp',
@@ -70,7 +70,7 @@ function Login() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/getUser', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/jsonp',
