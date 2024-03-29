@@ -26,7 +26,7 @@ function QRCodeGenerator() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/qrimage', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/qrimage', {
 
       method: 'POST',
       headers: {
@@ -53,7 +53,7 @@ function QRCodeGenerator() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + text, {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + text, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/jsonp',
