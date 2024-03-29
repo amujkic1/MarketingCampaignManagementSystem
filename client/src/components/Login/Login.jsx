@@ -15,7 +15,7 @@ function Login() {
     fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp'
+        'Content-Type': 'application/json'
       },
       credentials: 'include',
       body: JSON.stringify({ emailOrPhone, password })
@@ -47,7 +47,7 @@ function Login() {
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp',
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
@@ -73,7 +73,7 @@ function Login() {
     fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp',
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
