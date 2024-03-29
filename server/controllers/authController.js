@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 const userService = require("../services/authService");
 const generateUserJwtToken = require("./jwtController");
 const User = require('../models/user');
@@ -16,10 +16,12 @@ async function login(req, res) {
     if (!user) {
       return res.status(404).json({ message: "User is not found" });
     }
-   // const passwordMatch = await bcrypt.compare(password, user.password);
-    if (password === user.password) {
+    const passwordMatch = await bcryptjs.compare(password, user.password);
+    if (passwordMatch) {
       const authToken = generateUserJwtToken(user);
-      return res.status(200).json({ message: "Your login is successful" ,  emailOrPhone: user.email || user.phone , authToken: authToken});
+      return res
+          .cookie('uname', user.username)
+          .cookie('token', authToken).status(200).json({ message: "Your login is successful" ,  username: user.username, authToken: authToken});
     } else {
       return res.status(400).json({ message: "Password is not correct" });
     }
@@ -32,16 +34,15 @@ async function qrCode(req, res) {
 
     try{
       
-      const username = "john_doe";
-      const password = "password123"
-      
-      const user = await User.getUser(pool, username, password);
-  
+      const username = req.cookies.uname
+      console.log(username)
+      const user = await User.getUser(pool, username);
+      console.log(user);
       const secret = authenticator.generateSecret();
       const uri = authenticator.keyuri(user.id, "marketing", secret)
       const image = await qrcode.toDataURL(uri);
-  
-      user.updateUserSecret(secret);
+      
+      await user.updateUserSecret(secret);
   
       return res.send({
         success: true,
@@ -61,21 +62,16 @@ async function set2FA(req, res) {
 
   try{
    
-    const username = "john_doe";
-    const password = "password123"
-    //code je hardkodiran, dohvatiti sa klijentske strane kasnije
-    const code = "653786";
-    const user = await User.getUser(pool, username, password);
+    const username = await req.cookies.uname;
+    const code = await req.query.code
 
-    console.log(user);
-
+    const user = await User.getUser(pool, username);
     const tempSecret = user.two_factor_secret;
-
-    const verified = authenticator.check(code.toString(), tempSecret.toString())
+    const verified = authenticator.check(code, tempSecret)
     
     if(!verified) throw false;
 
-    user.enable2FA();
+    await user.enable2FA();
 
     return res.send({
       success: true
@@ -89,8 +85,35 @@ async function set2FA(req, res) {
 
 }
 
+async function getUser(req, res){
+  
+  try{
+
+      const username = await req.cookies.uname;
+      //const username = "john_doe";
+
+      const user = await User.getUser(pool, username);
+      const enabled = user.two_factor_enabled;
+
+      return res.status(200).send({
+        success: true,
+        enabled: enabled
+      });
+
+    } catch(error) {
+      console.error('Error fetching user from database:', error);
+      return res.status(500).send({
+        success: false,
+        message: 'Internal server error'
+    });
+  }
+
+}
+
+
 module.exports = {
   login,
   qrCode,
-  set2FA
+  set2FA,
+  getUser
 };
