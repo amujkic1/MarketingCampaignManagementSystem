@@ -30,7 +30,7 @@ function QRCodeGenerator() {
 
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp'
+        'Content-Type': 'application/json'
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
@@ -56,7 +56,7 @@ function QRCodeGenerator() {
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + text, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp',
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
