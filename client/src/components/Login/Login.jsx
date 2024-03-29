@@ -15,7 +15,7 @@ function Login() {
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/jsonp'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ emailOrPhone, password })
     })
