@@ -41,13 +41,16 @@ function Login() {
   };
 
   const handleAuthenticate = () => {
+
+    const username = encodeURIComponent(Cookies.get('uname'));
+
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + authCode, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
       },
-      credentials: 'include'
+      credentials: 'include',
+      body: JSON.stringify({ uname: username })
     })
       .then(async res => {
         const { success } = await res.json();
@@ -64,13 +67,16 @@ function Login() {
   };
 
   const handleTwoFACheck = () => {
+
+    const username = encodeURIComponent(Cookies.get('uname'));
+
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/getUser', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
       },
-      credentials: 'include'
+      credentials: 'include',
+      body: JSON.stringify({ uname: username })
     })
       .then(async res => {
         const { success, enabled } = await res.json();

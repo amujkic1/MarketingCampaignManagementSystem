@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 //app.use(cors());
 
 app.use(cors({
-  origin: 'https://marketing-campaign-management-system-client.vercel.app',
+  origin: 'https://marketing-campaign-management-system-client.vercel.app/',
   credentials: true
 }));
 

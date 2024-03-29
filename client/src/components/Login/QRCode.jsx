@@ -12,7 +12,7 @@ function QRCodeGenerator() {
 
   useEffect(() => {
     // Pozivanje handleSetQRCode funkcije prilikom prvog prikaza komponente
-    handleTwoFACheck();
+    handleSetQRCode();
   }, []); // Prilikom prvog prikaza, [] će se izvršiti samo jednom
 
   const handleInputChange = (event) => {
@@ -23,14 +23,17 @@ function QRCodeGenerator() {
   };
 
   const handleSetQRCode = () => {
+
+    const username = encodeURIComponent(Cookies.get('uname'));
+
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/qrimage', {
 
-      method: 'GET',
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
+        'Content-Type': 'application/json'
       },
-      credentials: 'include'
+      credentials: 'include',
+      body: JSON.stringify({ uname: username })
     })
       .then(async res => {
         const { success, image } = await res.json();
@@ -47,13 +50,16 @@ function QRCodeGenerator() {
 
 
   const handleAuthenticate = () => {
+
+    const username = encodeURIComponent(Cookies.get('uname'));
+
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + text, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
       },
-      credentials: 'include'
+      credentials: 'include',
+      body: JSON.stringify({ uname: username })
     })
       .then( async res => {
         const { success } =  await res.json();
@@ -70,35 +76,6 @@ function QRCodeGenerator() {
 
   };
   
-
-  const handleTwoFACheck = () => {
-    fetch('https://marketingcampaignmanagementsystem-1.onrender.com/getUser', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `uname=${encodeURIComponent(Cookies.get('uname'))}`
-      },
-      credentials: 'include'
-    })
-      .then(async res => {
-        const { success, enabled } = await res.json();
-        if (success) {
-          if(enabled){
-            console.log('2FA enabled');
-             // Call handleSetQRCode if 2FA is enabled
-          }else{
-            handleSetQRCode();
-          }
-          
-        } else {
-          console.log('2FA not enabled');
-          alert('Two-factor authentication is not enabled');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
 
   const handleLogout = () => {
     console.log("Korisnik se odjavio");
