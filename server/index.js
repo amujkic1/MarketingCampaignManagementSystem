@@ -13,7 +13,13 @@ const authMiddleware = require('./middleware/authMiddleware.js');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(cors({origin:true}));
+//app.use(cors());
+
+app.use(cors({
+  origin: 'https://marketing-campaign-management-system-client.vercel.app',
+  credentials: true
+}));
+
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
 app.use("/set2FA", authRouter);
