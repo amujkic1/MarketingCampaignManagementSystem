@@ -30,7 +30,7 @@ function QRCodeGenerator() {
 
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/jsonp'
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
@@ -56,7 +56,7 @@ function QRCodeGenerator() {
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + text, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/jsonp',
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
