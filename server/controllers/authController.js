@@ -34,7 +34,7 @@ async function qrCode(req, res) {
 
     try{
       
-      const username = req.cookies.uname
+      const username = req.body.uname
       console.log(username)
       const user = await User.getUser(pool, username);
       console.log(user);
@@ -62,7 +62,7 @@ async function set2FA(req, res) {
 
   try{
    
-    const username = await req.cookies.uname;
+    const username = await req.body.uname;
     const code = await req.query.code
 
     const user = await User.getUser(pool, username);
@@ -89,7 +89,7 @@ async function getUser(req, res){
   
   try{
 
-      const username = await req.cookies.uname;
+      const username = await req.body.uname;
       //const username = "john_doe";
 
       const user = await User.getUser(pool, username);
