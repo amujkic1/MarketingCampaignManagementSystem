@@ -11,10 +11,10 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
+    fetch('https://marketing-campaign-management-system-f5w7.vercel.app//login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/jsonp'
       },
       body: JSON.stringify({ emailOrPhone, password })
     })
@@ -39,7 +39,7 @@ function Login() {
   };
 
   const handleAuthenticate = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
+    fetch('https://marketing-campaign-management-system-f5w7.vercel.app//set2FA?code=' + authCode, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ function Login() {
   };
 
   const handleTwoFACheck = () => {
-    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
+    fetch('https://marketing-campaign-management-system-f5w7.vercel.app//getUser', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
