@@ -15,7 +15,7 @@ function Login() {
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/jsonp'
       },
       credentials: 'include',
       body: JSON.stringify({ emailOrPhone, password })
@@ -47,7 +47,7 @@ function Login() {
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/jsonp',
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
@@ -73,7 +73,7 @@ function Login() {
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/getUser', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/jsonp',
       },
       credentials: 'include',
       body: JSON.stringify({ uname: username })
