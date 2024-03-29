@@ -24,6 +24,7 @@ function QRCodeGenerator() {
 
   const handleSetQRCode = () => {
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/qrimage', {
+
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
