@@ -11,10 +11,11 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+
     fetch('https://marketingcampaignmanagementsystem-1.onrender.com/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/jsonp'
       },
       credentials: 'include',
       body: JSON.stringify({ emailOrPhone, password })
