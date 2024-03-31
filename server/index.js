@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const { pool } = require('./database');
 const authRouter = require("./routes/authRouter");
+const mediaRouter = require("./routes/mediaRouter");
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
 const app = express();
@@ -30,6 +31,7 @@ app.use(bodyParser.json());
 
 
 app.use("/", authRouter);
+app.use("/", mediaRouter);
 
 const port = 3000;
 

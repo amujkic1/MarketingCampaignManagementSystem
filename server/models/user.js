@@ -1,11 +1,13 @@
 class User {
-  constructor(pool, id, username, email, two_factor_enabled, two_factor_secret) {
+  constructor(pool, id, username, email, two_factor_enabled, two_factor_secret, role, company_id) {
     this.pool = pool;
     this.id = id;
     this.username = username;
     this.email = email;
     this.two_factor_enabled = two_factor_enabled;
     this.two_factor_secret = two_factor_secret;
+    this.role = role
+    this.company_id = company_id
   }
 
   static async getAllUsers(pool) {
@@ -14,7 +16,7 @@ class User {
       const client = await pool.connect();
       const result = await client.query(query);
       client.release();
-      return result.rows.map(row => new User(pool, row.id, row.username, row.email, row.two_factor_enabled, row.two_factor_secret));
+      return result.rows.map(row => new User(pool, row.id, row.username, row.email, row.two_factor_enabled, row.two_factor_secret, row.role, row.company_id));
     } catch (error) {
       console.error('Error fetching users:', error);
       throw error;
@@ -31,7 +33,7 @@ class User {
       if (!userData) {
         return null; 
       }
-      return new User(pool, userData.id, userData.username, userData.email, userData.two_factor_enabled, userData.two_factor_secret);
+      return new User(pool, userData.id, userData.username, userData.email, userData.two_factor_enabled, userData.two_factor_secret, userData.role, userData.company_id);
     } catch (error) {
       console.error(`Error fetching user with username ${username}:`, error);
       throw error;
