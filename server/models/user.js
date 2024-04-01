@@ -13,6 +13,7 @@ class User {
   }
 
   static async getAllUsers(pool) {
+
     const query = 'SELECT * FROM users';
     const client = await pool.connect();
     const { rows } = await client.query(query);
@@ -21,14 +22,14 @@ class User {
   }
 
   static async getUser(pool, username) {
-    const query = 'SELECT * FROM users WHERE username = $1';
+    const query = "SELECT * FROM users WHERE username = $1";
     try {
       const client = await pool.connect();
       const result = await client.query(query, [username]);
       client.release();
       const userData = result.rows[0];
       if (!userData) {
-        return null; 
+        return null;
       }
       return new User(pool, userData.id, userData.username, userData.password, userData.email, userData.phone, userData.two_factor_enabled, userData.two_factor_secret, userData.role, userData.company_id);
     } catch (error) {
@@ -78,21 +79,21 @@ class User {
   async updateUserSecret(secret) {
     try {
       const two_factor_secret = secret;
-    
+
       const query = `
         UPDATE users
         SET two_factor_secret = $1
         WHERE id = $2
       `;
       const values = [two_factor_secret, this.id];
-    
+
       const client = await this.pool.connect();
       await client.query(query, values);
       client.release();
-    
+
       return true;
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
       throw error;
     }
   }
@@ -105,15 +106,15 @@ class User {
         WHERE id = $1
       `;
       const values = [this.id];
-  
+
       const client = await this.pool.connect();
       await client.query(query, values);
       client.release();
-  
-      this.two_factor_enabled = true; 
+
+      this.two_factor_enabled = true;
       return true;
     } catch (error) {
-      console.error('Error enabling 2FA for user:', error);
+      console.error("Error enabling 2FA for user:", error);
       throw error;
     }
   }
