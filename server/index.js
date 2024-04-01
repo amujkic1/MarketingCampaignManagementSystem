@@ -3,6 +3,8 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const { pool } = require('./database');
 const authRouter = require("./routes/authRouter");
+const mediaRouter = require("./routes/mediaRouter");
+const userRouter = require("./routes/userRouter");
 const superAdminRouter = require("./routes/superAdminRouter.js"); 
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
@@ -39,6 +41,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(bodyParser.json());
 
 app.use("/", authRouter);
+app.use("/", mediaRouter);
+app.use("/", userRouter);
 
 const port = 3000;
 
