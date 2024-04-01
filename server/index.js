@@ -15,7 +15,12 @@ const authMiddleware = require('./middleware/authMiddleware.js');
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cors());
+//app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
 /*app.use(cors({
   origin: 'https://marketing-campaign-management-system-client.vercel.app',

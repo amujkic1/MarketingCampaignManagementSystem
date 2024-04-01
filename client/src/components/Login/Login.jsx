@@ -12,7 +12,7 @@ function Login() {
 
   const handleLogin = () => {
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
+    fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ function Login() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
+    fetch('http://localhost:3000/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ function Login() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
+    fetch('http://localhost:3000/getUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
