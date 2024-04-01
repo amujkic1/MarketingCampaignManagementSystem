@@ -6,13 +6,59 @@ class Campaign {
     this.duration = duration;
   }
 
-  static async createCampaign(pool, name, duration) {
-    const query =
-      "INSERT INTO campaign (name, duration) VALUES ($1, $2) RETURNING *";
+  static async createCampaign(
+    pool,
+    name,
+    durationfrom,
+    durationto,
+    mediatypesName,
+    channelName
+  ) {
     const client = await pool.connect();
-    const values = [name, duration];
+    const query =
+      "INSERT INTO campaign (name, durationfrom, durationto,mediatypes, channels) VALUES ($1, $2, $3, $4, $5) RETURNING *";
+    console.log(channelName);
+    console.log(mediatypesName);
+    const channels = `SELECT id FROM channels WHERE name='${channelName}' `;
+    const mediatypes = `SELECT id FROM mediatypes WHERE name='${mediatypesName}'`;
+
+    const channelResult = await client.query(channels);
+    const mediatypesResult = await client.query(mediatypes);
+
+    const channelId = channelResult.rows[0].id;
+    const mediatypesId = mediatypesResult.rows[0].id;
+
+    console.log(channelId);
+    console.log(mediatypesId);
+
+    const values = [
+      name,
+      durationfrom,
+      durationto,
+      mediatypesName,
+      channelName,
+    ];
     const { rows } = await client.query(query, values);
-    client.release();
+    const campaignId = rows[0].id;
+
+    const channelCampaign =
+      "INSERT INTO campaign_channels (campaign_id,channel_id) VALUES ($1,$2)";
+    const campaignChannelValues = [campaignId, channelId];
+    const { rows: campaignChannelRows } = await client.query(
+      channelCampaign,
+      campaignChannelValues
+    );
+    const mediatypesCampaign =
+      "INSERT INTO campaign_mediatypes (campaign_id, mediatype_id) VALUES ($1,$2)";
+    const campaignMediaTypesValues = [campaignId, mediatypesId];
+    const { rows: campaignMediaTypesRows } = await client.query(
+      mediatypesCampaign,
+      campaignMediaTypesValues
+    );
+
+    console.log(campaignChannelRows);
+    console.log(campaignMediaTypesRows);
+
     return rows[0];
   }
 

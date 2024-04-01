@@ -2,15 +2,27 @@ const { pool } = require("../database");
 const Campaign = require("../models/campaign");
 
 async function createCampaign(req, res) {
-  const { name, duration } = req.body;
+  const { name, durationfrom, durationto, mediatypes, channels } = req.body;
   try {
-    const newCampaign = await Campaign.createCampaign(pool, name, duration);
-    res.status(200).json({ message: "Successfully created campaign" });
+    const newCampaign = await Campaign.createCampaign(
+      pool,
+      name,
+      durationfrom,
+      durationto,
+      mediatypes,
+      channels
+    );
+    res.status(200).json({
+      message: "Successfully created campaign",
+      campaign: newCampaign,
+    });
   } catch (error) {
     console.log(error);
+
     res.status(500).json({ message: "Failed to create campaign" });
   }
 }
+
 async function getCampaigns(req, res) {
   try {
     const campaigns = await Campaign.getCampaigns(pool);
