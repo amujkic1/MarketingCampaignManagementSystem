@@ -21,7 +21,7 @@ async function login(req, res) {
       const authToken = generateUserJwtToken(user);
       return res
           .cookie('uname', user.username)
-          .cookie('token', authToken).status(200).json({ message: "Your login is successful" ,  username: user.username, authToken: authToken});
+          .cookie('token', authToken).status(200).json({ message: "Your login is successful" ,  username: user.username, role: user.role, authToken: authToken});
     } else {
       return res.status(400).json({ message: "Password is not correct" });
     }
