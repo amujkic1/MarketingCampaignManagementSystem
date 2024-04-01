@@ -14,7 +14,7 @@ async function createCompany(req, res){
         res.status(200).json({ message: "Company created successfully!" });
     } catch(error){
         console.error('Error creating company:', error);
-        res.status(500).json({ error: "Internal server error" });
+        res.status(500).json({ error: "Internal server error!" });
     }
 }
 
