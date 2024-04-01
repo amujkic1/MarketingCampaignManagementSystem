@@ -25,6 +25,7 @@ async function login(req, res) {
         .json({
           message: "Your login is successful",
           username: user.username,
+          role: user.role,
           authToken: authToken,
         });
     } else {
