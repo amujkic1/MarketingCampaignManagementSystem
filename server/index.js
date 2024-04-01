@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const { pool } = require('./database');
 const authRouter = require("./routes/authRouter");
 const mediaRouter = require("./routes/mediaRouter");
+const userRouter = require("./routes/userRouter");
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
 const app = express();
@@ -32,6 +33,7 @@ app.use(bodyParser.json());
 
 app.use("/", authRouter);
 app.use("/", mediaRouter);
+app.use("/", userRouter);
 
 const port = 3000;
 
