@@ -1,5 +1,6 @@
 import Login from "./components/Login/Login.jsx";
 import Home from "./components/Home/Home.jsx"
+import SAKompanije from "./components/SAKompanije/SAKompanije.jsx";
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
@@ -14,8 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
-          <Route path="/" element={<SAHome />} /> {/* Privremena ruta za testiranje */}
-         <Route path="/home" element={<Home />} />
+          <Route path="/" element={<SAHome />} /> 
+          <Route path="/add-company" element={<SAKompanije/>} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
     </div>
