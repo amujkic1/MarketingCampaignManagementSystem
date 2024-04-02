@@ -1,24 +1,59 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 function SAHome() {
+  const [isAdmin, setIsAdmin] = useState(false);
 
+  useEffect(() => {
+    checkAdminStatus();
+  }, []);
+
+  const checkAdminStatus = async () => {
+    try {
+      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/super/isSuperAdmin', {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setIsAdmin(data.isSuperAdmin);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+    }
+  };
+
+  if (!isAdmin) {
+    return <Redirect to="/login" />;
+  }
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const response = await axios.get('/admincompanies'); 
-        setCompanies(response.data);
-      } catch (error) {
-        console.error('Error fetching companies:', error);
-      }
-    };
-
+    // Dohvat podataka o kompanijama iz baze podataka
     fetchCompanies();
   }, []);
 
+  const fetchCompanies = async () => {
+    try {
+      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/super/admincompanies', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCompanies(data);
+      } else {
+        throw new Error('Failed to fetch companies.');
+      }
+    } catch (error) {
+      console.error('Error fetching companies:', error);
+    }
+  };
   /*Hardkodirana lista kompanija*/
 
   /*const companies = [
@@ -143,5 +178,5 @@ function SAHome() {
     </div>
   );
 }
-export default SAHome; 
+export default SAHome; // Primjena authMiddleware na SAHome komponentu
 
