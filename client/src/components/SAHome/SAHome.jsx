@@ -1,13 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import authMiddleware from '../middleware/authMiddleware'; // Uvoz authMiddleware.js
 
 function SAHome() {
-  const companies = [
+
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await axios.get('/admincompanies'); 
+        setCompanies(response.data);
+      } catch (error) {
+        console.error('Error fetching companies:', error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
+
+  /*Hardkodirana lista kompanija*/
+
+  /*const companies = [
     { id: 1, name: 'Company A', logo: 'https://png.pngtree.com/element_pic/16/11/03/dda587d35b48fd01947cf38931323161.jpg', admin: 'Admin A' },
     { id: 2, name: 'Company B', logo: 'https://png.pngtree.com/element_pic/00/16/07/115783931601b5c.jpg', admin: 'Admin B' },
     { id: 3, name: 'Company C', logo: 'https://png.pngtree.com/element_pic/16/11/03/dda587d35b48fd01947cf38931323161.jpg', admin: 'Admin C' },
     { id: 4, name: 'Company D', logo: 'https://png.pngtree.com/element_pic/00/16/07/115783931601b5c.jpg', admin: 'Admin D' },
-  ];
+  ]; */
 
   const styles = {
     homeContainer: {
@@ -32,8 +52,8 @@ function SAHome() {
       justifyContent: 'space-between',
     },
     companyLogo: {
-      width: 'auto', // Automatska širina loga kako bi bio proporcionalno veći
-      height: '110px', // Postavljamo visinu loga kako bi očuvali proporciju
+      width: 'auto', 
+      height: '110px', 
       marginRight: '10px',
       border: '1px solid #ccc',
       borderRadius: '5px',
@@ -125,6 +145,6 @@ function SAHome() {
   );
 }
 
-export default SAHome;
+export default authMiddleware(SAHome); // Primjena authMiddleware na SAHome komponentu
 
 
