@@ -1,0 +1,114 @@
+.homeContainer {
+    padding: 20px;
+  }
+  
+  .drop-area {
+    border: 1px solid #ccc;
+    height: 200px;
+  }
+  
+  .admin-info {
+    margin-top: 20px;
+  }
+  
+  .addCompanyBtn {
+    display: block;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    background-color: #2b3d5b;
+    color: #f3f3f3;
+    margin-top: 40px;
+    border-color: #2b3d5b;
+    text-decoration: none;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .addCompanyBtn:hover {
+    color: #ffffff;
+    background-color: #41526f;
+    border-color: #2b3d5b;
+  }
+
+  .logologo{
+    margin-top: 20px;
+  }
+  
+  .addCompanyBtn:focus {
+    outline: none;
+    color: #ffffff;
+    background-color: #2b3d5b;
+    border-color: #2b3d5b;
+  }
+  
+  .drop-area {
+    border: 1px dashed #ccc;
+    height: 250px;
+    max-width: 374px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .logo-image {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .form-control {
+    max-width: 370px;
+  }
+
+  .form-group label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input {
+    margin-bottom: 1rem; 
+  }
+  
+  .card {
+    margin-top: 20px; 
+    padding: 20px; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .card-body {
+    padding-bottom: 20px;
+  }
+  
+  .btn-primary {
+    width: 100%; 
+    margin-top: 20px;
+  }
+  
+  .card {
+    width: 80%; 
+    margin: 0 auto;
+  }
+  
+  h2 {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+
+  .admino{
+    display:flex;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .form-group{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .inputImage{
+    padding: 20px;
+  }

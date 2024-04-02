@@ -5,7 +5,7 @@ const { pool } = require("../database");
 async function findUser(emailOrPhone) {
   try {
     const client = await pool.connect();
-    console.log(emailOrPhone);
+    //console.log(emailOrPhone);
     const user = await client.query(
       `SELECT * FROM  users WHERE email='${emailOrPhone}' OR phone='${emailOrPhone}'`
     );
