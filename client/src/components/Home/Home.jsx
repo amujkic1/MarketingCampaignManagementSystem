@@ -3,20 +3,6 @@ import React from 'react';
 function Home() {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{ 
-        position: 'fixed', 
-        width: '100%', 
-        top: 0, 
-        zIndex: 1000, /* Postavljamo visoki z-index da bude iznad ostalog sadržaja */
-        marginBottom: '30px' /* Margina ispod navbara */
-      }}>
-        <div className="container-fluid justify-content-center">
-          <a className="navbar-brand" href="/home">
-            Home {/* Tekst "Home" umjesto logoa */}
-          </a>
-          {/* Dodajte dodatne stavke izbornika ovdje ako je potrebno */}
-        </div>
-      </nav>
       <div style={{ paddingTop: '56px' }}> {/* Dodajemo padding na vrh sadržaja kako bi bio vidljiv ispod fiksiranog navbara */}
         <div className="container">
           <div className="row justify-content-center align-items-center vh-100">
