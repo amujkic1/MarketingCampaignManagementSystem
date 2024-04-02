@@ -5,6 +5,7 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import QRCodeGenerator from "./components/Login/QRCode.jsx";
+import SAHome from "./components/SAHome/SAHome.jsx"; 
 
 function App() {
 
@@ -14,8 +15,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<SAHome />} /> 
           <Route path="/add-company" element={<SAKompanije/>} />
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
     </div>
