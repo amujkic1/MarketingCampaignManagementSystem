@@ -19,7 +19,7 @@ const Navbar = () => {
         {isAdmin && (
           <>
             <li>
-              <Link to="/media-types">Users</Link>
+              <Link to="/users">Users</Link>
             </li>
             <li>
               <Link to="/media-types">Media Types</Link>

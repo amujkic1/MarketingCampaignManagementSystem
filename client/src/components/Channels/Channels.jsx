@@ -1,11 +1,13 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './Channels.css';
 
 const Channels = () => {
   const [types, setTypes] = useState([]);
-  const [mediaType, setMediaType] = useState('');
+  const [addMediaType, setAddMediaType] = useState('');
+  const [updateMediaType, setUpdateMediaType] = useState('');
   const [isHovered, setIsHovered] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [selectedChannel, setSelectedChannel] = useState(null);
 
   useEffect(() => {
     getAllChannels();
@@ -39,14 +41,14 @@ const Channels = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: mediaType }),
+        body: JSON.stringify({ name: addMediaType }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to add media type');
       }
 
-      setMediaType('');
+      setAddMediaType('');
       getAllChannels();
     } catch (error) {
       console.error('Error adding media type:', error);
@@ -72,7 +74,36 @@ const Channels = () => {
     }
   };
 
+  const handleEditClick = (channel) => {
+    setSelectedChannel(channel);
+    setUpdateMediaType(channel.name);
+    setIsPopupOpen(true);
+  };
 
+  const handleClosePopup = () => {
+    setIsPopupOpen(false);
+  };
+
+  const handleUpdateChannel = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/channel/${selectedChannel.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: updateMediaType }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update channel');
+      }
+
+      setIsPopupOpen(false);
+      getAllChannels();
+    } catch (error) {
+      console.error('Error updating channel:', error);
+    }
+  };
 
   return (
     <div className="task-manager-container">
@@ -80,14 +111,16 @@ const Channels = () => {
         <div className="input-wrapper">
           <select
             className="input-select"
-            value={mediaType}
-            onChange={(e) => setMediaType(e.target.value)}
+            value={addMediaType}
+            onChange={(e) => setAddMediaType(e.target.value)}
+            disabled={isPopupOpen}
           >
-            <option value="">Select media type</option>
-            <option value="Image">Image</option>
-            <option value="Image with text">Image with text</option>
-            <option value="Video">Video</option>
-            <option value="Link">Link</option>
+            <option value="">Select channel</option>
+            <option value="TV">TV</option>
+            <option value="Radio">Radio</option>
+            <option value="Billboard">Billboard</option>
+            <option value="Web-site">Web site</option>
+            <option value="Display">Display</option>
           </select>
         </div>
         <button
@@ -113,16 +146,49 @@ const Channels = () => {
               <tr key={index}>
                 <td>{type.name}</td>
                 <td>
-                  <button className="btn-edit" >✏️</button>
+                  <button className="btn-edit" onClick={() => handleEditClick(type)}>✏️</button>
                   <button className="btn-delete" onClick={() => deleteChannel(type.id)}>🗑️</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      
+      </div>
+
+      {isPopupOpen && (
+        <div className="popup-background">
+          <div className="popup">
+            <div className="popup-content">
+              <div className="form-container">
+                <div className="input-wrapper">
+                  <select
+                    className="input-select"
+                    value={updateMediaType}
+                    onChange={(e) => setUpdateMediaType(e.target.value)}
+                  >
+                    <option value="">Select channel</option>
+                    <option value="TV">TV</option>
+                    <option value="Radio">Radio</option>
+                    <option value="Billboard">Billboard</option>
+                    <option value="Web-site">Web site</option>
+                    <option value="Display">Display</option>
+                  </select>
+                </div>
+                <button
+                  className="btn-update"
+                  onClick={handleUpdateChannel}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
+                >
+                  Update
+                </button>
+                <button className="btn-close" onClick={handleClosePopup}></button>
+              </div>
+            </div>
+          </div>
         </div>
-      
+      )}
     </div>
   );
 };

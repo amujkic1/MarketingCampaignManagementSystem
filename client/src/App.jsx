@@ -8,16 +8,15 @@ import QRCodeGenerator from "./components/Login/QRCode.jsx";
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
+import Users from "./components/Users/Users.jsx";
 
 function App() {
   return (
     <div>
       <Router>
         <Routes>
-          {/* Navbar se ne prikazuje na Login stranici */}
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
-          {/* Navbar se prikazuje na ostalim stranicama */}
           <Route path="/home" element={<>
             <Navbar />
             <Home />
@@ -33,8 +32,16 @@ function App() {
           <Route path="/campaigns" element={<>
             <Navbar />
             <Campaigns />
-          </>} />
+            
+          </>
+        } />
+        <Route path="/users" element={<>
+            <Navbar />
+            <Users />
+            </>
+        } />
         </Routes>
+        
       </Router>
     </div>
   )

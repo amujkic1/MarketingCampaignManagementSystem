@@ -69,7 +69,8 @@ tbody tr:nth-child(odd) {
   margin-bottom: 1rem;
 }
 
-.btn-add {
+.btn-add,
+.btn-update{
   width: calc(100% - 20px);
   padding: 0.75rem;
   border: none;
