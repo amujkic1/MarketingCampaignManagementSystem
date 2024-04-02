@@ -25,6 +25,25 @@ async function createAdmin(username, password, email, phone){
 
 }
 
+async function getAdminByUsername(username){
+
+    const query = "SELECT id FROM users WHERE username = $1 AND role = 'admin'"
+    try{
+        const client = await pool.connect();
+        const result = await client.query(query, [username]);
+        client.release();
+        const adminId = result.rows[0];
+        if (!adminId) {
+          return null;
+        }
+        return adminId;      
+    } catch(error){
+        console.error(`Error fetching admin with username ${username}:`, error);
+        throw error;
+    }
+}
+
 module.exports = {
-    createAdmin
+    createAdmin,
+    getAdminByUsername
 };
