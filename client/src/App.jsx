@@ -12,10 +12,11 @@ function App() {
     <div>
       <Router>
         <Routes>
+        <Route path="/" element={<SAHome />} />
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
-          <Route path="/" element={<SAHome />} /> {/* Privremena ruta za testiranje */}
-         <Route path="/home" element={<Home />} />
+          {/*<Route path="/" element={<SAHome />} /> */}
+          <Route path="/home" element={<Home />} />
         </Routes>
       </Router>
     </div>
