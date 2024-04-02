@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import authMiddleware from '../middleware/authMiddleware'; // Uvoz authMiddleware.js
 
 function SAHome() {
 
@@ -144,7 +143,5 @@ function SAHome() {
     </div>
   );
 }
-
-export default authMiddleware(SAHome); // Primjena authMiddleware na SAHome komponentu
-
+export default SAHome; 
 
