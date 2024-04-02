@@ -10,22 +10,34 @@ import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
 
 function App() {
-
   return (
     <div>
       <Router>
-      <Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          {/* Navbar se ne prikazuje na Login stranici */}
+          <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/media-types" element={<MediaTypes />} />
-          <Route path="/channels" element={<Channels />} />
-          <Route path="/campaigns" element={<Campaigns/>}></Route>
+          {/* Navbar se prikazuje na ostalim stranicama */}
+          <Route path="/home" element={<>
+            <Navbar />
+            <Home />
+          </>} />
+          <Route path="/media-types" element={<>
+            <Navbar />
+            <MediaTypes />
+          </>} />
+          <Route path="/channels" element={<>
+            <Navbar />
+            <Channels />
+          </>} />
+          <Route path="/campaigns" element={<>
+            <Navbar />
+            <Campaigns />
+          </>} />
         </Routes>
       </Router>
     </div>
   )
 }
 
-export default App
+export default App;

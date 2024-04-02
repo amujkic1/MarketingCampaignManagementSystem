@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Campaigns.css';
 
 const Campaigns = () => {
@@ -9,24 +9,131 @@ const Campaigns = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const [channelOptions, setChannelOptions] = useState([]);
+  const [mediaOptions, setMediaOptions] = useState([]);
 
-  const addCampaign = () => {
-    if (!newName || !channelType || !mediaType || !startDate || !endDate) return;
-    setCampaigns([...campaigns, {
-      name: newName,
-      channel: channelType,
-      media: mediaType,
-      duration: `${startDate} - ${endDate}`
-    }]);
-    setNewName('');
-    setChannelType('');
-    setMediaType('');
-    setStartDate('');
-    setEndDate('');
+  useEffect(() => {
+    getAllChannels();
+    getAllMedia();
+    getAllCampaigns();
+  }, []);
+
+  const getAllCampaigns = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/campaign', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch campaigns');
+      }
+
+      const campaignData = await response.json();
+      setCampaigns(campaignData);
+      // Postavljamo dobivene kampanje u stanje
+    } catch (error) {
+      console.error('Error fetching campaigns:', error);
+    }
   };
 
-  const deleteCampaign = (index) => {
-    setCampaigns(campaigns.filter((_, i) => i !== index));
+  const createCampaign = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/campaign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: newName,
+          channels: channelType,
+          mediatypes: mediaType,
+          durationfrom: startDate,
+          durationto: endDate
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create campaign');
+      }
+
+      const newCampaign = await response.json();
+      setCampaigns([...campaigns, newCampaign]); // Dodajemo novu kampanju u stanje
+      setNewName('');
+      setChannelType('');
+      setMediaType('');
+      setStartDate('');
+      setEndDate('');
+      getAllCampaigns();
+    } catch (error) {
+      console.error('Error creating campaign:', error);
+    }
+  };
+
+  const getAllChannels = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/channel', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch channels');
+      }
+
+      const channelData = await response.json();
+      const channelNames = channelData.map(channel => channel.name);
+      setChannelOptions(channelNames);
+    } catch (error) {
+      console.error('Error fetching channels:', error);
+    }
+  };
+
+  const getAllMedia = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/media', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch media');
+      }
+
+      const mediaData = await response.json();
+      const mediaNames = mediaData.map(media => media.name);
+      setMediaOptions(mediaNames);
+    } catch (error) {
+      console.error('Error fetching media:', error);
+    }
+  };
+  const deleteCampaign = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/campaign/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete campaign');
+      }
+
+      getAllCampaigns();
+    } catch (error) {
+      console.error('Error deleting campaign:', error);
+    }
   };
 
   return (
@@ -46,11 +153,9 @@ const Campaigns = () => {
             onChange={(e) => setChannelType(e.target.value)}
           >
             <option value="">Select channel</option>
-            <option value="TV">TV</option>
-            <option value="Radio">Radio</option>
-            <option value="Billboard">Billboard</option>
-            <option value="Web-site">Web site</option>
-            <option value="Display">Display</option>
+            {channelOptions.map((channel, index) => (
+              <option key={index} value={channel}>{channel}</option>
+            ))}
           </select>
           <select
             className="input-select"
@@ -58,28 +163,31 @@ const Campaigns = () => {
             onChange={(e) => setMediaType(e.target.value)}
           >
             <option value="">Select media type</option>
-            <option value="Social Media">Social Media</option>
-            <option value="Print">Print</option>
-            <option value="Online">Online</option>
+            {mediaOptions.map((media, index) => (
+              <option key={index} value={media}>{media}</option>
+            ))}
           </select>
           <input
             className="input-date"
             type="date"
             placeholder="Start Date"
             value={startDate}
+            min={new Date().toISOString().split('T')[0]} // Postavljanje minimalne vrijednosti na današnji datum
             onChange={(e) => setStartDate(e.target.value)}
           />
+
           <input
             className="input-date"
             type="date"
             placeholder="End Date"
             value={endDate}
+            min={new Date().toISOString().split('T')[0]}
             onChange={(e) => setEndDate(e.target.value)}
           />
         </div>
         <button
           className="btn-add"
-          onClick={addCampaign}
+          onClick={createCampaign}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
@@ -102,12 +210,12 @@ const Campaigns = () => {
             {campaigns.map((campaign, index) => (
               <tr key={index}>
                 <td>{campaign.name}</td>
-                <td>{campaign.channel}</td>
-                <td>{campaign.media}</td>
-                <td>{campaign.duration}</td>
+                <td>{campaign.channels}</td>
+                <td>{campaign.mediatypes}</td>
+                <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
                 <td>
-                  <button className="btn-edit" onClick={() => { }}>✏️</button>
-                  <button className="btn-delete" onClick={() => deleteCampaign(index)}>🗑️</button>
+                  <button className="btn-edit" >✏️</button>
+                  <button className="btn-delete" onClick={() => deleteCampaign(campaign.id)}>🗑️</button>
                 </td>
               </tr>
             ))}
