@@ -1,6 +1,8 @@
 const adminService = require("../services/adminService");
 const companyService = require("../services/companyService");
 const { pool } = require('../database');
+const User = require("../models/user");
+const jwt = require('jsonwebtoken');
 
 async function createCompany(req, res){
     try{
@@ -36,8 +38,21 @@ async function createAdmin(req, res){
 
 }
 
+async function checkIsSuperAdmin(req) {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decodedToken.userId;
+        const user = await User.getUserById(pool, userId);
+        return user.role === 'superadmin';
+    } catch (error) {
+        console.error('Error checking superadmin status:', error);
+        throw error;
+    }
+}
 
 module.exports = {
     createCompany,
-    createAdmin
+    createAdmin,
+    checkIsSuperAdmin
 }
