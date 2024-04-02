@@ -4,9 +4,9 @@ const { pool } = require('../database');
 
 async function createCompany(req, res){
     try{
-        const { name, logo } = req.body; 
+        const { name, logo, adminId } = req.body; 
         try{
-            await companyService.createCompany(name, logo);
+            await companyService.createCompany(name, logo, adminId);
         } catch(error){
             console.error('Database error:', error);
             res.status(500).json({ error: "Internal server error" });    
