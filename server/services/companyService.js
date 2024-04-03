@@ -3,7 +3,7 @@ const { Pool } = require("pg");
 const { pool } = require("../database");
 const User = require("../models/user");
 
-async function createCompany(name, username){
+async function createCompany(name, username, logoUrl){
     try{
         console.log('parameter', username);
         const client = await pool.connect();
@@ -15,8 +15,8 @@ async function createCompany(name, username){
         console.log('id', user.id);
 
         const companiesQuery = {
-            text: 'INSERT INTO companies(name, admin_user_id) VALUES ($1, $2) RETURNING id',
-            values: [name, user.id]
+            text: 'INSERT INTO companies(name, admin_user_id, logo) VALUES ($1, $2, $3) RETURNING id',
+            values: [name, user.id, logoUrl]
         };
 
         const result = await client.query(companiesQuery);

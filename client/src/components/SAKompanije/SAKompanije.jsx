@@ -71,15 +71,60 @@ function SAKompanije() {
     }
   };
 
+
   const handleCreateCompany = async () => {
     try {
       const companyName = document.getElementById("companyName").value;
-      const logo = document.getElementById("logo").files[0];
+      const logoFile = document.getElementById("logo").files[0];
+      const adminId = document.getElementById("administrator").value;
+  
+      const formData = new FormData();
+      formData.append("name", companyName);
+      formData.append("image", logoFile);
+      formData.append("adminId", adminId);
+  
+      // Upload the image first
+      const imageResponse = await fetch("http://localhost:3000/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const imageData = await imageResponse.json();
+      const imageUrl = imageData.imageUrl;
+  
+      // Then create the company with the returned image URL
+      const companyData = {
+        name: companyName,
+        username: adminId,
+        logoUrl: imageUrl,
+        //adminId: adminId,
+      };
+  
+      const companyResponse = await fetch("http://localhost:3000/super/company", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(companyData),
+      });
+      
+      const companyResponseData = await companyResponse.json();
+      alert(companyResponseData.message);
+    } catch (error) {
+      console.error("Error creating company:", error);
+      alert("Error creating company.");
+    }
+  };
+  
+
+  /*const handleCreateCompany = async () => {
+    try {
+      const companyName = document.getElementById("companyName").value;
+      const logoFile = document.getElementById("logo").files[0];
       const adminId = document.getElementById("adminUsername").value;
   
       const formData = new FormData();
       formData.append("name", companyName);
-      formData.append("logo", logo);
+      formData.append("logo", logoFile);
       formData.append("adminId", adminId);
   
       const response = await fetch("http://localhost:3000/super/company", {
@@ -93,7 +138,7 @@ function SAKompanije() {
       console.error("Error creating company:", error);
       alert("Error creating company.");
     }
-  };
+  };*/
   
 
   return (
@@ -120,7 +165,7 @@ function SAKompanije() {
                           className="form-control"
                           id="companyName"
                         />
-                     {/*  <div className="logologo">
+                        <div className="logologo">
                           <label htmlFor="logo">Logo</label>
                           <div className="drop-area">
                             <input
@@ -130,7 +175,7 @@ function SAKompanije() {
                               accept="image/*"
                               onChange={handleImageChange}
                             />
-                            {/* Prikazujemo odabranu sliku 
+                            {/* Prikazujemo odabranu sliku */}
                             {logo && (
                               <img
                                 src={logo}
@@ -139,7 +184,7 @@ function SAKompanije() {
                               />
                             )}
                           </div>
-                        </div>*/}
+                        </div>
                       </div>
                     </div>
                     <div className="col-md-6">

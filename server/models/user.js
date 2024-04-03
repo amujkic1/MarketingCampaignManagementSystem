@@ -14,7 +14,7 @@ class User {
 
   static async getAllUsers(pool) {
 
-    const query = 'SELECT * FROM users';
+    const query = "SELECT * FROM users WHERE role = 'user'";
     const client = await pool.connect();
     const { rows } = await client.query(query);
     client.release();

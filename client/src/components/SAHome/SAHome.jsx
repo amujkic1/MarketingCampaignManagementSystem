@@ -1,32 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import Cookies from 'js-cookie';
 
 function SAHome() {
-
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
-    const fetchCompanies = async () => {
-      try {
-        const response = await axios.get('/admincompanies'); 
-        setCompanies(response.data);
-      } catch (error) {
-        console.error('Error fetching companies:', error);
-      }
-    };
-
     fetchCompanies();
   }, []);
 
-  /*Hardkodirana lista kompanija*/
+  const fetchCompanies = () => {
 
-  /*const companies = [
-    { id: 1, name: 'Company A', logo: 'https://png.pngtree.com/element_pic/16/11/03/dda587d35b48fd01947cf38931323161.jpg', admin: 'Admin A' },
-    { id: 2, name: 'Company B', logo: 'https://png.pngtree.com/element_pic/00/16/07/115783931601b5c.jpg', admin: 'Admin B' },
-    { id: 3, name: 'Company C', logo: 'https://png.pngtree.com/element_pic/16/11/03/dda587d35b48fd01947cf38931323161.jpg', admin: 'Admin C' },
-    { id: 4, name: 'Company D', logo: 'https://png.pngtree.com/element_pic/00/16/07/115783931601b5c.jpg', admin: 'Admin D' },
-  ]; */
+    const username = encodeURIComponent(Cookies.get('uname'));
+
+    fetch('http://localhost:3000/admincompanies', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ username: username })      
+    })
+    .then(async response => {
+      if (response.ok) {
+        const data = await response.json();
+        setCompanies(data); // Postavljanje podataka u stanje companies
+      } else {
+        throw new Error('Failed to fetch companies.');
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching companies:', error);
+    });
+  }
+  const isValidUrl = (url) => {
+    // Regular expression to validate URL
+    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+    return urlRegex.test(url);
+  };
+    
+
+  const renderCompanyCards = () => {
+    return companies.map((company) => (
+      <div key={company.id} style={styles.companyCard}>
+        <div style={styles.companyContent}>
+          {isValidUrl(company.logo) ? ( // Check if company.logo is a valid URL
+            <img src={company.logo} alt={company.name} style={styles.companyLogo} />
+          ) : (
+            <div>No logo available</div>
+          )}
+          <div style={styles.companyInfo}>
+            <div style={styles.companyName}>{company.name}</div>
+            <div style={styles.companyAdmin}>{company.admin}</div>
+          </div>
+        </div>
+      </div>
+    ));
+  };
 
   const styles = {
     homeContainer: {
@@ -121,17 +151,7 @@ function SAHome() {
                 <div style={styles.homeContainer}>
                   <h2>COMPANIES</h2>
                   <div style={styles.companiesList}>
-                    {companies.map(company => (
-                      <div key={company.id} style={styles.companyCard}>
-                        <div style={styles.companyContent}>
-                          <img src={company.logo} alt={company.name} style={styles.companyLogo} />
-                          <div style={styles.companyInfo}>
-                            <div style={styles.companyName}>{company.name}</div>
-                            <div style={styles.companyAdmin}>{company.admin}</div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                    {renderCompanyCards()} {/* Prikazivanje kartica */}
                   </div>
                   <Link to="/add-company" style={styles.addCompanyBtn}>Add company</Link>
                 </div>
@@ -143,5 +163,5 @@ function SAHome() {
     </div>
   );
 }
-export default SAHome; 
 
+export default SAHome;

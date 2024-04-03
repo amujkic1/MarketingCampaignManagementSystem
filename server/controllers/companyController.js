@@ -29,6 +29,18 @@ async function findAdminsCompanies(req, res){
 
 }
 
+async function uploadImage(req, res){
+    try {
+ 
+ 
+
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+}
+
 module.exports = {
-    findAdminsCompanies
+    findAdminsCompanies,
+    uploadImage
 }
