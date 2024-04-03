@@ -12,7 +12,7 @@ function Login() {
 
   const handleLogin = () => {
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/login', {
+    fetch('http://localhost:3000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -22,11 +22,13 @@ function Login() {
     })
       .then(async response => {
         if (response.ok) {
-          const { message, username, authToken } = await response.json();
+          const { message, username, authToken, role} = await response.json();
           console.log('Login successful');
+          console.log(response);
           setErrorMessage('');
           Cookies.set('uname', username);
           Cookies.set('token', authToken);
+          Cookies.set('role', role);
           handleTwoFACheck();
         } else {
           return response.json().then(data => {
@@ -43,8 +45,9 @@ function Login() {
   const handleAuthenticate = () => {
 
     const username = encodeURIComponent(Cookies.get('uname'));
+    const userRole = encodeURIComponent(Cookies.get('role'));
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + authCode, {
+    fetch('http://localhost:3000/set2FA?code=' + authCode, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +58,12 @@ function Login() {
       .then(async res => {
         const { success } = await res.json();
         if (success) {
-          navigate('/home')
+          if(userRole==="admin"){
+            navigate('/home')
+          } else{
+            navigate('/home')
+          }
+
           //alert('successful auth');
         } else {
           setErrorMessage('Authentication code is invalid.');
@@ -70,7 +78,7 @@ function Login() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/getUser', {
+    fetch('http://localhost:3000/getUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
