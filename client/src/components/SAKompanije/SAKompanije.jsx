@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./SAKompanije.css"; // Import CSS file
 
 function SAKompanije() {
@@ -18,6 +19,57 @@ function SAKompanije() {
     // Sakrijemo opciju "Choose file" nakon što je slika odabrana
     e.target.style.display = "none";
   };
+
+  //Dugme za kreiranje Admina
+  const handleAdminCreate = async () => {
+    try {
+      const username = document.getElementById("adminUsername").value;
+      const password = document.getElementById("adminPassword").value;
+      const email = document.getElementById("adminEmail").value;
+
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("password", password);
+      formData.append("email", email);
+
+      console.log("FormData:", formData);
+
+      const response = await axios.post("/super/admin", formData);
+
+      console.log("Response:", response.data);
+
+      alert(response.data.message);
+
+      if (response.data.success) {
+        document.getElementById("administrator").value = username;
+      }
+    } catch (error) {
+      console.log(error);
+      document.getElementById("administrator").value =
+        "Neuspješno kreiran admin";
+      alert("Error creating admin.");
+    }
+  };
+
+  const handleCreateCompany = async () => {
+    try {
+      const companyName = document.getElementById("companyName").value;
+      const logo = document.getElementById("logo").files[0];
+      const adminId = document.getElementById("adminUsername").value;
+  
+      const formData = new FormData();
+      formData.append("name", companyName);
+      formData.append("logo", logo);
+      formData.append("adminId", adminId);
+  
+      const response = await axios.post("/super/company", formData);
+      alert(response.data.message);
+    } catch (error) {
+      console.error("Error creating company:", error);
+      alert("Error creating company.");
+    }
+  };
+  
 
   return (
     <div>
@@ -47,7 +99,8 @@ function SAKompanije() {
                           <label htmlFor="logo">Logo</label>
                           <div className="drop-area">
                             <input
-                                className="inputImage"
+                              id="logo"
+                              className="inputImage"
                               type="file"
                               accept="image/*"
                               onChange={handleImageChange}
@@ -66,7 +119,9 @@ function SAKompanije() {
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
-                        <label htmlFor="admin" className="admino">Administrator</label>
+                        <label htmlFor="admin" className="admino">
+                          Administrator
+                        </label>
                         <input
                           type="text"
                           className="form-control"
@@ -103,8 +158,11 @@ function SAKompanije() {
                             </div>
                             <div className="text-center">
                               {" "}
-                              {/* Centriranje sadržaja */}
-                              <button className="btn btn-primary mt-2">
+                              {}
+                              <button
+                                className="btn btn-primary mt-2"
+                                onClick={handleAdminCreate}
+                              >
                                 Create
                               </button>
                             </div>
@@ -113,7 +171,11 @@ function SAKompanije() {
                       </div>
                     </div>
                   </div>
-                  <Link to="/IlhaninaHomePage" className="addCompanyBtn">
+                  <Link
+                    to="/IlhaninaHomePage"
+                    className="addCompanyBtn"
+                    onClick={handleCreateCompany}
+                  >
                     Create Company
                   </Link>
                 </div>
