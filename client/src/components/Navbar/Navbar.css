@@ -1,0 +1,37 @@
+/* Navbar.css */
+.navbar {
+  position: fixed; /* Dodajte ovo svojstvo */
+  top: 0; /* Postavite navbar na vrh ekrana */
+  width: 100%; /* Postavite širinu na 100% */
+  z-index: 1000; /* Postavite z-index da bude iznad ostalih sadržaja */
+  display: flex;
+  justify-content: center;
+  background-color: #2B3D5B;
+  color: #fff;
+  padding: 10px 0;
+}
+
+/* Ostatak CSS-a ostaje nepromijenjen */
+.navbar-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.navbar-list li {
+  margin-right: 20px;
+}
+
+.navbar-list li:last-child {
+  margin-right: 0;
+}
+
+.navbar-list li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.navbar-list li a:hover {
+  text-decoration: underline;
+}
