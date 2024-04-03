@@ -1,14 +1,19 @@
 import Login from "./components/Login/Login.jsx";
 import Home from "./components/Home/Home.jsx"
+import SAKompanije from "./components/SAKompanije/SAKompanije.jsx";
 import MediaTypes from "./components/MediaTypes/MediaTypes.jsx";
+
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import QRCodeGenerator from "./components/Login/QRCode.jsx";
+import SAHome from "./components/SAHome/SAHome.jsx"; 
+
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
 import Users from "./components/Users/Users.jsx";
+
 
 function App() {
   return (
@@ -17,6 +22,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
+
+          <Route path="/sa-home" element={<SAHome />} /> 
+          <Route path="/add-company" element={<SAKompanije/>} />
+          <Route path="/home" element={<Home />} />
+
           <Route path="/home" element={<>
             <Navbar />
             <Home />
@@ -40,6 +50,7 @@ function App() {
             <Users />
             </>
         } />
+
         </Routes>
         
       </Router>

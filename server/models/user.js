@@ -40,7 +40,9 @@ class User {
 
   static async createUser(pool, username, password, email, phone) {
     const query = "INSERT INTO users (username, password, email, phone, two_factor_enabled, two_factor_secret, role) " +
-      "VALUES ($1,$2,$3,$4,false,null,'user') RETURNING *";
+
+                  "VALUES ($1,$2,$3,$4,false,null,'user') RETURNING *";
+
     const client = await pool.connect();
     const values = [username, password, email, phone];
     const { rows } = await client.query(query, values);

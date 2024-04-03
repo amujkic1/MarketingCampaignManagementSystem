@@ -10,6 +10,13 @@ const verify = (req, res, next) => {
         const extendedToken = jwt.sign({ ...decoded, exp: decoded.exp + (30 * 60) }, JWT_SECRET);
         req.headers["Authorization"] = extendedToken;
 
+        // Provjera da li je korisnik superadmin
+        if (decoded.role !== 'superadmin') {
+            return res.status(403).json({
+                message: 'Access denied. Superadmin privileges required.'
+            });
+        }
+
         // Postavljanje dekodiranih podataka u req.userData
         req.userData = decoded;
         next();
