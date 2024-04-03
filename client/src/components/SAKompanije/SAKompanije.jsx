@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import "./SAKompanije.css"; // Import CSS file
 
 function SAKompanije() {
-  const [logo, setLogo] = useState(null);
+  //const [logo, setLogo] = useState(null);
   const [phone, setPhone] = useState("");
   const [showAdminInfo, setShowAdminInfo] = useState(true); // Dodano stanje za prikazivanje/skrivanje admin-info card
 
-  const handleImageChange = (e) => {
+ /* const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -20,6 +20,7 @@ function SAKompanije() {
     // Sakrijemo opciju "Choose file" nakon što je slika odabrana
     e.target.style.display = "none";
   };
+  */
 
   const handleAdminCreate = async () => {
     try {
@@ -71,33 +72,41 @@ function SAKompanije() {
     }
   };
 
-  const handleCreateCompany = async () => {
-    try {
-      const companyName = document.getElementById("companyName").value;
-      const logo = document.getElementById("logo").files[0];
-      const adminId = document.getElementById("adminUsername").value;
-  
-      const formData = new FormData();
-      formData.append("name", companyName);
-      formData.append("logo", logo);
-      formData.append("adminId", adminId);
-  
-      const response = await fetch("http://localhost:3000/super/company", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-  
-      alert(data.message);
-    } catch (error) {
-      console.error("Error creating company:", error);
-      alert("Error creating company.");
-    }
-  };
-  
+  //Create company Dugme
 
+  const handleCreateCompany = async () => {
+  try {
+    const companyName = document.getElementById("companyName").value;
+    const administrator = document.getElementById("administrator").value;
+
+    const requestBody = {
+      name: companyName,
+      username: administrator
+    };
+
+    const response = await fetch("http://localhost:3000/super/company", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message);
+    } else {
+      throw new Error(data.error);
+    }
+  } catch (error) {
+    console.error("Error creating company:", error);
+    alert("Error creating company.");
+  }
+};
+  
   return (
-    <div>
+    <div style={{ position: "fixed", width: "100%", height: "100%", overflow: "auto" }}>
       <div style={{ paddingTop: "2px" }}>
         <div className="container">
           <div className="row justify-content-center align-items-center vh-100">
@@ -208,7 +217,7 @@ function SAKompanije() {
                     </div>
                   </div>
                   <Link
-                    to="/IlhaninaHomePage"
+                    to="/sa-home"
                     className="addCompanyBtn"
                     onClick={handleCreateCompany}
                   >
