@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import bcrypt from 'bcryptjs'; // Importirajte bcryptjs
 import './Users.css';
 
 const Users = () => {
@@ -12,7 +13,8 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [updateUsername, setUpdateUsername] = useState('');
   const [updateEmail, setUpdateEmail] = useState('');
-  const [updatePassword, setUpdatePassword] = useState('');
+  const [updatePasswordVisible, setUpdatePasswordVisible] = useState('');
+  const [updatePasswordHash, setUpdatePasswordHash] = useState('');
   const [updatePhone, setUpdatePhone] = useState('');
 
   useEffect(() => {
@@ -93,7 +95,8 @@ const Users = () => {
     setSelectedUser(user);
     setUpdateUsername(user.username);
     setUpdateEmail(user.email);
-    setUpdatePassword(user.password);
+    setUpdatePasswordVisible(''); // Reset visible password
+    setUpdatePasswordHash(user.password); // Set hashed password
     setUpdatePhone(user.phone);
     setIsPopupOpen(true);
   };
@@ -104,6 +107,9 @@ const Users = () => {
 
   const handleUpdateUser = async () => {
     try {
+      // Hash the new password before saving
+      const hashedPassword = await bcrypt.hash(updatePasswordVisible, 10);
+
       const response = await fetch(`http://localhost:3000/users/${selectedUser.id}`, {
         method: 'PUT',
         headers: {
@@ -112,7 +118,7 @@ const Users = () => {
         body: JSON.stringify({
           username: updateUsername,
           email: updateEmail,
-          password: updatePassword,
+          password: hashedPassword, // Save the hashed password
           phone: updatePhone
         }),
       });
@@ -227,8 +233,8 @@ const Users = () => {
                     className="input-name"
                     type="password"
                     placeholder="Password"
-                    value={updatePassword}
-                    onChange={(e) => setUpdatePassword(e.target.value)}
+                    value={updatePasswordVisible} // Display visible password
+                    onChange={(e) => setUpdatePasswordVisible(e.target.value)} // Update visible password
                   />
                   <input
                     className="input-name"
