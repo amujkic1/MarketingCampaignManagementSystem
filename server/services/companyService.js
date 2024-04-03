@@ -1,15 +1,22 @@
 const { query } = require("express");
 const { Pool } = require("pg");
 const { pool } = require("../database");
+const User = require("../models/user");
 
-async function createCompany(name, logo, adminId){
+async function createCompany(name, username){
     try{
+        console.log('parameter', username);
         const client = await pool.connect();
 
-        console.log('admin id', adminId);
+        const user = await User.getUser(pool, username);
+
+        console.log(user);
+        //console.log('username', user.username);
+        console.log('id', user.id);
+
         const companiesQuery = {
-            text: 'INSERT INTO companies(name, logo, admin_user_id) VALUES ($1, $2, $3) RETURNING id',
-            values: [name, logo, adminId]
+            text: 'INSERT INTO companies(name, admin_user_id) VALUES ($1, $2) RETURNING id',
+            values: [name, user.id]
         };
 
         const result = await client.query(companiesQuery);
@@ -18,7 +25,7 @@ async function createCompany(name, logo, adminId){
 
         const adminQuery = {
             text: 'UPDATE users SET company_id = $1 WHERE id = $2',
-            values: [companyID, adminId]
+            values: [companyID, user.id]
         };
         
         await client.query(adminQuery);
