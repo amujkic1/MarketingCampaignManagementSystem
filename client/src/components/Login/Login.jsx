@@ -61,7 +61,7 @@ function Login() {
           if(userRole==="admin"){
             navigate('/home')
           } else{
-            navigate('channels')
+            navigate('/home')
           }
 
           //alert('successful auth');
