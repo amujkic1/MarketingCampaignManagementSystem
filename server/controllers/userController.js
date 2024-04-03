@@ -4,9 +4,9 @@ const { pool } = require('../database');
 
 async function createUser(req, res) {
     try {
-        const { username, password, email, phone, role, company_id } = req.body;
+        const { username, password, email, phone } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.createUser(pool, username, hashedPassword, email, phone, role, company_id);
+        const newUser = await User.createUser(pool, username, hashedPassword, email, phone);
         res.status(201).json({
             message: "User created successfully",
             user: newUser});
@@ -14,7 +14,6 @@ async function createUser(req, res) {
         res.status(500).json({ error: 'Failed to create user' });
     }
 }
-
 async function getAllUsers(req, res) {
     try {
         const allUsers = await User.getAllUsers(pool);
@@ -42,9 +41,9 @@ async function getUserById(req, res) {
 async function updateUserById(req, res) {
     try {
         const { id } = req.params;
-        const { username, password, email, phone, role, company_id } = req.body;
+        const { username, password, email, phone, company_id } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const updatedUser = await User.updateUserById(pool, id, username, hashedPassword, email, phone, role, company_id);
+        const updatedUser = await User.updateUserById(pool, id, username, hashedPassword, email, phone, company_id);
     if (!updatedUser) {
       return res.status(404).json({ error: 'User not found' });
     }

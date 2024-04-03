@@ -14,7 +14,7 @@ class User {
 
   static async getAllUsers(pool) {
 
-    const query = 'SELECT * FROM users';
+    const query = "SELECT * FROM users WHERE role = 'user'";
     const client = await pool.connect();
     const { rows } = await client.query(query);
     client.release();
@@ -38,11 +38,11 @@ class User {
     }
   }
 
-  static async createUser(pool, username, password, email, phone, role, company_id) {
-    const query = 'INSERT INTO users (username, password, email, phone, two_factor_enabled, two_factor_secret, role, company_id) ' +
-                  'VALUES ($1,$2,$3,$4,false,null,$5,$6) RETURNING *';
+  static async createUser(pool, username, password, email, phone) {
+    const query = "INSERT INTO users (username, password, email, phone, two_factor_enabled, two_factor_secret, role) " +
+      "VALUES ($1,$2,$3,$4,false,null,'user') RETURNING *";
     const client = await pool.connect();
-    const values = [username, password, email, phone, role, company_id];
+    const values = [username, password, email, phone];
     const { rows } = await client.query(query, values);
     client.release();
     return rows[0];
@@ -57,11 +57,11 @@ class User {
     return rows[0];
   }
 
-  static async updateUserById(pool, id, username, password, email, phone, role, company_id) {
-    const query = 'UPDATE users SET username=$1, password=$2, email=$3, phone=$4, role=$5, company_id=$6 '
-                  + 'WHERE id = $7 RETURNING *';
+  static async updateUserById(pool, id, username, password, email, phone, company_id) {
+    const query = "UPDATE users SET username=$1, password=$2, email=$3, phone=$4, role=$5, company_id=$6 "
+      + 'WHERE id = $7 RETURNING *';
     const client = await pool.connect();
-    const values = [username, password, email, phone, role, company_id, id];
+    const values = [username, password, email, phone, 'user', company_id, id];
     const { rows } = await client.query(query, values);
     client.release();
     return rows[0];
