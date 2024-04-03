@@ -38,11 +38,11 @@ class User {
     }
   }
 
-  static async createUser(pool, username, password, email, phone, role, company_id) {
-    const query = 'INSERT INTO users (username, password, email, phone, two_factor_enabled, two_factor_secret, role, company_id) ' +
-                  'VALUES ($1,$2,$3,$4,false,null,$5,$6) RETURNING *';
+  static async createUser(pool, username, password, email, phone) {
+    const query = "INSERT INTO users (username, password, email, phone, two_factor_enabled, two_factor_secret, role) " +
+                  "VALUES ($1,$2,$3,$4,false,null,'user') RETURNING *";
     const client = await pool.connect();
-    const values = [username, password, email, phone, role, company_id];
+    const values = [username, password, email, phone];
     const { rows } = await client.query(query, values);
     client.release();
     return rows[0];

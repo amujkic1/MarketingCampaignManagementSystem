@@ -4,9 +4,9 @@ const { pool } = require('../database');
 
 async function createUser(req, res) {
     try {
-        const { username, password, email, phone, role, company_id } = req.body;
+        const { username, password, email, phone, company_id } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.createUser(pool, username, hashedPassword, email, phone, role, company_id);
+        const newUser = await User.createUser(pool, username, hashedPassword, email, phone, company_id);
         res.status(201).json({
             message: "User created successfully",
             user: newUser});
