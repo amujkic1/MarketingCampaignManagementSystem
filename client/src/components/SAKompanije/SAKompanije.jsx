@@ -35,7 +35,7 @@ function SAKompanije() {
         phone: phone
       };
 
-      const response = await fetch('http://localhost:3000/super/admin', {
+      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/super/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -84,7 +84,7 @@ function SAKompanije() {
       formData.append("adminId", adminId);
   
       // Upload the image first
-      const imageResponse = await fetch("http://localhost:3000/upload", {
+      const imageResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/upload", {
         method: "POST",
         body: formData,
       });
@@ -99,7 +99,7 @@ function SAKompanije() {
         //adminId: adminId,
       };
   
-      const companyResponse = await fetch("http://localhost:3000/super/company", {
+      const companyResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/super/company", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
