@@ -8,15 +8,13 @@
 }
 
 .form-container {
-  width: 70%;
-  padding: 1.5rem;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
   background-color: #DDDEE5;
+  padding: 20px;
   border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  width: 70%; /* Dodano povećanje širine pop-up prozora */
+  max-width: 500px; /* Dodano ograničenje maksimalne širine */
+  min-width: 350px;;
 }
 
 .input-select,
@@ -112,15 +110,6 @@ tbody tr:nth-child(odd) {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.popup {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-  width: 70%; /* Dodano povećanje širine pop-up prozora */
-  max-width: 500px; /* Dodano ograničenje maksimalne širine */
 }
 
 .popup-content {

@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SAKompanije.css"; // Import CSS file
+import { useNavigate } from 'react-router-dom';
 
 function SAKompanije() {
   const [logo, setLogo] = useState(null);
   const [phone, setPhone] = useState("");
-  const [showAdminInfo, setShowAdminInfo] = useState(true); // Dodano stanje za prikazivanje/skrivanje admin-info card
+  const [showAdminInfo, setShowAdminInfo] = useState(true);
+  const [adminInputEnabled, setAdminInputEnabled] = useState(false); // Dodano stanje za omogućavanje uređivanja polja za administratora
+  const [administrator, setAdministrator] = useState(""); // Dodano stanje za spremanje imena administratora
+  const navigate = useNavigate();
 
   const handleAdminCreate = async () => {
     try {
       const username = document.getElementById("adminUsername").value;
       const password = document.getElementById("adminPassword").value;
       const email = document.getElementById("adminEmail").value;
-      const phone = document.getElementById("adminPhone").value; // Dodano dobavljanje vrijednosti telefona
+      const phone = document.getElementById("adminPhone").value;
 
       const requestBody = {
         username: username,
@@ -32,21 +36,19 @@ function SAKompanije() {
       if (response.ok) {
         const data = await response.json();
         console.log('Admin creation successful:', data);
-       
 
-        // Kopiranje vrijednosti username u polje administrator
-        document.getElementById("administrator").value = username;
+        setAdministrator(username); // Postavljanje imena administratora u state
 
-        // Isprazniti polja za unos emaila, korisničkog imena, lozinke i broja telefona
+        document.getElementById("administrator").readOnly = true; // Postavljamo polje za administratora kao readonly nakon kreiranja
+
         document.getElementById("adminEmail").value = "";
         document.getElementById("adminUsername").value = "";
         document.getElementById("adminPassword").value = "";
         document.getElementById("adminPhone").value = "";
 
-        // Sakrij admin-info card nakon uspješnog kreiranja admina
         setShowAdminInfo(false);
+        setAdminInputEnabled(false); // Postavljamo stanje za omogućavanje uređivanja polja za administratora na false
 
-        // Dodajte dodatne korake koji su vam potrebni nakon uspješnog kreiranja admina
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message);
@@ -57,19 +59,19 @@ function SAKompanije() {
     }
   };
 
-
   const handleCreateCompany = async () => {
     try {
       const companyName = document.getElementById("companyName").value;
-      const logoFile = document.getElementById("logo").files[0];
-      const adminId = document.getElementById("administrator").value;
+      const adminId = document.getElementById("administrator").value; // Koristimo spremljeno ime administratora
   
       const formData = new FormData();
       formData.append("name", companyName);
-      formData.append("image", logoFile);
       formData.append("adminId", adminId);
   
-  
+      const companyData = {
+        name: companyName,
+        username: adminId,
+      };
       const companyResponse = await fetch("http://localhost:3000/super/company", {
         method: "POST",
         headers: {
@@ -77,7 +79,7 @@ function SAKompanije() {
         },
         body: JSON.stringify(companyData),
       });
-      
+      navigate('/sa-home');
       const companyResponseData = await companyResponse.json();
       alert(companyResponseData.message);
     } catch (error) {
@@ -85,7 +87,7 @@ function SAKompanije() {
       alert("Error creating company.");
     }
   };
-  
+
   return (
     <div className="full-screen-container">
       <div className="homeContainer">
@@ -102,7 +104,13 @@ function SAKompanije() {
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="administrator">Administrator</label>
-                  <input type="text" className="form-control" id="administrator" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="administrator"
+                    value={administrator} // Postavljamo vrijednost input polja na spremljeno ime administratora
+                    readOnly={!adminInputEnabled} // Postavljamo readonly atribut ovisno o stanju
+                  />
                   {showAdminInfo && (
                     <div className="admin-info card">
                       <div className="card-body">
@@ -120,10 +128,26 @@ function SAKompanije() {
                         </div>
                         <div className="form-group">
                           <label htmlFor="adminPhone">Phone</label>
-                          <input type="text" className="form-control" id="adminPhone" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="adminPhone"
+                            placeholder="Phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                          />
                         </div>
                         <div className="text-center">
-                          <button className="btn btn-primary mt-2" style={{ backgroundColor: "#2B3D5B" }} onClick={handleAdminCreate}>Create Admin</button>
+                          <button
+                            className="btn btn-primary mt-2"
+                            style={{ backgroundColor: "#2B3D5B" }}
+                            onClick={() => {
+                              handleAdminCreate();
+                              setAdminInputEnabled(true); // Omogućujemo uređivanje polja za administratora prilikom klika na gumb
+                            }}
+                          >
+                            Create Admin
+                          </button>
                         </div>
                       </div>
                     </div>

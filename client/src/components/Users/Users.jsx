@@ -209,7 +209,6 @@ const Users = () => {
 
       {isPopupOpen && selectedUser && (
         <div className="popup-background">
-          <div className="popup">
             <div className="popup-content">
               <div className="form-container">
                 <div className="input-wrapper">
@@ -253,7 +252,6 @@ const Users = () => {
                 </button>
                 <button className="btn-close" onClick={handleClosePopup}></button>
               </div>
-            </div>
           </div>
         </div>
       )}

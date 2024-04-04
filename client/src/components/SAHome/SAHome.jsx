@@ -10,7 +10,6 @@ function SAHome() {
   }, []);
 
   const fetchCompanies = () => {
-
     const username = encodeURIComponent(Cookies.get('uname'));
 
     fetch('http://localhost:3000/admincompanies', {
@@ -40,8 +39,8 @@ function SAHome() {
         <div style={styles.companyContent}>
           <div style={styles.companyInfo}>
             <div style={styles.companyName}>{company.name}</div>
-            <div style={styles.companyAdmin}>{company.niche}</div>
-            <div style={styles.companyAdmin}>{company.headquarters}</div>
+            <div style={styles.companyDetail}> {company.niche}</div>
+            <div style={styles.companyDetail}> {company.headquarters}</div>
           </div>
         </div>
       </div>
@@ -61,35 +60,32 @@ function SAHome() {
       flexWrap: 'wrap',
     },
     companyCard: {
-      width: '240px',
+      width: 'calc(40% - 20px)', // Postavljamo širinu na 20% sa razmakom od 20px između
       margin: '10px',
-      padding: '10px',
+      padding: '20px',
       border: '1px solid #ccc',
-      borderRadius: '5px',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      flexBasis: 'calc(20% - 20px)', 
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     },
     companyContent: {
       display: 'flex',
-      flexDirection: 'column', 
+      flexDirection: 'column',
       alignItems: 'center',
-    },
-    companyLogo: {
-      width: 'auto', 
-      height: '110px', 
-      marginBottom: '10px', 
-      border: '1px solid #ccc',
-      borderRadius: '5px',
+      height: '100%', // Postavljamo visinu sadržaja na 100% kako bi se vertikalno centrirao
     },
     companyInfo: {
-      textAlign: 'center', 
+      textAlign: 'center',
     },
     companyName: {
-      marginBottom: '5px', 
+      marginBottom: '10px',
       fontWeight: 'bold',
+      fontSize: '20px',
+      fontFamily: 'Arial, sans-serif',
     },
-    companyAdmin: {
+    companyDetail: {
       color: '#666',
+      marginBottom: '5px',
+      fontStyle: 'italic',
     },
     addCompanyBtn: {
       display: 'block',
@@ -122,21 +118,19 @@ function SAHome() {
       <div style={{ paddingTop: '2px' }}>
         <div className="container">
           <div className="row justify-content-center align-items-center vh-100">
-            <div className="col-12">
               <div className='card my-5' style={{ 
                 background: '#DDDEE5', 
                 boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' 
               }}>
                 <div style={styles.homeContainer}>
-                  <h2>COMPANIES</h2>
+                  <h2 style={{ fontFamily: 'Arial, sans-serif' }}>Companies</h2>
                   <div style={styles.companiesList}>
-                    {renderCompanyCards()} {/* Prikazivanje kartica */}
+                    {renderCompanyCards()}
                   </div>
                   <Link to="/add-company" style={styles.addCompanyBtn}>Add company</Link>
                 </div>
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>
