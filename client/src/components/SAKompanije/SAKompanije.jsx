@@ -60,22 +60,16 @@ function SAKompanije() {
 
   const handleCreateCompany = async () => {
     try {
-      const companyName = document.getElementById("companyName").value;
-      const logoFile = document.getElementById("logo").files[0];
-      const adminId = document.getElementById("administrator").value;
-  
-      const formData = new FormData();
-      formData.append("name", companyName);
-      formData.append("image", logoFile);
-      formData.append("adminId", adminId);
-  
+      const name = document.getElementById("companyName").value;
+      //const logoFile = document.getElementById("logo").files[0];
+      const username = document.getElementById("administrator").value;
   
       const companyResponse = await fetch("http://localhost:3000/super/company", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(companyData),
+        body: JSON.stringify({ name: name, username: username })
       });
       
       const companyResponseData = await companyResponse.json();
