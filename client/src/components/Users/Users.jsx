@@ -23,7 +23,7 @@ const Users = () => {
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/users', {
+      const response = await fetch('http://localhost:3000/users', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const Users = () => {
       // Hash the new password before saving
       const hashedPassword = await bcrypt.hash(updatePasswordVisible, 10);
 
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/users/${selectedUser.id}`, {
+      const response = await fetch(`http://localhost:3000/users/${selectedUser.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +183,6 @@ const Users = () => {
             <tr>
               <th>Username</th>
               <th>Email</th>
-              <th>Password</th>
               <th>Phone</th>
               <th>Actions</th>
             </tr>
@@ -193,7 +192,6 @@ const Users = () => {
               <tr key={index}>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
-                <td>{user.password}</td>
                 <td>{user.phone}</td>
                 <td>
                   <button className="btn-edit" onClick={() => handleEditClick(user)}>
