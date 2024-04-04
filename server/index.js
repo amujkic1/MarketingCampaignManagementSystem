@@ -28,18 +28,18 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(express.static('public'));
 
-
+/*
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
+*/
 
-/*
 app.use(cors({
   origin: 'https://marketing-campaign-management-system-client.vercel.app',
   credentials: true
 }));
-*/
+
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
 app.use("/set2FA", authRouter);
