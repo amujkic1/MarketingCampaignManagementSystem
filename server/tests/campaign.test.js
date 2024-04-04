@@ -31,7 +31,7 @@ describe('Campaign model', function() {
       const campaign = await Campaign.createCampaign(poolStub, 'Test Campaign', '2023-01-01', '2023-12-31', 'Social Media', 'Facebook');
   
       expect(campaign).to.have.property('id', 3);
-      expect(clientStub.query.callCount).to.equal(5); // Provjerite da li je client.query pozvan očekivani broj puta
+      expect(clientStub.query.callCount).to.equal(5); 
     });
   });
   
