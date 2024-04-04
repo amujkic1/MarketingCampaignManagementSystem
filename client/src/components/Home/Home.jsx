@@ -13,7 +13,7 @@ function Home() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/users');
+      const response = await fetch('http://localhost:3000/users');
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -26,7 +26,7 @@ function Home() {
 
   const fetchCampaigns = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign');
+      const response = await fetch('http://localhost:3000/campaign');
       if (!response.ok) {
         throw new Error('Failed to fetch campaigns');
       }

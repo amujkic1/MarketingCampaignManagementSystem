@@ -13,7 +13,7 @@ function SAHome() {
 
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('https://marketing-campaign-management-system-server.vercel.app/admincompanies', {
+    fetch('http://localhost:3000/admincompanies', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -24,7 +24,7 @@ function SAHome() {
     .then(async response => {
       if (response.ok) {
         const data = await response.json();
-        setCompanies(data); // Postavljanje podataka u stanje companies
+        setCompanies(data); 
       } else {
         throw new Error('Failed to fetch companies.');
       }
@@ -32,13 +32,7 @@ function SAHome() {
     .catch(error => {
       console.error('Error fetching companies:', error);
     });
-  }
-  const isValidUrl = (url) => {
-    // Regular expression to validate URL
-    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-    return urlRegex.test(url);
-  };
-    
+  }    
 
   const renderCompanyCards = () => {
     return companies.map((company) => (
@@ -46,13 +40,9 @@ function SAHome() {
         <div style={styles.companyContent}>
           <div style={styles.companyInfo}>
             <div style={styles.companyName}>{company.name}</div>
-            <div style={styles.companyAdmin}>{company.admin}</div>
+            <div style={styles.companyAdmin}>{company.niche}</div>
+            <div style={styles.companyAdmin}>{company.headquarters}</div>
           </div>
-          {isValidUrl(company.logo) ? ( // Check if company.logo is a valid URL
-            <img src={company.logo} alt={company.name} style={styles.companyLogo} />
-          ) : (
-            <div>No logo available</div>
-          )}
         </div>
       </div>
     ));
@@ -61,14 +51,14 @@ function SAHome() {
   const styles = {
     homeContainer: {
       padding: '10px',
-      width: '100%', // Proširujemo na cijelu širinu ekrana
-      maxWidth: 'none', // Uklanjamo ograničenje maksimalne širine
+      width: '100%', 
+      maxWidth: 'none',
     },
     companiesList: {
       display: 'flex',
       justifyContent: 'center',
       background: 'none',
-      flexWrap: 'wrap', // Dodajemo prelamanje na više redova
+      flexWrap: 'wrap',
     },
     companyCard: {
       width: '240px',
@@ -77,25 +67,25 @@ function SAHome() {
       border: '1px solid #ccc',
       borderRadius: '5px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      flexBasis: 'calc(20% - 20px)', // Postavljamo širinu kartice na 20% s razmakom od 20px
+      flexBasis: 'calc(20% - 20px)', 
     },
     companyContent: {
       display: 'flex',
-      flexDirection: 'column', // Postavljamo kolone
+      flexDirection: 'column', 
       alignItems: 'center',
     },
     companyLogo: {
       width: 'auto', 
       height: '110px', 
-      marginBottom: '10px', // Pomicanje slike od naziva kompanije
+      marginBottom: '10px', 
       border: '1px solid #ccc',
       borderRadius: '5px',
     },
     companyInfo: {
-      textAlign: 'center', // Centriranje teksta
+      textAlign: 'center', 
     },
     companyName: {
-      marginBottom: '5px', // Manji razmak između naziva kompanije i administratora
+      marginBottom: '5px', 
       fontWeight: 'bold',
     },
     companyAdmin: {

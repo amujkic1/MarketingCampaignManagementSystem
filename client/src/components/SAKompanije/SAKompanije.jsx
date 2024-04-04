@@ -7,20 +7,6 @@ function SAKompanije() {
   const [phone, setPhone] = useState("");
   const [showAdminInfo, setShowAdminInfo] = useState(true); // Dodano stanje za prikazivanje/skrivanje admin-info card
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      setLogo(event.target.result);
-    };
-
-    reader.readAsDataURL(file);
-
-    // Sakrijemo opciju "Choose file" nakon što je slika odabrana
-    e.target.style.display = "none";
-  };
-
   const handleAdminCreate = async () => {
     try {
       const username = document.getElementById("adminUsername").value;
@@ -35,7 +21,7 @@ function SAKompanije() {
         phone: phone
       };
 
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/super/admin', {
+      const response = await fetch('http://localhost:3000/super/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -83,23 +69,8 @@ function SAKompanije() {
       formData.append("image", logoFile);
       formData.append("adminId", adminId);
   
-      // Upload the image first
-      const imageResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const imageData = await imageResponse.json();
-      const imageUrl = imageData.imageUrl;
   
-      // Then create the company with the returned image URL
-      const companyData = {
-        name: companyName,
-        username: adminId,
-        logoUrl: imageUrl,
-        //adminId: adminId,
-      };
-  
-      const companyResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/super/company", {
+      const companyResponse = await fetch("http://localhost:3000/super/company", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -126,13 +97,6 @@ function SAKompanije() {
                 <div className="form-group">
                   <label htmlFor="companyName">Company Name</label>
                   <input type="text" className="form-control" id="companyName" />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="logo">Logo</label>
-                  <div className="drop-area">
-                    <input id="logo" className="inputImage" type="file" accept="image/*" onChange={handleImageChange} />
-                    {logo && <img src={logo} alt="Company Logo" className="logo-image" />}
-                  </div>
                 </div>
               </div>
               <div className="col-md-6">
