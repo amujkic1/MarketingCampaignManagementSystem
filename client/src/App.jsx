@@ -23,9 +23,15 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
 
-          <Route path="/sa-home" element={<SAHome />} /> 
-          <Route path="/add-company" element={<SAKompanije/>} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/add-company" element={<>
+            <Navbar />
+            <SAKompanije />
+          </>} />
+
+          <Route path="/sa-home" element={<>
+            <Navbar />
+            <SAHome />
+          </>} />
 
           <Route path="/home" element={<>
             <Navbar />

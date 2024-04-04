@@ -105,10 +105,23 @@ class Campaign {
   }
 
   static async deleteCampaign(pool, id) {
+
+    const mediaQuery = "DELETE FROM campaign_mediatypes WHERE campaign_id = $1"
+    const channelQuery = "DELETE FROM campaign_channels WHERE campaign_id = $1"
     const query = "DELETE FROM campaign WHERE id = $1";
+
     const client = await pool.connect();
     const values = [id];
-    await client.query(query, values);
+
+    try {
+      await client.query(mediaQuery, values);
+      await client.query(channelQuery, values);
+      await client.query(query, values);
+    } catch (error) {
+      console.log(error);
+    }
+
+
     client.release();
     return true;
   }

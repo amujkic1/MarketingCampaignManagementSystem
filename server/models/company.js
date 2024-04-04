@@ -8,11 +8,10 @@ class Company{
         this.admin_user_id = admin_user_id;
     }
 
-    static async getAdminCompanies(pool, adminId){
-        const query = 'SELECT * FROM companies WHERE admin_user_id = $1';
+    static async getAdminCompanies(pool){
+        const query = 'SELECT * FROM companies';
         const client = await pool.connect();
-        const values = [adminId];
-        const { rows } = await client.query(query, values);
+        const { rows } = await client.query(query);
         client.release();
         return rows;
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import './Login.css'
 
 function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
@@ -61,7 +62,7 @@ function Login() {
           if(userRole==="admin"){
             navigate('/home')
           } else{
-            navigate('/home')
+            navigate('/sa-home')
           }
 
           //alert('successful auth');

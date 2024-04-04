@@ -44,15 +44,15 @@ function SAHome() {
     return companies.map((company) => (
       <div key={company.id} style={styles.companyCard}>
         <div style={styles.companyContent}>
+          <div style={styles.companyInfo}>
+            <div style={styles.companyName}>{company.name}</div>
+            <div style={styles.companyAdmin}>{company.admin}</div>
+          </div>
           {isValidUrl(company.logo) ? ( // Check if company.logo is a valid URL
             <img src={company.logo} alt={company.name} style={styles.companyLogo} />
           ) : (
             <div>No logo available</div>
           )}
-          <div style={styles.companyInfo}>
-            <div style={styles.companyName}>{company.name}</div>
-            <div style={styles.companyAdmin}>{company.admin}</div>
-          </div>
         </div>
       </div>
     ));
@@ -61,11 +61,14 @@ function SAHome() {
   const styles = {
     homeContainer: {
       padding: '10px',
+      width: '100%', // Proširujemo na cijelu širinu ekrana
+      maxWidth: 'none', // Uklanjamo ograničenje maksimalne širine
     },
     companiesList: {
       display: 'flex',
       justifyContent: 'center',
       background: 'none',
+      flexWrap: 'wrap', // Dodajemo prelamanje na više redova
     },
     companyCard: {
       width: '240px',
@@ -74,30 +77,29 @@ function SAHome() {
       border: '1px solid #ccc',
       borderRadius: '5px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      flexBasis: 'calc(20% - 20px)', // Postavljamo širinu kartice na 20% s razmakom od 20px
     },
     companyContent: {
       display: 'flex',
+      flexDirection: 'column', // Postavljamo kolone
       alignItems: 'center',
-      justifyContent: 'space-between',
     },
     companyLogo: {
       width: 'auto', 
       height: '110px', 
-      marginRight: '10px',
+      marginBottom: '10px', // Pomicanje slike od naziva kompanije
       border: '1px solid #ccc',
       borderRadius: '5px',
     },
     companyInfo: {
-      flex: '1',
+      textAlign: 'center', // Centriranje teksta
     },
     companyName: {
-      marginBottom: '10px',
+      marginBottom: '5px', // Manji razmak između naziva kompanije i administratora
       fontWeight: 'bold',
     },
     companyAdmin: {
       color: '#666',
-      borderTop: '1px solid #ccc',
-      paddingTop: '10px',
     },
     addCompanyBtn: {
       display: 'block',
@@ -127,19 +129,6 @@ function SAHome() {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light" style={{ 
-        position: 'fixed', 
-        width: '100%', 
-        top: 0, 
-        zIndex: 1000,
-        marginBottom: '2px' 
-      }}>
-        <div className="container-fluid justify-content-center">
-          <a className="navbar-brand" href="/home">
-            Home
-          </a>
-        </div>
-      </nav>
       <div style={{ paddingTop: '2px' }}>
         <div className="container">
           <div className="row justify-content-center align-items-center vh-100">

@@ -115,152 +115,60 @@ function SAKompanije() {
     }
   };
   
-
-  /*const handleCreateCompany = async () => {
-    try {
-      const companyName = document.getElementById("companyName").value;
-      const logoFile = document.getElementById("logo").files[0];
-      const adminId = document.getElementById("adminUsername").value;
-  
-      const formData = new FormData();
-      formData.append("name", companyName);
-      formData.append("logo", logoFile);
-      formData.append("adminId", adminId);
-  
-      const response = await fetch("http://localhost:3000/super/company", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-  
-      alert(data.message);
-    } catch (error) {
-      console.error("Error creating company:", error);
-      alert("Error creating company.");
-    }
-  };*/
-  
-
   return (
-    <div>
-      <div style={{ paddingTop: "2px" }}>
-        <div className="container">
-          <div className="row justify-content-center align-items-center vh-100">
-            <div className="col-12">
-              <div
-                className="card my-5"
-                style={{
-                  background: "#DDDEE5",
-                  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                <div className="homeContainer">
-                  <h2>Create Company</h2>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label htmlFor="companyName">Ime kompanije</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="companyName"
-                        />
-                        <div className="logologo">
-                          <label htmlFor="logo">Logo</label>
-                          <div className="drop-area">
-                            <input
-                              id="logo"
-                              className="inputImage"
-                              type="file"
-                              accept="image/*"
-                              onChange={handleImageChange}
-                            />
-                            {/* Prikazujemo odabranu sliku */}
-                            {logo && (
-                              <img
-                                src={logo}
-                                alt="Company Logo"
-                                className="logo-image"
-                              />
-                            )}
-                          </div>
+    <div className="full-screen-container">
+      <div className="homeContainer">
+        <div className="cardA my-5" style={{ background: "#DDDEE5", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
+          <div className="card-body-all">
+            <h2 className="text-center mb-4">Create Company</h2>
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="companyName">Company Name</label>
+                  <input type="text" className="form-control" id="companyName" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="logo">Logo</label>
+                  <div className="drop-area">
+                    <input id="logo" className="inputImage" type="file" accept="image/*" onChange={handleImageChange} />
+                    {logo && <img src={logo} alt="Company Logo" className="logo-image" />}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="administrator">Administrator</label>
+                  <input type="text" className="form-control" id="administrator" />
+                  {showAdminInfo && (
+                    <div className="admin-info card">
+                      <div className="card-body">
+                        <div className="form-group">
+                          <label htmlFor="adminEmail">Email</label>
+                          <input type="email" className="form-control" id="adminEmail" placeholder="Email" />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="adminUsername">Username</label>
+                          <input type="text" className="form-control" id="adminUsername" placeholder="Username" />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="adminPassword">Password</label>
+                          <input type="password" className="form-control" id="adminPassword" placeholder="Password" />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="adminPhone">Phone</label>
+                          <input type="text" className="form-control" id="adminPhone" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                        </div>
+                        <div className="text-center">
+                          <button className="btn btn-primary mt-2" style={{ backgroundColor: "#2B3D5B" }} onClick={handleAdminCreate}>Create Admin</button>
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label htmlFor="admin" className="admino">
-                          Administrator
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          id="administrator"
-                        />
-                        {showAdminInfo && ( // Prikaži admin-info card samo ako showAdminInfo stanje nije false
-                          <div className="admin-info card">
-                            <div className="card-body">
-                              <div className="form-group">
-                                <label htmlFor="adminEmail">Email</label>
-                                <input
-                                  type="email"
-                                  className="form-control"
-                                  id="adminEmail"
-                                  placeholder="Email"
-                                />
-                              </div>
-                              <div className="form-group">
-                                <label htmlFor="adminUsername">Username</label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  id="adminUsername"
-                                  placeholder="Username"
-                                />
-                              </div>
-                              <div className="form-group">
-                                <label htmlFor="adminPassword">Password</label>
-                                <input
-                                  type="password"
-                                  className="form-control"
-                                  id="adminPassword"
-                                  placeholder="Password"
-                                />
-                              </div>
-                              <div className="form-group">
-                                <label htmlFor="adminPhone">Phone</label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  id="adminPhone"
-                                  placeholder="Phone"
-                                  value={phone}
-                                  onChange={(e) => setPhone(e.target.value)}
-                                />
-                              </div>
-                              <div className="text-center">
-                                <button
-                                  className="btn btn-primary mt-2"
-                                  onClick={handleAdminCreate}
-                                >
-                                  Create
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <Link
-                    to="/IlhaninaHomePage"
-                    className="addCompanyBtn"
-                    onClick={handleCreateCompany}
-                  >
-                    Create Company
-                  </Link>
+                  )}
                 </div>
               </div>
+            </div>
+            <div className="text-center">
+              <button className="btn btn-primary mt-2" style={{ backgroundColor: "#2B3D5B" }} onClick={handleCreateCompany}>Create Company</button>
             </div>
           </div>
         </div>

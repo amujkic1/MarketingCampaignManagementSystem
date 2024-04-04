@@ -104,10 +104,24 @@ async function getUser(req, res) {
     });
   }
 }
+async function logout(req, res) {
+  try {
+    
+    res.clearCookie('token');
+    res.clearCookie('uname');
+    res.clearCookie('role');
+  
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 module.exports = {
   login,
   qrCode,
   set2FA,
   getUser,
+  logout,
 };

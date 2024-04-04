@@ -28,11 +28,23 @@ class Channel {
     return rows;
   }
   static async deleteChannel(pool, id) {
+    const channelQuery = "DELETE FROM campaign_channels WHERE channel_id = $1"
     const channel = "DELETE FROM channels WHERE id=$1";
+    
     const client = await pool.connect();
     const values = [id];
-    const { rows } = await client.query(channel, values);
-    return rows;
+    
+    try{
+      await client.query(channelQuery, values);
+      await client.query(channel, values);
+    } catch(error){
+      console.log(error);
+    }
+    
+    client.release();
+    return true;
+    //const { rows } = await client.query(channel, values);
+    //return rows;
   }
   static async updateChannel(pool, name, id) {
     const channel = "UPDATE channels SET name=$1 WHERE id=$2 RETURNING *";

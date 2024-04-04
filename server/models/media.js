@@ -5,7 +5,7 @@ class Media {
         this.id = id;
         this.name = name;
     }
-    
+
     static async createMedia(pool, name) {
         const query = 'INSERT INTO mediatypes (name) VALUES ($1) RETURNING *';
         const client = await pool.connect();
@@ -42,14 +42,23 @@ class Media {
     }
 
     static async deleteMediaById(pool, id) {
+        const mediaQuery = "DELETE FROM campaign_mediatypes WHERE mediatype_id = $1"
         const query = 'DELETE FROM mediatypes WHERE id = $1';
+
         const client = await pool.connect();
         const values = [id];
-        await client.query(query, values);
+
+        try {
+            await client.query(mediaQuery, values);
+            await client.query(query, values);
+        } catch (error) {
+            console.log(error);
+        }
+
         client.release();
         return true;
     }
 
 }
-  
+
 module.exports = Media;
