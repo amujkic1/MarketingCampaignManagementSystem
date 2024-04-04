@@ -1,0 +1,120 @@
+.homeContainer {
+  padding: 20px;
+  display: block; /* Dodajemo fleksibilni prikaz */
+  flex-direction: column; /* Postavljamo kolone */
+  align-items: center;
+  max-width: none; /* Centriramo elemente po horizontalnoj osi */
+}
+
+.form-group {
+  width: 100%;
+  max-width: 370px;
+  margin-bottom: 20px; /* Dodajemo razmak između formi */
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+}
+
+.logologo {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column; /* Postavljamo kolone */
+  align-items: center; /* Centriramo elemente po horizontalnoj osi */
+}
+
+.drop-area {
+  border: 1px dashed #ccc;
+  height: 250px;
+  max-width: 374px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.logo-image {
+  width: auto; /* Promenjeno na auto */
+  max-width: 100%; /* Promenjeno na max-width */
+  height: auto; /* Promenjeno na auto */
+  max-height: 100%; /* Promenjeno na max-height */
+}
+
+.card {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%; /* Promenjeno na 80% */
+  max-width: 600px; /* Dodato ograničenje maksimalne širine */
+  margin: 0 auto; /* Centriramo karticu */
+}
+
+.btn-primary {
+  width: 100%;
+  margin-top: 20px;
+}
+
+h2 {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.admino {
+  text-align: center;
+}
+
+.addCompanyBtn {
+  display: inline-block; /* Promenjeno na inline-block */
+  width: auto; /* Promenjeno na auto */
+  padding: 10px 20px; /* Promenjeno na 10px gornji/donji, 20px levi/desni */
+  text-align: center;
+  background-color: #2b3d5b;
+  color: #f3f3f3;
+  margin-top: 20px;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.addCompanyBtn:hover {
+  background-color: #41526f;
+}
+
+.addCompanyBtn:focus {
+  outline: none;
+}
+.card {
+  margin-top: 20px;
+  padding: 0; /* Uklanjamo padding da bi card bio širine ekrana */
+  border-radius: 0; /* Uklanjamo border-radius ako ga ima */
+  box-shadow: none; /* Uklanjamo box-shadow ako postoji */
+  width: 100%; /* Card zauzima celu širinu ekrana */
+}
+.card-body-all {
+  width: 100%; /* Postavljamo širinu na 80% */
+  max-width: 800px; /* Dodajemo ograničenje maksimalne širine */
+  margin: 0 auto; /* Centriramo card-body-all */
+  padding: 20px; /* Dodajemo unutarnji razmak */
+}
+
+/* Dodajemo razmak iznad .cardA */
+.cardA {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  margin: 2rem auto 1rem; /* Dodajemo veći razmak iznad nego ispod */
+  border-radius: 10px;
+}
+
+
