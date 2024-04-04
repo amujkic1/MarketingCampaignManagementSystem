@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const Campaign = require('../models/Campaign');
+const Campaign = require('../models/campaign');
 
 describe('Campaign model', function() {
   let poolStub, clientStub;
