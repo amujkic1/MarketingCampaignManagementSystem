@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import './Login.css'
+import './Login.css';
 
 function Login() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
@@ -134,7 +134,7 @@ function Login() {
                   <label className='form-label' htmlFor='auth-code'>Authentication Code</label>
                   <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
                   <div className="text-center mt-3"> {/* Move text-center to this div */}
-                    <button className='btn btn-primary px-5' type='button' onClick={handleAuthenticate}>
+                    <button className='btn btn-primary px-5' type='button' onClick={handleAuthenticate} style={{ backgroundColor: "#2B3D5B" }}>
                       Log in
                     </button>
                   </div>
@@ -145,7 +145,7 @@ function Login() {
 
 
               {!showAuthCodeInput && (
-                <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin}>
+                <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin} style={{ backgroundColor: "#2B3D5B" }}>
                   Log in
                 </button>
               )}

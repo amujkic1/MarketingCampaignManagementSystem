@@ -77,21 +77,24 @@ class Campaign {
     client.release();
     return rows;
   }
-  static async updateCampaign(pool, id, name, duration) {
+  static async updateCampaign(pool, id, name, durationfrom, durationto) {
     try {
       let query;
       let values;
 
-      if (name && duration) {
+      if (name && durationfrom && durationto) {
         query =
-          "UPDATE campaign SET name=$2, duration=$3 WHERE id=$1 RETURNING *";
-        values = [id, name, duration];
+          "UPDATE campaign SET name=$2, durationfrom=$3, durationto=$4 WHERE id=$1 RETURNING *";
+        values = [id, name, durationfrom, durationto];
       } else if (name) {
         query = "UPDATE campaign SET name=$2 WHERE id=$1 RETURNING *";
         values = [id, name];
-      } else if (duration) {
-        query = "UPDATE campaign SET duration=$2 WHERE id=$1 RETURNING *";
-        values = [id, duration];
+      } else if (durationfrom) {
+        query = "UPDATE campaign SET durationfrom=$2 WHERE id=$1 RETURNING *";
+        values = [id, durationfrom];
+      } else if (durationto) {
+        query = "UPDATE campaign SET durationto=$2 WHERE id=$1 RETURNING *";
+        values = [id, durationto];
       }
 
       const client = await pool.connect();

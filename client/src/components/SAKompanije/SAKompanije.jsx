@@ -91,7 +91,7 @@ function SAKompanije() {
       <div className="homeContainer">
         <div className="cardA my-5" style={{ background: "#DDDEE5", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
           <div className="card-body-all">
-            <h2 className="text-center mb-4">Create Company</h2>
+          <h2 style={{ fontFamily: 'Calibri, sans-serif' }}>Create company</h2>
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
