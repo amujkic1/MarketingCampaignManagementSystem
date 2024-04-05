@@ -7,8 +7,11 @@ function SAKompanije() {
   const [logo, setLogo] = useState(null);
   const [phone, setPhone] = useState("");
   const [showAdminInfo, setShowAdminInfo] = useState(true);
-  const [adminInputEnabled, setAdminInputEnabled] = useState(false); // Dodano stanje za omogućavanje uređivanja polja za administratora
-  const [administrator, setAdministrator] = useState(""); // Dodano stanje za spremanje imena administratora
+  const [adminInputEnabled, setAdminInputEnabled] = useState(false);
+  const [administrator, setAdministrator] = useState("");
+  const [niche, setNiche] = useState("");
+  const [headquarters, setHeadquarters] = useState("");
+  const [adminCreated, setAdminCreated] = useState(false); // Dodato stanje za označavanje da li je admin kreiran
   const navigate = useNavigate();
 
   const handleAdminCreate = async () => {
@@ -17,38 +20,38 @@ function SAKompanije() {
       const password = document.getElementById("adminPassword").value;
       const email = document.getElementById("adminEmail").value;
       const phone = document.getElementById("adminPhone").value;
-
+  
       const requestBody = {
         username: username,
         password: password,
         email: email,
         phone: phone
       };
-
-      const response = await fetch('http://localhost:3000/super/admin', {
+  
+      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/super/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         console.log('Admin creation successful:', data);
-
-        setAdministrator(username); // Postavljanje imena administratora u state
-
-        document.getElementById("administrator").readOnly = true; // Postavljamo polje za administratora kao readonly nakon kreiranja
-
+  
+        setAdministrator(username); // Set administrator state to the entered username
+        setAdminCreated(true); // Postavljamo stanje da je admin kreiran
+  
+        // Enable input for administrator and disable admin info fields
+        setAdminInputEnabled(false);
+        setShowAdminInfo(false);
+  
+        // Clear admin input fields
         document.getElementById("adminEmail").value = "";
         document.getElementById("adminUsername").value = "";
         document.getElementById("adminPassword").value = "";
         document.getElementById("adminPhone").value = "";
-
-        setShowAdminInfo(false);
-        setAdminInputEnabled(false); // Postavljamo stanje za omogućavanje uređivanja polja za administratora na false
-
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message);
@@ -58,23 +61,25 @@ function SAKompanije() {
       alert('Error creating admin.');
     }
   };
+  
 
   const handleCreateCompany = async () => {
     try {
       const name = document.getElementById("companyName").value;
-      //const logoFile = document.getElementById("logo").files[0];
       const username = document.getElementById("administrator").value;
-  
-      const companyResponse = await fetch("http://localhost:3000/super/company", {
+      const niche = document.getElementById("niche").value;
+      const headquarters = document.getElementById("headquarters").value;
+
+      const companyResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/super/company", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name: name, username: username })
+        body: JSON.stringify({ name, username, niche, headquarters })
       });
-      navigate('/sa-home');
+
       const companyResponseData = await companyResponse.json();
-      alert(companyResponseData.message);
+      navigate('/sa-home');
     } catch (error) {
       console.error("Error creating company:", error);
       alert("Error creating company.");
@@ -93,6 +98,26 @@ function SAKompanije() {
                   <label htmlFor="companyName">Company Name</label>
                   <input type="text" className="form-control" id="companyName" />
                 </div>
+                <div className="form-group">
+                  <label htmlFor="niche">Niche</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="niche"
+                    value={niche}
+                    onChange={(e) => setNiche(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="headquarters">Headquarter</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="headquarters"
+                    value={headquarters}
+                    onChange={(e) => setHeadquarters(e.target.value)}
+                  />
+                </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
@@ -101,8 +126,8 @@ function SAKompanije() {
                     type="text"
                     className="form-control"
                     id="administrator"
-                    value={administrator} // Postavljamo vrijednost input polja na spremljeno ime administratora
-                    readOnly={!adminInputEnabled} // Postavljamo readonly atribut ovisno o stanju
+                    value={administrator}
+                    readOnly={!adminInputEnabled}
                   />
                   {showAdminInfo && (
                     <div className="admin-info card">
@@ -136,7 +161,7 @@ function SAKompanije() {
                             style={{ backgroundColor: "#2B3D5B" }}
                             onClick={() => {
                               handleAdminCreate();
-                              setAdminInputEnabled(true); // Omogućujemo uređivanje polja za administratora prilikom klika na gumb
+                              setAdminInputEnabled(true);
                             }}
                           >
                             Create Admin
@@ -144,6 +169,9 @@ function SAKompanije() {
                         </div>
                       </div>
                     </div>
+                  )}
+                  {adminCreated && ( // Prikazujemo poruku samo ako je admin kreiran
+                    <p className="text-center text-success mt-3">Admin successfully created.</p>
                   )}
                 </div>
               </div>

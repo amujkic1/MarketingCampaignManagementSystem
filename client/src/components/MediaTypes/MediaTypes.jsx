@@ -15,7 +15,7 @@ const MediaTypes = () => {
 
   const getAllMedia = async () => {
     try {
-      const response = await fetch('http://localhost:3000/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/media', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const MediaTypes = () => {
 
   const addMediaType = async () => {
     try {
-      const response = await fetch('http://localhost:3000/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/media', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const MediaTypes = () => {
 
   const deleteMediaType = async (id) => {
     try {
-      const response = await fetch(`hhttp://localhost:3000/media/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/media/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const MediaTypes = () => {
 
   const handleUpdateMediaType = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/media/${selectedMediaType.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/media/${selectedMediaType.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

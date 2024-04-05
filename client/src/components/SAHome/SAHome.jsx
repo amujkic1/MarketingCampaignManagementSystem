@@ -12,7 +12,7 @@ function SAHome() {
   const fetchCompanies = () => {
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('http://localhost:3000/admincompanies', {
+    fetch('https://marketing-campaign-management-system-server.vercel.app/admincompanies', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ function SAHome() {
       flexWrap: 'wrap',
     },
     companyCard: {
-      width: 'calc(40% - 20px)', // Postavljamo širinu na 20% sa razmakom od 20px između
+      width: 'calc(25% - 20px)', // Postavljamo širinu na 25% sa razmakom od 20px između
       margin: '10px',
       padding: '20px',
       border: '1px solid #ccc',
@@ -118,19 +118,19 @@ function SAHome() {
       <div style={{ paddingTop: '2px' }}>
         <div className="container">
           <div className="row justify-content-center align-items-center vh-100">
-              <div className='card my-5' style={{ 
-                background: '#DDDEE5', 
-                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' 
-              }}>
-                <div style={styles.homeContainer}>
-                  <h2 style={{ fontFamily: 'Arial, sans-serif' }}>Companies</h2>
-                  <div style={styles.companiesList}>
-                    {renderCompanyCards()}
-                  </div>
-                  <Link to="/add-company" style={styles.addCompanyBtn}>Add company</Link>
+            <div className='card my-5' style={{ 
+              background: '#DDDEE5', 
+              boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' 
+            }}>
+              <div style={styles.homeContainer}>
+                <h2 style={{ fontFamily: 'Calibri, sans-serif' }}>Companies</h2>
+                <div style={styles.companiesList}>
+                  {renderCompanyCards()}
                 </div>
+                <Link to="/add-company" style={styles.addCompanyBtn}>Add company</Link>
               </div>
             </div>
+          </div>
         </div>
       </div>
     </div>
