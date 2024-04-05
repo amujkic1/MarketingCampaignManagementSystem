@@ -52,6 +52,7 @@ function QRCodeGenerator() {
   const handleAuthenticate = () => {
 
     const username = encodeURIComponent(Cookies.get('uname'));
+    const userRole = encodeURIComponent(Cookies.get('role'));
 
     fetch('https://marketing-campaign-management-system-server.vercel.app/set2FA?code=' + text, {
       method: 'POST',
@@ -61,13 +62,16 @@ function QRCodeGenerator() {
       credentials: 'include',
       body: JSON.stringify({ uname: username })
     })
-      .then( async res => {
-        const { success } =  await res.json();
+      .then(async res => {
+        const { success } = await res.json();
         if (success) {
-          navigate('/home');
-          //alert('Authentication successful');
+          if (userRole === "admin") {
+            navigate('/home')
+          } else {
+            navigate('/sa-home')
+          }
         } else {
-          alert('Authentication failed');
+          setErrorMessage('Authentication code is invalid.');
         }
       })
       .catch(error => {
@@ -75,7 +79,7 @@ function QRCodeGenerator() {
       });
 
   };
-  
+
 
   const handleLogout = () => {
     console.log("Korisnik se odjavio");
