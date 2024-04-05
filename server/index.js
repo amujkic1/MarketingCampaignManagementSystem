@@ -33,8 +33,8 @@ app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
-*/
 
+*/
 app.use(cors({
   origin: 'https://marketing-campaign-management-system-client.vercel.app',
   credentials: true
@@ -58,38 +58,6 @@ app.use(bodyParser.json());
 app.use("/", authRouter);
 app.use("/", mediaRouter);
 app.use("/", userRouter);
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-      cb(null, 'public/images')
-  },
-  filename: (req, file, cb) => {
-      cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
-  }
-})
-
-const upload = multer({
-  storage: storage
-})
-
-app.post('/upload', upload.single('image'), (req, res) => {
-  console.log(req.file);
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
-
-    const imagePath = req.file.path; // Path where the image is saved
-    const imageUrl = `https://marketing-campaign-management-system-server.vercel.app/images/${req.file.filename}`; // URL to access the uploaded image
-
-    // Save image URL to your database here
-
-    res.status(200).json({ message: 'Image uploaded successfully', imageUrl: imageUrl });
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  } 
-})
 
 const port = 3000;
 

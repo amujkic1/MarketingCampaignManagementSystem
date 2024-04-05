@@ -86,7 +86,7 @@ function QRCodeGenerator() {
   };
 
   const cardStyle = {
-    backgroundColor: 'white',
+    backgroundColor: '#DDDEE5', // Siva boja za karticu
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
     borderRadius: '8px',
     padding: '24px',
@@ -111,42 +111,37 @@ function QRCodeGenerator() {
     transition: 'background-color 0.3s ease',
   };
 
-  const logoutButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: '#ffcccc',
-    color: 'white',
-  };
-
-  const twoFactorButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: '#7CFC00',
-    color: 'white',
-  };
-
   return (
-    <div style={cardStyle}>
-      <p style={{ fontSize: '24px' }}>Set up Two-factor Authentication {username}</p>
-      <div style={{ marginTop: '50px' }}>
-        {/* Prikazujemo QR kod */}
-        <img src={qrValue} alt="QR Code" style={{ width: '256px', height: '256px' }} />
+    <div style={{ backgroundColor: 'linear-gradient(to right, #DDDEE5, #2B3D5B)', minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={cardStyle}>
+        <p style={{ fontSize: '24px' }}>Set up Two-factor Authentication {username}</p>
+        <div style={{ marginTop: '50px' }}>
+          {/* Prikazujemo QR kod */}
+          <img src={qrValue} alt="QR Code" style={{ width: '256px', height: '256px' }} />
+        </div>
+        <input
+          type="text"
+          placeholder="Enter 2FA Code"
+          value={text}
+          onChange={handleInputChange}
+          maxLength={6} // Postavljamo maksimalnu dužinu na 6 cifara
+          style={{
+            fontSize: '24px',
+            marginTop: '20px',
+            width: 'calc(100% - 20px)', // Promijenili smo širinu input polja tako da se uklapa u 6 mjesta
+            maxWidth: '300px',
+            textAlign: 'center',
+            backgroundColor: '#fefeffc6', // Stil za input polja kada su u fokusu
+            color: '#3a3a3cc6', // Boja teksta ostaje bijela
+            outline: 'none', // Sklanjamo outline prilikom fokusa
+            border: 'none', // Sklanjamo border prilikom fokusa
+            borderRadius: '5px', // Dodajemo blagi border radius
+          }}
+        />
+        <button onClick={handleAuthenticate} style={{ ...buttonStyle, backgroundColor: '#007bff', color: 'white', marginTop: '20px' }}>
+          AUTHENTICATE
+        </button>
       </div>
-      <input
-        type="text"
-        placeholder="Enter 2FA Code"
-        value={text}
-        onChange={handleInputChange}
-        maxLength={6} // Postavljamo maksimalnu dužinu na 6 cifara
-        style={{
-          fontSize: '24px',
-          marginTop: '20px',
-          width: 'calc(100% - 20px)', // Promijenili smo širinu input polja tako da se uklapa u 6 mjesta
-          maxWidth: '300px',
-          textAlign: 'center'
-        }}
-      />
-      <button onClick={handleAuthenticate} style={{ ...buttonStyle, backgroundColor: '#007bff', color: 'white', marginTop: '20px' }}>
-        AUTHENTICATE
-      </button>
     </div>
   );
 }

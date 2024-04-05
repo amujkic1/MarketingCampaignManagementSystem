@@ -88,3 +88,4 @@ tbody tr:nth-child(odd) {
 tbody tr:nth-child(even) {
   background-color: #f2f2f2; /* Dodana boja parnih redova */
 }
+

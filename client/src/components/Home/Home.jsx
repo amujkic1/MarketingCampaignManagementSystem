@@ -41,7 +41,6 @@ function Home() {
     <div style={{ paddingTop: '56px' }}>
       <div className="container">
         <div className="row justify-content-center align-items-center vh-100">
-          <div className="col-12">
             <div className='card my-5' style={{ 
               background: '#DDDEE5',
               boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
@@ -54,7 +53,7 @@ function Home() {
                 <p className="text-muted text-center mb-5">Explore the possibilities with us!</p>
 
                 {/* Tablica s korisnicima */}
-                <div className="table-responsive mb-4" style={{ maxWidth: '800px', width: '100%' }}>
+                <div className="table-responsive mb-4" style={{ maxWidth: '100%', width: '100%' }}> {/* Promijenjena maksimalna širina */}
                   <h3 className="text-center mb-3">Users</h3>
                   <table className="table table-striped">
                     <thead>
@@ -79,7 +78,7 @@ function Home() {
                 </div>
                 
                 {/* Tablica s kampanjama */}
-                <div className="table-responsive" style={{ maxWidth: '800px', width: '100%' }}>
+                <div className="table-responsive" style={{ maxWidth: '100%', width: '100%' }}> {/* Promijenjena maksimalna širina */}
                   <h3 className="text-center mb-3">Campaigns</h3>
                   <table className="table table-striped">
                     <thead>
@@ -111,7 +110,6 @@ function Home() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 

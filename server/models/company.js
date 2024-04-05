@@ -1,11 +1,12 @@
 class Company{
 
-    constructor(pool, id, name, logo, admin_user_id){
+    constructor(pool, id, name, admin_user_id, niche, headquarters){
         this.pool = pool;
         this.id = id;
         this.name = name;
-        this.logo = logo;
         this.admin_user_id = admin_user_id;
+        this.niche = niche;
+        this.headquarters = headquarters;
     }
 
     static async getAdminCompanies(pool){

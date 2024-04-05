@@ -11,20 +11,21 @@
   color: #fff;
   padding: 10px 20px; /* Povećavamo razmak */
 }
-
 /* Dodajemo stilove za gumb "Log out" */
 .navbar button {
   background-color: rgb(159, 160, 163); /* Boja pozadine crvena */
   color: #fff; /* Boja teksta bijela */
   border: none; /* Uklanjamo okvir */
-  padding: 10px 20px; /* Dodajemo prostor unutar gumba */
+  padding: 6px 16px; /* Smanjujemo prostor unutar gumba */
   border-radius: 5px; /* Dodajemo zaobljenje rubova */
   cursor: pointer; /* Pokazivač ruke */
+  font-size: 14px; /* Smanjujemo veličinu fonta */
 }
 
 .navbar button:hover {
   background-color: #707070cc; /* Tamnija crvena boja prilikom prelaska mišem */
 }
+
 
 /* Ostatak CSS-a ostaje nepromijenjen */
 .navbar-list {

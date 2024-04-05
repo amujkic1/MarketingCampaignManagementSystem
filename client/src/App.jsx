@@ -13,7 +13,7 @@ import Navbar from "./components/Navbar/Navbar.jsx";
 import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
 import Users from "./components/Users/Users.jsx";
-
+import AuthGuard from "./components/Auth/AuthGuard.jsx"; 
 
 function App() {
   return (
@@ -23,38 +23,40 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
 
-          <Route path="/add-company" element={<>
+          <Route path="/add-company" element={<AuthGuard roles={['super_admin']}>
             <Navbar />
             <SAKompanije />
-          </>} />
+          </AuthGuard>} />
 
-          <Route path="/sa-home" element={<>
+          <Route path="/sa-home" element={<AuthGuard roles={['super_admin']}>
             <Navbar />
             <SAHome />
-          </>} />
+          </AuthGuard>} />
 
           <Route path="/home" element={<>
             <Navbar />
             <Home />
           </>} />
-          <Route path="/media-types" element={<>
+          <Route path="/media-types" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <MediaTypes />
-          </>} />
-          <Route path="/channels" element={<>
+          </AuthGuard>} />
+
+          <Route path="/channels" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <Channels />
-          </>} />
-          <Route path="/campaigns" element={<>
+          </AuthGuard>} />
+          
+          <Route path="/campaigns" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <Campaigns />
-            
-          </>
+          </AuthGuard>
         } />
-        <Route path="/users" element={<>
+
+        <Route path="/users" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <Users />
-            </>
+            </AuthGuard>
         } />
 
         </Routes>

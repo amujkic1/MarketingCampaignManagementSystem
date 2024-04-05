@@ -10,7 +10,6 @@ function SAHome() {
   }, []);
 
   const fetchCompanies = () => {
-
     const username = encodeURIComponent(Cookies.get('uname'));
 
     fetch('https://marketing-campaign-management-system-server.vercel.app/admincompanies', {
@@ -24,7 +23,7 @@ function SAHome() {
     .then(async response => {
       if (response.ok) {
         const data = await response.json();
-        setCompanies(data); // Postavljanje podataka u stanje companies
+        setCompanies(data); 
       } else {
         throw new Error('Failed to fetch companies.');
       }
@@ -32,13 +31,7 @@ function SAHome() {
     .catch(error => {
       console.error('Error fetching companies:', error);
     });
-  }
-  const isValidUrl = (url) => {
-    // Regular expression to validate URL
-    const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
-    return urlRegex.test(url);
-  };
-    
+  }    
 
   const renderCompanyCards = () => {
     return companies.map((company) => (
@@ -46,13 +39,9 @@ function SAHome() {
         <div style={styles.companyContent}>
           <div style={styles.companyInfo}>
             <div style={styles.companyName}>{company.name}</div>
-            <div style={styles.companyAdmin}>{company.admin}</div>
+            <div style={styles.companyDetail}> {company.niche}</div>
+            <div style={styles.companyDetail}> {company.headquarters}</div>
           </div>
-          {isValidUrl(company.logo) ? ( // Check if company.logo is a valid URL
-            <img src={company.logo} alt={company.name} style={styles.companyLogo} />
-          ) : (
-            <div>No logo available</div>
-          )}
         </div>
       </div>
     ));
@@ -61,45 +50,42 @@ function SAHome() {
   const styles = {
     homeContainer: {
       padding: '10px',
-      width: '100%', // Proširujemo na cijelu širinu ekrana
-      maxWidth: 'none', // Uklanjamo ograničenje maksimalne širine
+      width: '100%', 
+      maxWidth: 'none',
     },
     companiesList: {
       display: 'flex',
       justifyContent: 'center',
       background: 'none',
-      flexWrap: 'wrap', // Dodajemo prelamanje na više redova
+      flexWrap: 'wrap',
     },
     companyCard: {
-      width: '240px',
+      width: 'calc(25% - 20px)', // Postavljamo širinu na 25% sa razmakom od 20px između
       margin: '10px',
-      padding: '10px',
+      padding: '20px',
       border: '1px solid #ccc',
-      borderRadius: '5px',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-      flexBasis: 'calc(20% - 20px)', // Postavljamo širinu kartice na 20% s razmakom od 20px
+      borderRadius: '10px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
     },
     companyContent: {
       display: 'flex',
-      flexDirection: 'column', // Postavljamo kolone
+      flexDirection: 'column',
       alignItems: 'center',
-    },
-    companyLogo: {
-      width: 'auto', 
-      height: '110px', 
-      marginBottom: '10px', // Pomicanje slike od naziva kompanije
-      border: '1px solid #ccc',
-      borderRadius: '5px',
+      height: '100%', // Postavljamo visinu sadržaja na 100% kako bi se vertikalno centrirao
     },
     companyInfo: {
-      textAlign: 'center', // Centriranje teksta
+      textAlign: 'center',
     },
     companyName: {
-      marginBottom: '5px', // Manji razmak između naziva kompanije i administratora
+      marginBottom: '10px',
       fontWeight: 'bold',
+      fontSize: '20px',
+      fontFamily: 'Arial, sans-serif',
     },
-    companyAdmin: {
+    companyDetail: {
       color: '#666',
+      marginBottom: '5px',
+      fontStyle: 'italic',
     },
     addCompanyBtn: {
       display: 'block',
@@ -132,18 +118,16 @@ function SAHome() {
       <div style={{ paddingTop: '2px' }}>
         <div className="container">
           <div className="row justify-content-center align-items-center vh-100">
-            <div className="col-12">
-              <div className='card my-5' style={{ 
-                background: '#DDDEE5', 
-                boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' 
-              }}>
-                <div style={styles.homeContainer}>
-                  <h2>COMPANIES</h2>
-                  <div style={styles.companiesList}>
-                    {renderCompanyCards()} {/* Prikazivanje kartica */}
-                  </div>
-                  <Link to="/add-company" style={styles.addCompanyBtn}>Add company</Link>
+            <div className='card my-5' style={{ 
+              background: '#DDDEE5', 
+              boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' 
+            }}>
+              <div style={styles.homeContainer}>
+                <h2 style={{ fontFamily: 'Calibri, sans-serif' }}>Companies</h2>
+                <div style={styles.companiesList}>
+                  {renderCompanyCards()}
                 </div>
+                <Link to="/add-company" style={styles.addCompanyBtn}>Add company</Link>
               </div>
             </div>
           </div>

@@ -1,40 +1,33 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./SAKompanije.css"; // Import CSS file
+import { useNavigate } from 'react-router-dom';
 
 function SAKompanije() {
   const [logo, setLogo] = useState(null);
   const [phone, setPhone] = useState("");
-  const [showAdminInfo, setShowAdminInfo] = useState(true); // Dodano stanje za prikazivanje/skrivanje admin-info card
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      setLogo(event.target.result);
-    };
-
-    reader.readAsDataURL(file);
-
-    // Sakrijemo opciju "Choose file" nakon što je slika odabrana
-    e.target.style.display = "none";
-  };
+  const [showAdminInfo, setShowAdminInfo] = useState(true);
+  const [adminInputEnabled, setAdminInputEnabled] = useState(false);
+  const [administrator, setAdministrator] = useState("");
+  const [niche, setNiche] = useState("");
+  const [headquarters, setHeadquarters] = useState("");
+  const [adminCreated, setAdminCreated] = useState(false); // Dodato stanje za označavanje da li je admin kreiran
+  const navigate = useNavigate();
 
   const handleAdminCreate = async () => {
     try {
       const username = document.getElementById("adminUsername").value;
       const password = document.getElementById("adminPassword").value;
       const email = document.getElementById("adminEmail").value;
-      const phone = document.getElementById("adminPhone").value; // Dodano dobavljanje vrijednosti telefona
-
+      const phone = document.getElementById("adminPhone").value;
+  
       const requestBody = {
         username: username,
         password: password,
         email: email,
         phone: phone
       };
-
+  
       const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/super/admin', {
         method: 'POST',
         headers: {
@@ -42,25 +35,23 @@ function SAKompanije() {
         },
         body: JSON.stringify(requestBody)
       });
-
+  
       if (response.ok) {
         const data = await response.json();
         console.log('Admin creation successful:', data);
-       
-
-        // Kopiranje vrijednosti username u polje administrator
-        document.getElementById("administrator").value = username;
-
-        // Isprazniti polja za unos emaila, korisničkog imena, lozinke i broja telefona
+  
+        setAdministrator(username); // Set administrator state to the entered username
+        setAdminCreated(true); // Postavljamo stanje da je admin kreiran
+  
+        // Enable input for administrator and disable admin info fields
+        setAdminInputEnabled(false);
+        setShowAdminInfo(false);
+  
+        // Clear admin input fields
         document.getElementById("adminEmail").value = "";
         document.getElementById("adminUsername").value = "";
         document.getElementById("adminPassword").value = "";
         document.getElementById("adminPhone").value = "";
-
-        // Sakrij admin-info card nakon uspješnog kreiranja admina
-        setShowAdminInfo(false);
-
-        // Dodajte dodatne korake koji su vam potrebni nakon uspješnog kreiranja admina
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message);
@@ -70,51 +61,31 @@ function SAKompanije() {
       alert('Error creating admin.');
     }
   };
-
+  
 
   const handleCreateCompany = async () => {
     try {
-      const companyName = document.getElementById("companyName").value;
-      const logoFile = document.getElementById("logo").files[0];
-      const adminId = document.getElementById("administrator").value;
-  
-      const formData = new FormData();
-      formData.append("name", companyName);
-      formData.append("image", logoFile);
-      formData.append("adminId", adminId);
-  
-      // Upload the image first
-      const imageResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const imageData = await imageResponse.json();
-      const imageUrl = imageData.imageUrl;
-  
-      // Then create the company with the returned image URL
-      const companyData = {
-        name: companyName,
-        username: adminId,
-        logoUrl: imageUrl,
-        //adminId: adminId,
-      };
-  
+      const name = document.getElementById("companyName").value;
+      const username = document.getElementById("administrator").value;
+      const niche = document.getElementById("niche").value;
+      const headquarters = document.getElementById("headquarters").value;
+
       const companyResponse = await fetch("https://marketing-campaign-management-system-server.vercel.app/super/company", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(companyData),
+        body: JSON.stringify({ name, username, niche, headquarters })
       });
-      
+
       const companyResponseData = await companyResponse.json();
-      alert(companyResponseData.message);
+      navigate('/sa-home');
     } catch (error) {
       console.error("Error creating company:", error);
       alert("Error creating company.");
     }
   };
-  
+
   return (
     <div className="full-screen-container">
       <div className="homeContainer">
@@ -128,17 +99,36 @@ function SAKompanije() {
                   <input type="text" className="form-control" id="companyName" />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="logo">Logo</label>
-                  <div className="drop-area">
-                    <input id="logo" className="inputImage" type="file" accept="image/*" onChange={handleImageChange} />
-                    {logo && <img src={logo} alt="Company Logo" className="logo-image" />}
-                  </div>
+                  <label htmlFor="niche">Niche</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="niche"
+                    value={niche}
+                    onChange={(e) => setNiche(e.target.value)}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="headquarters">Headquarter</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="headquarters"
+                    value={headquarters}
+                    onChange={(e) => setHeadquarters(e.target.value)}
+                  />
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
                   <label htmlFor="administrator">Administrator</label>
-                  <input type="text" className="form-control" id="administrator" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="administrator"
+                    value={administrator}
+                    readOnly={!adminInputEnabled}
+                  />
                   {showAdminInfo && (
                     <div className="admin-info card">
                       <div className="card-body">
@@ -156,13 +146,32 @@ function SAKompanije() {
                         </div>
                         <div className="form-group">
                           <label htmlFor="adminPhone">Phone</label>
-                          <input type="text" className="form-control" id="adminPhone" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                          <input
+                            type="text"
+                            className="form-control"
+                            id="adminPhone"
+                            placeholder="Phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                          />
                         </div>
                         <div className="text-center">
-                          <button className="btn btn-primary mt-2" style={{ backgroundColor: "#2B3D5B" }} onClick={handleAdminCreate}>Create Admin</button>
+                          <button
+                            className="btn btn-primary mt-2"
+                            style={{ backgroundColor: "#2B3D5B" }}
+                            onClick={() => {
+                              handleAdminCreate();
+                              setAdminInputEnabled(true);
+                            }}
+                          >
+                            Create Admin
+                          </button>
                         </div>
                       </div>
                     </div>
+                  )}
+                  {adminCreated && ( // Prikazujemo poruku samo ako je admin kreiran
+                    <p className="text-center text-success mt-3">Admin successfully created.</p>
                   )}
                 </div>
               </div>

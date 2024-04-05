@@ -183,7 +183,6 @@ const Users = () => {
             <tr>
               <th>Username</th>
               <th>Email</th>
-              <th>Password</th>
               <th>Phone</th>
               <th>Actions</th>
             </tr>
@@ -193,7 +192,6 @@ const Users = () => {
               <tr key={index}>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
-                <td>{user.password}</td>
                 <td>{user.phone}</td>
                 <td>
                   <button className="btn-edit" onClick={() => handleEditClick(user)}>
@@ -211,7 +209,6 @@ const Users = () => {
 
       {isPopupOpen && selectedUser && (
         <div className="popup-background">
-          <div className="popup">
             <div className="popup-content">
               <div className="form-container">
                 <div className="input-wrapper">
@@ -255,7 +252,6 @@ const Users = () => {
                 </button>
                 <button className="btn-close" onClick={handleClosePopup}></button>
               </div>
-            </div>
           </div>
         </div>
       )}

@@ -23,7 +23,7 @@ function Login() {
     })
       .then(async response => {
         if (response.ok) {
-          const { message, username, authToken, role} = await response.json();
+          const { message, username, authToken, role } = await response.json();
           console.log('Login successful');
           console.log(response);
           setErrorMessage('');
@@ -59,9 +59,9 @@ function Login() {
       .then(async res => {
         const { success } = await res.json();
         if (success) {
-          if(userRole==="admin"){
+          if (userRole === "admin") {
             navigate('/home')
-          } else{
+          } else {
             navigate('/sa-home')
           }
 
@@ -128,13 +128,13 @@ function Login() {
                 <label className='form-label' htmlFor='password'>Password</label>
                 <input className='form-control' id='password' type='password' value={password} onChange={e => setPassword(e.target.value)} />
               </div>
-           
+
               {showAuthCodeInput && (
                 <div className='mb-4 mx-5 w-100'>
                   <label className='form-label' htmlFor='auth-code'>Authentication Code</label>
-                  <div className="text-center"> {/* Dodali smo text-center na ovaj div */}
-                    <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
-                    <button className='btn btn-primary mx-2 px-5 mt-3' type='button' onClick={handleAuthenticate}>
+                  <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
+                  <div className="text-center mt-3"> {/* Move text-center to this div */}
+                    <button className='btn btn-primary px-5' type='button' onClick={handleAuthenticate}>
                       Log in
                     </button>
                   </div>
@@ -142,7 +142,8 @@ function Login() {
               )}
 
 
-            
+
+
               {!showAuthCodeInput && (
                 <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin}>
                   Log in
