@@ -62,6 +62,9 @@ const Navbar = () => {
             <li>
               <Link to="/campaigns">Campaigns</Link>
             </li>
+            <li>
+              <Link to="/firebase">Upload</Link>
+            </li>
           </>
         )}
       </ul>
