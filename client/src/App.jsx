@@ -14,6 +14,7 @@ import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
 import Users from "./components/Users/Users.jsx";
 import AuthGuard from "./components/Auth/AuthGuard.jsx"; 
+import FirebaseImage from "./components/Firebase/FirebaseImage.jsx";
 
 function App() {
   return (
@@ -58,6 +59,8 @@ function App() {
             <Users />
             </AuthGuard>
         } />
+
+        <Route path="/firebase" element={<FirebaseImage />} />
 
         </Routes>
         
