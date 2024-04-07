@@ -30,16 +30,16 @@ app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static('public'));
 
 
-app.use(cors({
+/*app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
-}));
+}));*/
 
 
-/*app.use(cors({
+app.use(cors({
   origin: 'https://marketing-campaign-management-system-client.vercel.app',
   credentials: true
-}));*/
+}));
 
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
