@@ -10,6 +10,7 @@ import { storage } from "./firebase";
 import { v4 } from "uuid";
 
 function FirebaseImage() {
+
   const [fileUpload, setFileUpload] = useState(null);
   const [fileUrls, setFileUrls] = useState([]);
 
@@ -20,9 +21,31 @@ function FirebaseImage() {
     const fileRef = ref(storage, `videos/${fileUpload.name + v4()}`);
     uploadBytes(fileRef, fileUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        setFileUrls((prev) => [...prev, url]);
+
+        fetch('http://localhost:3000/addmediaurl', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ url, id: 38 })
+        })
+        .then(async response => {
+          if (response.ok) {
+            console.log('ok');
+          } else {
+            return response.json().then(data => {
+              throw new Error(data.message);
+            });
+          }
+        })
+        .catch(error => {
+          setErrorMessage('Failed to upload files.');
+        });
+          console.log(url);
+          //setFileUrls((prev) => [...prev, url]);
+        });
+
       });
-    });
   };
 
   useEffect(() => {
