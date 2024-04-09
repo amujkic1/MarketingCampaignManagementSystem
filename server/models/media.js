@@ -59,6 +59,59 @@ class Media {
         return true;
     }
 
+    static async addMediaURL(pool, type, url, banner_link, campaign_id){
+
+        let query, values;
+        
+        if(banner_link){
+            query = 'INSERT INTO media (type, url, banner_link, campaignid) VALUES ($1, $2, $3, $4) RETURNING *'
+            values = [url, type, banner_link, campaign_id];
+        }
+        else{
+            query = 'INSERT INTO media (type, url, campaignid) VALUES ($1, $2, $3) RETURNING *'
+            values = [url, type, campaign_id];
+        }
+        
+        const client = await pool.connect();
+        const { rows } = await client.query(query, values);
+        client.release();
+        return rows[0];
+    }
+
+    static async deleteCampaignUrl(pool, id) {
+        
+        const query = "DELETE FROM media WHERE campaignid = $1"
+        
+        const client = await pool.connect();
+        const values = [id];
+
+        try {
+            await client.query(query, values);
+        } catch (error) {
+            console.log(error);
+        }
+
+        client.release();
+        return true;
+    }
+
+    static async deleteMediaUrl(pool, id) {
+        
+        const query = "DELETE FROM media WHERE id = $1"
+        
+        const client = await pool.connect();
+        const values = [id];
+
+        try {
+            await client.query(query, values);
+        } catch (error) {
+            console.log(error);
+        }
+
+        client.release();
+        return true;
+    }
+
 }
 
 module.exports = Media;

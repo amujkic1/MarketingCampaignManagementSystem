@@ -61,10 +61,49 @@ async function deleteMediaById(req, res) {
     }
 }
 
+async function addMediaURL(req, res) {
+    try{
+        const{ type, url, banner_link, campaign_id } = req.body;
+        try{
+            await Media.addMediaURL(pool, type, url, banner_link, campaign_id);
+        }
+        catch(error) {
+            console.log(error);
+        }
+        
+        res.status(200).json({ message: 'URL added successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add URL' });
+    }
+}
+
+async function deleteCampaignURL(req, res) {
+    try{
+        const { id } = req.params;
+        await Media.deleteCampaignUrl(pool, id);
+        res.status(200).json({ message: 'Media deleted successfully' });
+    } catch(error) {
+        res.status(500).json({ error: 'Failed to delete media' });
+    }
+}
+
+async function deleteMediaURL(req, res) {
+    try{
+        const { id } = req.params;
+        await Media.deleteMediaUrl(pool, id);
+        res.status(200).json({ message: 'Media deleted successfully' });
+    } catch(error) {
+        res.status(500).json({ error: 'Failed to delete media' });
+    }
+}
+
 module.exports = {
     createMedia,
     getAllMedia,
     getMediaById,
     updateMediaById,
-    deleteMediaById
+    deleteMediaById,
+    addMediaURL,
+    deleteCampaignURL,
+    deleteMediaURL
 }
