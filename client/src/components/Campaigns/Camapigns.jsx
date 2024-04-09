@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import './Campaigns.css';
 
 const Campaigns = () => {
@@ -18,6 +20,7 @@ const Campaigns = () => {
   const [updateMediaType, setUpdateMediaType] = useState('');
   const [updateStartDate, setUpdateStartDate] = useState('');
   const [updateEndDate, setUpdateEndDate] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllChannels();
@@ -27,7 +30,7 @@ const Campaigns = () => {
 
   const getAllCampaigns = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign', {
+      const response = await fetch('http://localhost:3000/campaign', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +125,8 @@ const Campaigns = () => {
     }
   };
 
-  const deleteCampaign = async (id) => {
+  const deleteCampaign = async (event, id) => {
+    event.stopPropagation(); // Spriječi podizanje događaja
     try {
       const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${id}`, {
         method: 'DELETE',
@@ -141,7 +145,8 @@ const Campaigns = () => {
     }
   };
 
-  const handleEditClick = (campaign) => {
+  const handleEditClick = (event, campaign) => {
+    event.stopPropagation(); // Spriječi podizanje događaja
     setSelectedCampaign(campaign);
     setUpdateName(campaign.name);
     setUpdateChannel(campaign.channels);
@@ -180,6 +185,12 @@ const Campaigns = () => {
     } catch (error) {
       console.error('Error updating campaign:', error);
     }
+  };
+
+  const handleCampaignClick = (campaignId) => {
+    console.log("Clicked campaign ID:", campaignId);
+    Cookies.set('campaignID', campaignId); // Spremanje ID kampanje u kolačić
+    navigate('/campaign');
   };
 
   return (
@@ -254,14 +265,14 @@ const Campaigns = () => {
           </thead>
           <tbody>
             {campaigns.map((campaign, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={() => handleCampaignClick(campaign.id)}>
                 <td>{campaign.name}</td>
                 <td>{campaign.channels}</td>
                 <td>{campaign.mediatypes}</td>
                 <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEditClick(campaign)}>✏️</button>
-                  <button className="btn-delete" onClick={() => deleteCampaign(campaign.id)}>🗑️</button>
+                  <button className="btn-edit" onClick={(e) => handleEditClick(e, campaign)}>✏️</button>
+                  <button className="btn-delete" onClick={(e) => deleteCampaign(e, campaign.id)}>🗑️</button>
                 </td>
               </tr>
             ))}
