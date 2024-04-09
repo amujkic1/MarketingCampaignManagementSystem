@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie'; // Uvoz Cookies modula
-import './UniqueCampaign.css'; // Stilizacija se može prilagoditi prema vašim potrebama
+import Cookies from 'js-cookie';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
+import { storage } from "../Campaigns/firebase";
+import { v4 } from "uuid";
+import './UniqueCampaign.css';
 
 const UniqueCampaign = () => {
+  const [fileUpload, setFileUpload] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState(null);
   const [campaign, setCampaign] = useState(null);
   
   useEffect(() => {
-    const campaignId = Cookies.get('campaignID'); // Čitanje ID-a kampanje iz kolačića
+    const campaignId = Cookies.get('campaignID');
     if (campaignId) {
       getCampaignById(campaignId);
     }
@@ -45,8 +55,30 @@ const UniqueCampaign = () => {
       return data.campaign;
     } catch (error) {
       console.error('Error fetching campaign by ID:', error);
-      throw error; // Propagirajte grešku prema gore kako biste je mogli obraditi tamo gdje koristite funkciju getCampaignById
+      throw error;
     }
+  };
+
+  const uploadFile = () => {
+    if (fileUpload == null) return;
+    setUploading(true);
+    const fileRef = ref(storage, `videos/${fileUpload.name + v4()}`);
+    uploadBytes(fileRef, fileUpload)
+      .then((snapshot) => {
+        getDownloadURL(snapshot.ref)
+          .then((url) => {
+            setUploadedUrl(url);
+            setUploading(false);
+          })
+          .catch((error) => {
+            console.error("Error getting download URL:", error);
+            setUploading(false);
+          });
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+        setUploading(false);
+      });
   };
 
   return (
@@ -73,11 +105,30 @@ const UniqueCampaign = () => {
             Duration End:
             <input type="text" value={campaign.durationto} readOnly />
           </p>
-          {/* Dodajte ostale informacije o kampanji prema potrebi */}
         </div>
       ) : (
         <p>Loading...</p>
       )}
+      <div className="upload-section">
+        <input
+          type="file"
+          accept="video/*"
+          onChange={(event) => {
+            setFileUpload(event.target.files[0]);
+          }}
+        />
+        <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+          {uploading ? 'Uploading...' : 'Upload Video'}
+        </button>
+        {uploadedUrl && (
+          <div className="video-card">
+            <video controls width="250">
+              <source src={uploadedUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

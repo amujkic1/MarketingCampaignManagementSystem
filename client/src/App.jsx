@@ -14,7 +14,6 @@ import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
 import Users from "./components/Users/Users.jsx";
 import AuthGuard from "./components/Auth/AuthGuard.jsx";
-import FirebaseImage from "./components/Firebase/FirebaseImage.jsx";
 import UniqueCampaign from "./components/Campaigns/UniqueCampaign.jsx";
 
 function App() {
@@ -67,7 +66,7 @@ function App() {
             <UniqueCampaign />
           </AuthGuard>
           } />
-          <Route path="/firebase" element={<FirebaseImage />} />
+         
 
         </Routes>
 
