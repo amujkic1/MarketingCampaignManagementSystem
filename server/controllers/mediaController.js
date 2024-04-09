@@ -51,6 +51,20 @@ async function updateMediaById(req, res) {
     }
 }
 
+async function getCampaignMedia(req, res){
+    try{
+       const { campaign_id } = req.params;
+       console.log(campaign_id);
+       const media = await Media.getCampaignMedia(pool, campaign_id);
+       if (!media) {
+        return res.status(404).json({ error: 'Media not found' });
+        }
+        res.status(200).json(media);
+    } catch(error) {
+        res.status(500).json({ error: 'Failed to fetch media' });
+    }
+}
+
 async function deleteMediaById(req, res) {
     try {
         const { id } = req.params;
@@ -105,5 +119,6 @@ module.exports = {
     deleteMediaById,
     addMediaURL,
     deleteCampaignURL,
-    deleteMediaURL
+    deleteMediaURL,
+    getCampaignMedia
 }
