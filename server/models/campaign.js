@@ -116,16 +116,18 @@ class Campaign {
 
   static async deleteCampaign(pool, id) {
 
-    const mediaQuery = "DELETE FROM campaign_mediatypes WHERE campaign_id = $1"
+    const mediaTypeQuery = "DELETE FROM campaign_mediatypes WHERE campaign_id = $1"
     const channelQuery = "DELETE FROM campaign_channels WHERE campaign_id = $1"
+    const mediaQuery = "DELETE FROM media WHERE campaign_id = $1"
     const query = "DELETE FROM campaign WHERE id = $1";
 
     const client = await pool.connect();
     const values = [id];
 
     try {
-      await client.query(mediaQuery, values);
+      await client.query(mediaTypeQuery, values);
       await client.query(channelQuery, values);
+      await client.query(mediaQuery, values);
       await client.query(query, values);
     } catch (error) {
       console.log(error);
