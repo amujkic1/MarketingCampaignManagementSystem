@@ -17,7 +17,8 @@ const UniqueCampaign = () => {
   const [cookieId, setCookieId] = useState(null);
   const [media, setMedia] = useState([]);
   const [textContent, setTextContent] = useState('');
-  const [uploadedTextContent, setUploadedTextContent] = useState('')
+  const [uploadedTextContent, setUploadedTextContent] = useState('');
+  const [bannerLink, setBannerLink] = useState('');
 
   useEffect(() => {
     const campaignId = Cookies.get('campaignID');
@@ -66,11 +67,11 @@ const UniqueCampaign = () => {
 
 
   const uploadTextContent = async () => {
-    if (!textContent || !cookieId) return; 
-  
+    if (!textContent || !cookieId) return;
+
     try {
       setUploading(true);
-  
+
       const response = await fetch(`http://localhost:3000/addtext/${cookieId}`, {
         method: 'POST',
         headers: {
@@ -78,12 +79,11 @@ const UniqueCampaign = () => {
         },
         body: JSON.stringify({ text: textContent })
       });
-  
+
       if (response.ok) {
         console.log('Text content added successfully');
         const data = await response.json();
         console.log('data text ', data.text);
-        setUploadedTextContent(data.text);
         getCampaignMedia(cookieId);
       } else {
         const data = await response.json();
@@ -95,7 +95,7 @@ const UniqueCampaign = () => {
       setUploading(false);
     }
   };
-  
+
 
 
   const uploadFile = () => {
@@ -109,24 +109,33 @@ const UniqueCampaign = () => {
             // Postavljanje uploadanog URL-a na null nakon uspješnog uploada
             setUploadedUrl(null);
             if (cookieId) {
+              const body = {
+                type: campaign.mediatypes,
+                url,
+                campaign_id: cookieId,
+              };
+              if (campaign.mediatypes.toLowerCase() === 'banner') {
+                // Dodajemo banner_link samo ako je medij vrste "banner"
+                body.banner_link = bannerLink;
+              }
               fetch('http://localhost:3000/addmediaurl', {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ type: campaign.mediatypes, url, campaign_id: cookieId })
+                body: JSON.stringify(body),
               })
-                .then(async response => {
+                .then(async (response) => {
                   if (response.ok) {
                     console.log('URL added successfully');
                     getCampaignMedia(cookieId);
                   } else {
-                    return response.json().then(data => {
+                    return response.json().then((data) => {
                       throw new Error(data.message);
                     });
                   }
                 })
-                .catch(error => {
+                .catch((error) => {
                   console.error('Failed to add URL:', error);
                 });
             }
@@ -142,6 +151,8 @@ const UniqueCampaign = () => {
         setUploading(false);
       });
   };
+
+
 
 
   const getCampaignMedia = async (campaignId) => {
@@ -162,20 +173,20 @@ const UniqueCampaign = () => {
     fetch(`http://localhost:3000/deletemediaurl/${mediaId}`, {
       method: 'DELETE',
     })
-    .then(response => {
-      if (response.ok) {
-        console.log('Media deleted successfully');
-        // Ponovno dohvatite medije kako biste osvježili prikaz
-        getCampaignMedia(cookieId);
-      } else {
-        return response.json().then(data => {
-          throw new Error(data.error || 'Failed to delete media');
-        });
-      }
-    })
-    .catch(error => {
-      console.error('Failed to delete media:', error);
-    });
+      .then(response => {
+        if (response.ok) {
+          console.log('Media deleted successfully');
+          // Ponovno dohvatite medije kako biste osvježili prikaz
+          getCampaignMedia(cookieId);
+        } else {
+          return response.json().then(data => {
+            throw new Error(data.error || 'Failed to delete media');
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Failed to delete media:', error);
+      });
   };
 
   return (
@@ -183,7 +194,7 @@ const UniqueCampaign = () => {
       <table>
         <tbody>
           <tr>
-            <td style={{width:"350px", verticalAlign: "middle"}}>
+            <td style={{ width: "350px", verticalAlign: "middle" }}>
               {campaign ? (
                 <div className="campaign-details">
                   <p>
@@ -216,100 +227,162 @@ const UniqueCampaign = () => {
 
               <div className="upload-section">
 
-              {campaign && (campaign.mediatypes.toLowerCase() === 'image' || campaign.mediatypes.toLowerCase() === 'image with text') ? (
-              <div className="upload-section">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(event) => {
-                    setFileUpload(event.target.files[0]);
-                  }}
-                />
-                <button className="upload-button" onClick={uploadFile} disabled={uploading}>
-                  {uploading ? 'Uploading...' : 'Upload Image'}
-                </button>
-                {uploadedUrl && (
-                  <div className="image-card">
-                    <img src={uploadedUrl} alt="Uploaded Image" />
+                {campaign && (campaign.mediatypes.toLowerCase() === 'image' || campaign.mediatypes.toLowerCase() === 'image with text') ? (
+                  <div className="upload-section">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => {
+                        setFileUpload(event.target.files[0]);
+                      }}
+                    />
+                    <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                      {uploading ? 'Uploading...' : 'Upload Image'}
+                    </button>
+                    {uploadedUrl && (
+                      <div className="image-card">
+                        <img src={uploadedUrl} alt="Uploaded Image" />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ) : campaign && campaign.mediatypes.toLowerCase() === 'video' ? (
-              <div className="upload-section">
-                <input
-                  type="file"
-                  accept="video/*"
-                  onChange={(event) => {
-                    setFileUpload(event.target.files[0]);
-                  }}
-                />
-                <button className="upload-button" onClick={uploadFile} disabled={uploading}>
-                  {uploading ? 'Uploading...' : 'Upload Video'}
-                </button>
-                {uploadedUrl && (
-                  <div className="video-card">
-                    <video controls width="250" height="200">
-                      <source src={uploadedUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
-                    </video>
+                ) : campaign && campaign.mediatypes.toLowerCase() === 'video' ? (
+                  <div className="upload-section">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={(event) => {
+                        setFileUpload(event.target.files[0]);
+                      }}
+                    />
+                    <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                      {uploading ? 'Uploading...' : 'Upload Video'}
+                    </button>
+                    {uploadedUrl && (
+                      <div className="video-card">
+                        <video controls width="250" height="200">
+                          <source src={uploadedUrl} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ) : campaign && campaign.mediatypes.toLowerCase() === 'audio' ? (
-              <div className="upload-section">
-                <input
-                  type="file"
-                  accept="audio/*"
-                  onChange={(event) => {
-                    setFileUpload(event.target.files[0]);
-                  }}
-                />
-                <button className="upload-button" onClick={uploadFile} disabled={uploading}>
-                  {uploading ? 'Uploading...' : 'Upload Audio'}
-                </button>
-                {uploadedUrl && (
-                  <div className="audio-card">
-                    <audio controls>
-                      <source src={uploadedUrl} type="audio/mpeg" />
-                      Your browser does not support the audio tag.
-                    </audio>
+                ) : campaign && campaign.mediatypes.toLowerCase() === 'audio' ? (
+                  <div className="upload-section">
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      onChange={(event) => {
+                        setFileUpload(event.target.files[0]);
+                      }}
+                    />
+                    <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                      {uploading ? 'Uploading...' : 'Upload Audio'}
+                    </button>
+                    {uploadedUrl && (
+                      <div className="audio-card">
+                        <audio controls>
+                          <source src={uploadedUrl} type="audio/mpeg" />
+                          Your browser does not support the audio tag.
+                        </audio>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ) : campaign && campaign.mediatypes.toLowerCase() === 'text' ? (
-              <div className="upload-section">
-                <textarea
-                  rows="4"
-                  cols="50"
-                  placeholder="Enter text content"
-                  value={textContent}
-                  onChange={(event) => setTextContent(event.target.value)}
-                />
-                <button className="upload-button" onClick={ () => {
-                  uploadTextContent();
-                  console.log('uploaded', uploadedTextContent);
-                }
-                  
-                  } disabled={uploading}>
-                  {uploading ? 'Uploading...' : 'Upload Text'}
-                </button>
-                {uploadedTextContent && (
-                  <div className="text-content">
-                    <p>{uploadedTextContent}</p>
+                ) : campaign && campaign.mediatypes.toLowerCase() === 'text' ? (
+                  <div className="upload-section">
+                    <textarea
+                      rows="4"
+                      cols="50"
+                      placeholder="Enter text content"
+                      value={textContent}
+                      onChange={(event) => setTextContent(event.target.value)}
+                    />
+                    <button
+                      className="upload-button"
+                      onClick={() => {
+                        uploadTextContent();
+                        console.log('uploaded', uploadedTextContent);
+                      }}
+                      disabled={uploading}
+                      style={{ display: "block", margin: "auto" }}
+                    >
+                      {uploading ? 'Uploading...' : 'Upload Text'}
+                    </button>
+                    {uploadedTextContent && (
+                      <div className="text-content">
+                        <p>{uploadedTextContent}</p>
+                      </div>
+                    )}
                   </div>
+
+                ) : campaign && campaign.mediatypes.toLowerCase() === 'link' ? (
+                  <div className="upload-section">
+                    <textarea
+                      rows="4"
+                      cols="50"
+                      placeholder="Enter link"
+                      value={textContent}
+                      onChange={(event) => setTextContent(event.target.value)}
+                    />
+                    <button
+                      className="upload-button"
+                      onClick={() => {
+                        uploadTextContent();
+                        console.log('uploaded', uploadedTextContent);
+                      }}
+                      disabled={uploading}
+                      style={{ display: "block", margin: "auto" }}
+                    >
+                      {uploading ? 'Uploading...' : 'Upload Text'}
+                    </button>
+                    {uploadedTextContent && (
+                      <div className="text-content">
+                        <p>{uploadedTextContent}</p>
+                      </div>
+                    )}
+                  </div>
+                ) : campaign && campaign.mediatypes.toLowerCase() === 'banner' && (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => {
+                        setFileUpload(event.target.files[0]);
+                      }}
+                    />
+                    <textarea
+                      rows="4"
+                      cols="50"
+                      placeholder="Enter link"
+                      value={bannerLink} // Povezujemo polje za unos sa stanjem bannerLink
+                      onChange={(event) => setBannerLink(event.target.value)} // Ažuriramo stanje bannerLink
+                    />
+                    <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                      {uploading ? 'Uploading...' : 'Upload banner'}
+                    </button>
+                  </>
                 )}
-              </div>
-            ) : null}
 
                 <div className="media-container">
                   {media.map((item) => (
-                    <div key={item.id} className="media-card">
-                      <iframe src={item.url} title={item.type} width="250" height="180"></iframe>
+                    <div key={item.id} className="media-card" style={{ width: "250px" }}>
+                      {item.type.toLowerCase() === 'banner' ? (
+                        // Ako je medijski tip "banner", koristimo <a> tag s <img> tagom unutar njega
+                        <a href={item.banner_link} target="_blank" rel="noopener noreferrer">
+                          <img src={item.url} alt={item.type} style={{ width: "100%" }} />
+                        </a>
+                      ) : item.type.toLowerCase() === 'text' ? (
+                        // Ako je medijski tip "text", prikažemo tekst direktno
+                        <div className="text-content" style={{ overflow: "hidden", wordWrap: "break-word" }}>
+                          <p>{item.text}</p>
+                        </div>
+                      ) : (
+                        // Za ostale medijske tipove koristimo <img> tag
+                        <img src={item.url} alt={item.type} style={{ width: "100%" }} />
+                      )}
                       <button className="delete-button" onClick={() => deleteMedia(item.id)}>Delete</button>
                     </div>
                   ))}
                 </div>
-
               </div>
             </td>
           </tr>

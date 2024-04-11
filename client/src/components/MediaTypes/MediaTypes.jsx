@@ -122,6 +122,7 @@ const MediaTypes = () => {
             <option value="Link">Link</option>
             <option value="Audio">Audio</option>
             <option value="Text">Text</option>
+            <option value="Banner">Banner</option>
           </select>
         </div>
         <button
@@ -173,6 +174,7 @@ const MediaTypes = () => {
                     <option value="Link">Link</option>
                     <option value="Audio">Audio</option>
                     <option value="Text">Text</option>
+                    <option value="Banner">Banner</option>
                   </select>
                 </div>
                 <button
