@@ -42,7 +42,7 @@ const UniqueCampaign = () => {
 
   const getCampaignById = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/campaign/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const UniqueCampaign = () => {
     try {
       setUploading(true);
 
-      const response = await fetch(`http://localhost:3000/addtext/${cookieId}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/addtext/${cookieId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ const UniqueCampaign = () => {
               if (campaign.mediatypes.toLowerCase() === 'banner') {
                 body.banner_link = bannerLink;
               }
-              fetch('http://localhost:3000/addmediaurl', {
+              fetch('https://marketing-campaign-management-system-server.vercel.app/addmediaurl', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ const UniqueCampaign = () => {
 
   const getCampaignMedia = async (campaignId) => {
     try {
-      const response = await fetch(`http://localhost:3000/campaignmedia/${campaignId}`);
+      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaignmedia/${campaignId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch campaign media');
       }
@@ -181,7 +181,7 @@ const UniqueCampaign = () => {
   };
 
   const deleteMedia = (mediaId) => {
-    fetch(`http://localhost:3000/deletemediaurl/${mediaId}`, {
+    fetch(`https://marketing-campaign-management-system-server.vercel.app/deletemediaurl/${mediaId}`, {
       method: 'DELETE',
     })
       .then(response => {
