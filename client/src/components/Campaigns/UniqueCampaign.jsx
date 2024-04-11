@@ -407,7 +407,7 @@ const UniqueCampaign = () => {
                           Your browser does not support the video tag.
                         </video>
                       ) : item.type.toLowerCase() === 'audio' ? (
-                        <iframe src={item.url} title={item.type} width="249" height="40"></iframe>
+                        <iframe src={item.url} title={item.type} width="249" height="50"></iframe>
                       ) : (
                         <img src={item.url} alt={item.type} style={{ width: "100%" }} />
                       )}
