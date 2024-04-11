@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Importajte biblioteku za rad s kolačićima
 import './Navbar.css'; // Import CSS datoteke za stilizaciju
 import { useNavigate } from 'react-router-dom';
-
+import "./Navbar.css";
 const Navbar = () => {
   // Dobivanje uloge korisnika iz kolačića
   const userRole = Cookies.get('role');
@@ -38,37 +38,37 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" data-testid = "navigation">
       <ul className="navbar-list">
         {isSuperAdmin && (
           <li>
-            <Link to="/sa-home">Home</Link>
+            <Link to="/sa-home" data-testid="sa-home">Home</Link>
           </li>
         )}
         {isAdmin && (
           <>
             <li>
-              <Link to="/home">Home</Link>
+              <Link to="/home" data-testid = "a-home">Home</Link>
             </li>
             <li>
-              <Link to="/users">Users</Link>
+              <Link to="/users" data-testid="a-users">Users</Link>
             </li>
             <li>
-              <Link to="/media-types">Media Types</Link>
+              <Link to="/media-types" data-testid="a-mediatypes" >Media Types</Link>
             </li>
             <li>
-              <Link to="/channels">Channels</Link>
+              <Link to="/channels" data-testid="a-channels">Channels</Link>
             </li>
             <li>
-              <Link to="/campaigns">Campaigns</Link>
+              <Link to="/campaigns" data-testid="a-campaigns">Campaigns</Link>
             </li>
             <li>
-              <Link to="/firebase">Upload</Link>
+              <Link to="/firebase" data-testid="a-firebase">Upload</Link>
             </li>
           </>
         )}
       </ul>
-      <button onClick={handleLogout}>Log out</button>
+      <button data-testid="logout" onClick={handleLogout}>Log out</button>
     </nav>
   );
 };
