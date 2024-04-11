@@ -121,6 +121,17 @@ class Media {
         return true;
     }
 
+    static async addText(pool, text, campaign_id){
+        
+        const query = 'INSERT INTO media (type, text, campaign_id) VALUES ($1, $2, $3) RETURNING *'
+        const values = ['Text', text, campaign_id];
+        
+        const client = await pool.connect();
+        const { rows } = await client.query(query, values);
+        client.release();
+        return rows[0];
+    }
+
 }
 
 module.exports = Media;

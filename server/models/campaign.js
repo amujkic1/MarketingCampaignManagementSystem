@@ -69,6 +69,7 @@ class Campaign {
     client.release();
     return rows;
   }
+
   static async getCampaignsById(pool, id) {
     const campaigns = "SELECT * FROM campaign WHERE id=$1";
     const client = await pool.connect();
@@ -77,15 +78,15 @@ class Campaign {
     client.release();
     return rows;
   }
-  static async updateCampaign(pool, id, name, durationfrom, durationto) {
+  static async updateCampaign(pool, id, name, durationfrom, durationto, mediatypes, channels) {
     try {
       let query;
       let values;
 
-      if (name && durationfrom && durationto) {
+      if (name && durationfrom && durationto && mediatypes && channels) {
         query =
-          "UPDATE campaign SET name=$2, durationfrom=$3, durationto=$4 WHERE id=$1 RETURNING *";
-        values = [id, name, durationfrom, durationto];
+          "UPDATE campaign SET name=$2, durationfrom=$3, durationto=$4, mediatypes=$5, channels=$6 WHERE id=$1 RETURNING *";
+        values = [id, name, durationfrom, durationto, mediatypes, channels];
       } else if (name) {
         query = "UPDATE campaign SET name=$2 WHERE id=$1 RETURNING *";
         values = [id, name];
@@ -95,6 +96,12 @@ class Campaign {
       } else if (durationto) {
         query = "UPDATE campaign SET durationto=$2 WHERE id=$1 RETURNING *";
         values = [id, durationto];
+      } else if(mediatypes) {
+        query = "UPDATE campaign SET mediatypes=$2 WHERE id=$1 RETURNING *";
+        values = [id, mediatypes];
+      } else if(channels) {
+        query = "UPDATE campaign SET channels=$2 WHERE id=$1 RETURNING *";
+        values = [id, channels];
       }
 
       const client = await pool.connect();

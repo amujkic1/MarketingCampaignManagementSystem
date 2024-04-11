@@ -111,6 +111,18 @@ async function deleteMediaURL(req, res) {
     }
 }
 
+async function addText(req, res) {
+    try{
+        const { campaign_id } = req.params;
+        const { text } = req.body;
+
+        await Media.addText(pool, text, campaign_id);
+        res.status(200).json({ message: 'Media added successfully', text });
+    } catch(error) {
+        res.status(500).json({ error: 'Failed to add media' });
+    }
+}
+
 module.exports = {
     createMedia,
     getAllMedia,
@@ -120,5 +132,6 @@ module.exports = {
     addMediaURL,
     deleteCampaignURL,
     deleteMediaURL,
-    getCampaignMedia
+    getCampaignMedia,
+    addText
 }

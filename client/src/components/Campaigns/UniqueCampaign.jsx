@@ -16,6 +16,8 @@ const UniqueCampaign = () => {
   const [campaign, setCampaign] = useState(null);
   const [cookieId, setCookieId] = useState(null);
   const [media, setMedia] = useState([]);
+  const [textContent, setTextContent] = useState('');
+  const [uploadedTextContent, setUploadedTextContent] = useState('')
 
   useEffect(() => {
     const campaignId = Cookies.get('campaignID');
@@ -61,6 +63,40 @@ const UniqueCampaign = () => {
       console.error('Error fetching campaign by ID:', error);
     }
   };
+
+
+  const uploadTextContent = async () => {
+    if (!textContent || !cookieId) return; 
+  
+    try {
+      setUploading(true);
+  
+      const response = await fetch(`http://localhost:3000/addtext/${cookieId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: textContent })
+      });
+  
+      if (response.ok) {
+        console.log('Text content added successfully');
+        const data = await response.json();
+        console.log('data text ', data.text);
+        setUploadedTextContent(data.text);
+        getCampaignMedia(cookieId);
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to add text content');
+      }
+    } catch (error) {
+      console.error('Error uploading text content:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+  
+
 
   const uploadFile = () => {
     if (fileUpload == null || cookieId == null) return;
@@ -176,6 +212,29 @@ const UniqueCampaign = () => {
               )}
             </td>
             <td>
+
+
+              <div className="upload-section">
+
+              {campaign && (campaign.mediatypes.toLowerCase() === 'image' || campaign.mediatypes.toLowerCase() === 'image with text') ? (
+              <div className="upload-section">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(event) => {
+                    setFileUpload(event.target.files[0]);
+                  }}
+                />
+                <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                  {uploading ? 'Uploading...' : 'Upload Image'}
+                </button>
+                {uploadedUrl && (
+                  <div className="image-card">
+                    <img src={uploadedUrl} alt="Uploaded Image" />
+                  </div>
+                )}
+              </div>
+            ) : campaign && campaign.mediatypes.toLowerCase() === 'video' ? (
               <div className="upload-section">
                 <input
                   type="file"
@@ -195,6 +254,53 @@ const UniqueCampaign = () => {
                     </video>
                   </div>
                 )}
+              </div>
+            ) : campaign && campaign.mediatypes.toLowerCase() === 'audio' ? (
+              <div className="upload-section">
+                <input
+                  type="file"
+                  accept="audio/*"
+                  onChange={(event) => {
+                    setFileUpload(event.target.files[0]);
+                  }}
+                />
+                <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                  {uploading ? 'Uploading...' : 'Upload Audio'}
+                </button>
+                {uploadedUrl && (
+                  <div className="audio-card">
+                    <audio controls>
+                      <source src={uploadedUrl} type="audio/mpeg" />
+                      Your browser does not support the audio tag.
+                    </audio>
+                  </div>
+                )}
+              </div>
+            ) : campaign && campaign.mediatypes.toLowerCase() === 'text' ? (
+              <div className="upload-section">
+                <textarea
+                  rows="4"
+                  cols="50"
+                  placeholder="Enter text content"
+                  value={textContent}
+                  onChange={(event) => setTextContent(event.target.value)}
+                />
+                <button className="upload-button" onClick={ () => {
+                  uploadTextContent();
+                  console.log('uploaded', uploadedTextContent);
+                }
+                  
+                  } disabled={uploading}>
+                  {uploading ? 'Uploading...' : 'Upload Text'}
+                </button>
+                {uploadedTextContent && (
+                  <div className="text-content">
+                    <p>{uploadedTextContent}</p>
+                  </div>
+                )}
+              </div>
+            ) : null}
+
                 <div className="media-container">
                   {media.map((item) => (
                     <div key={item.id} className="media-card">
@@ -203,6 +309,7 @@ const UniqueCampaign = () => {
                     </div>
                   ))}
                 </div>
+
               </div>
             </td>
           </tr>
