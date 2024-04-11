@@ -238,7 +238,7 @@ const UniqueCampaign = () => {
 
               <div className="upload-section">
 
-                {campaign && (campaign.mediatypes.toLowerCase() === 'image' || campaign.mediatypes.toLowerCase() === 'image with text') ? (
+                {campaign && (campaign.mediatypes.toLowerCase() === 'image') ? (
                   <div className="upload-section">
                     <input
                       type="file"
