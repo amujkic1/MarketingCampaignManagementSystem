@@ -77,7 +77,7 @@ const UniqueCampaign = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: textContent })
+        body: JSON.stringify({ text: textContent, type: type })
       });
 
       if (response.ok) {

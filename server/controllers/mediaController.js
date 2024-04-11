@@ -114,9 +114,9 @@ async function deleteMediaURL(req, res) {
 async function addText(req, res) {
     try{
         const { campaign_id } = req.params;
-        const { text } = req.body;
+        const { text, type } = req.body;
 
-        await Media.addText(pool, text, campaign_id);
+        await Media.addText(pool, text, campaign_id, type);
         res.status(200).json({ message: 'Media added successfully', text });
     } catch(error) {
         res.status(500).json({ error: 'Failed to add media' });
