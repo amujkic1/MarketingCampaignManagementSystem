@@ -59,6 +59,79 @@ class Media {
         return true;
     }
 
+    static async getCampaignMedia(pool, campaign_id){
+        const query = 'SELECT * FROM media WHERE campaign_id = $1';
+        const client = await pool.connect();
+        const values = [campaign_id];
+        const { rows } = await client.query(query, values);
+        client.release();
+        return rows;
+    }
+
+    static async addMediaURL(pool, type, url, banner_link, campaign_id){
+
+        let query, values;
+        
+        if(banner_link){
+            query = 'INSERT INTO media (type, url, banner_link, campaign_id) VALUES ($1, $2, $3, $4) RETURNING *'
+            values = [type, url, banner_link, campaign_id];
+        }
+        else{
+            query = 'INSERT INTO media (type, url, campaign_id) VALUES ($1, $2, $3) RETURNING *'
+            values = [type, url, campaign_id];
+        }
+        
+        const client = await pool.connect();
+        const { rows } = await client.query(query, values);
+        client.release();
+        return rows[0];
+    }
+
+    static async deleteCampaignUrl(pool, id) {
+        
+        const query = "DELETE FROM media WHERE campaign_id = $1"
+        
+        const client = await pool.connect();
+        const values = [id];
+
+        try {
+            await client.query(query, values);
+        } catch (error) {
+            console.log(error);
+        }
+
+        client.release();
+        return true;
+    }
+
+    static async deleteMediaUrl(pool, id) {
+        
+        const query = "DELETE FROM media WHERE id = $1"
+        
+        const client = await pool.connect();
+        const values = [id];
+
+        try {
+            await client.query(query, values);
+        } catch (error) {
+            console.log(error);
+        }
+
+        client.release();
+        return true;
+    }
+
+    static async addText(pool, text, campaign_id, type){
+        
+        const query = 'INSERT INTO media (type, text, campaign_id) VALUES ($1, $2, $3) RETURNING *'
+        const values = [type, text, campaign_id];
+        
+        const client = await pool.connect();
+        const { rows } = await client.query(query, values);
+        client.release();
+        return rows[0];
+    }
+
 }
 
 module.exports = Media;

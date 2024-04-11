@@ -49,9 +49,9 @@ async function getCampaignsById(req, res) {
 }
 async function updateCampaign(req, res) {
   const { id } = req.params;
-  const { name, durationfrom, durationto } = req.body;
+  const { name, durationfrom, durationto, mediatypes, channels } = req.body;
   try {
-    const campaign = await Campaign.updateCampaign(pool, id, name, durationfrom, durationto);
+    const campaign = await Campaign.updateCampaign(pool, id, name, durationfrom, durationto, mediatypes, channels);
     res.status(200).json({ message: "Successfuly updated campaign" });
   } catch (error) {
     console.log(error);

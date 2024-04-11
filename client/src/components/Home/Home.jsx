@@ -53,7 +53,7 @@ function Home() {
                 <p className="text-muted text-center mb-5">Explore the possibilities with us!</p>
 
                 {/* Tablica s korisnicima */}
-                <div className="table-responsive mb-4" style={{ maxWidth: '100%', width: '100%' }}> {/* Promijenjena maksimalna širina */}
+                <div className="table-responsive mb-4" style={{ maxWidth: '100%', width: '100%' }}> 
                   <h3 className="text-center mb-3">Users</h3>
                   <table className="table table-striped">
                     <thead>

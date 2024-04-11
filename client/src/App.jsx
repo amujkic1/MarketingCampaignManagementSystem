@@ -7,14 +7,14 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import QRCodeGenerator from "./components/Login/QRCode.jsx";
-import SAHome from "./components/SAHome/SAHome.jsx"; 
+import SAHome from "./components/SAHome/SAHome.jsx";
 
 import Navbar from "./components/Navbar/Navbar.jsx";
 import Channels from "./components/Channels/Channels.jsx";
 import Campaigns from "./components/Campaigns/Camapigns.jsx";
 import Users from "./components/Users/Users.jsx";
-import AuthGuard from "./components/Auth/AuthGuard.jsx"; 
-import FirebaseImage from "./components/Firebase/FirebaseImage.jsx";
+import AuthGuard from "./components/Auth/AuthGuard.jsx";
+import UniqueCampaign from "./components/Campaigns/UniqueCampaign.jsx";
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/2fa" element={<QRCodeGenerator />} />
+
 
           <Route path="/add-company" element={<AuthGuard roles={['super_admin']}>
             <Navbar />
@@ -47,23 +48,28 @@ function App() {
             <Navbar />
             <Channels />
           </AuthGuard>} />
-          
+
           <Route path="/campaigns" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <Campaigns />
           </AuthGuard>
-        } />
+          } />
 
-        <Route path="/users" element={<AuthGuard roles={['admin']}>
+          <Route path="/users" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <Users />
-            </AuthGuard>
-        } />
+          </AuthGuard>
+          } />
 
-        <Route path="/firebase" element={<FirebaseImage />} />
+          <Route path="/campaign" element={<AuthGuard roles={['admin']}>
+            <Navbar />
+            <UniqueCampaign />
+          </AuthGuard>
+          } />
+         
 
         </Routes>
-        
+
       </Router>
     </div>
   )

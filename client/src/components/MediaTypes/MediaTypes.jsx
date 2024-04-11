@@ -120,6 +120,9 @@ const MediaTypes = () => {
             <option value="Image with text">Image with text</option>
             <option value="Video">Video</option>
             <option value="Link">Link</option>
+            <option value="Audio">Audio</option>
+            <option value="Text">Text</option>
+            <option value="Banner">Banner</option>
           </select>
         </div>
         <button
@@ -132,7 +135,7 @@ const MediaTypes = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
+  
         <table>
           <thead>
             <tr>
@@ -152,8 +155,7 @@ const MediaTypes = () => {
             ))}
           </tbody>
         </table>
-      </div>
-
+ 
       {isPopupOpen && (
         <div className="popup-background">
             <div className="popup-content">
@@ -169,6 +171,9 @@ const MediaTypes = () => {
                     <option value="Image with text">Image with text</option>
                     <option value="Video">Video</option>
                     <option value="Link">Link</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Text">Text</option>
+                    <option value="Banner">Banner</option>
                   </select>
                 </div>
                 <button
