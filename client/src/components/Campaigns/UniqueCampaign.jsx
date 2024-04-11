@@ -77,7 +77,7 @@ const UniqueCampaign = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: textContent, type: type })
+        body: JSON.stringify({ text: textContent, type: campaign.mediatypes })
       });
 
       if (response.ok) {
@@ -317,7 +317,7 @@ const UniqueCampaign = () => {
                 ) : campaign && campaign.mediatypes.toLowerCase() === 'link' ? (
                   <div className="upload-section">
                     <textarea
-                      rows="4"
+                      rows="1"
                       cols="50"
                       placeholder="Enter link"
                       value={textContent}
