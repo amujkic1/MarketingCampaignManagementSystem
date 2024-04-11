@@ -78,11 +78,19 @@ td {
 
 
 .media-card iframe {
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   margin-bottom: 2px;
   /* Dodatni stil za iframe */
 }
-
+img{
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  margin-bottom: 3px;
+  width: 200px; /* Postavite željenu širinu slike */
+  height: 150px; /* Postavite željenu visinu slike */
+  object-fit: cover; 
+}
 .delete-button {
   padding: 5px 10px;
   font-size: 14px;
@@ -100,4 +108,17 @@ td {
 .delete-button:hover {
   background-color: #cc0000;
   /* Tamnocrvena boja pozadine na hover */
+}
+.input-container {
+  display: flex;
+  align-items: center;
+}
+
+.link-input {
+  flex-grow: 1;
+  margin-right: 10px; /* Razmak između ulaznog polja za unos linka i gumba */
+}
+
+.button-container {
+  margin-top: 10px; /* Razmak između ulaznog polja za unos linka i gumba */
 }

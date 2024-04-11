@@ -341,27 +341,30 @@ const UniqueCampaign = () => {
                     )}
                   </div>
                 ) : campaign && campaign.mediatypes.toLowerCase() === 'banner' && (
-                  <>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(event) => {
-                        setFileUpload(event.target.files[0]);
-                      }}
-                    />
-                    <textarea
-                      rows="4"
-                      cols="50"
-                      placeholder="Enter link"
-                      value={bannerLink} // Povezujemo polje za unos sa stanjem bannerLink
-                      onChange={(event) => setBannerLink(event.target.value)} // Ažuriramo stanje bannerLink
-                    />
-                    <button className="upload-button" onClick={uploadFile} disabled={uploading}>
-                      {uploading ? 'Uploading...' : 'Upload banner'}
-                    </button>
-                  </>
+                  <div className="upload-section">
+                    <div className="input-container">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(event) => {
+                          setFileUpload(event.target.files[0]);
+                        }}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter link"
+                        value={bannerLink}
+                        onChange={(event) => setBannerLink(event.target.value)}
+                        className="link-input"
+                      />
+                    </div>
+                    <div className="button-container">
+                      <button className="upload-button" onClick={uploadFile} disabled={uploading}>
+                        {uploading ? 'Uploading...' : 'Upload Banner'}
+                      </button>
+                    </div>
+                  </div>
                 )}
-
                 <div className="media-container">
                   {media.map((item) => (
                     <div key={item.id} className="media-card" style={{ width: "250px" }}>
@@ -375,8 +378,11 @@ const UniqueCampaign = () => {
                         <div className="text-content" style={{ overflow: "hidden", wordWrap: "break-word" }}>
                           <p>{item.text}</p>
                         </div>
+                      ) : item.type.toLowerCase() ==='video' ?(
+                        <iframe src={item.url} title={item.type} width="249" height="180"></iframe>
+                      ) : item.type.toLowerCase() ==='audio' ?(
+                        <iframe src={item.url} title={item.type} width="249" height="40"></iframe>
                       ) : (
-                        // Za ostale medijske tipove koristimo <img> tag
                         <img src={item.url} alt={item.type} style={{ width: "100%" }} />
                       )}
                       <button className="delete-button" onClick={() => deleteMedia(item.id)}>Delete</button>
