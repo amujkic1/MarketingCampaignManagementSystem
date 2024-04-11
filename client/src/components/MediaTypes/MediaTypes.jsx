@@ -135,7 +135,7 @@ const MediaTypes = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
+  
         <table>
           <thead>
             <tr>
@@ -155,8 +155,7 @@ const MediaTypes = () => {
             ))}
           </tbody>
         </table>
-      </div>
-
+ 
       {isPopupOpen && (
         <div className="popup-background">
             <div className="popup-content">

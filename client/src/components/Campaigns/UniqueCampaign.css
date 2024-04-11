@@ -72,10 +72,10 @@ td {
   margin-top: 10px;
   border: 1px solid #2B3D5B;
   border-radius: 10px;
-  flex-grow: 1; /* Omogućuje elementima da se redaju jedan za drugim */
-  max-width: calc(33.33% - 20px); /* Postavljanje maksimalne širine */
+  flex-grow: 1;
+  max-width: calc(33.33% - 20px);
+  position: relative; /* Dodajemo relativnu poziciju */
 }
-
 
 .media-card iframe {
   border-top-left-radius: 10px;
@@ -121,4 +121,10 @@ img{
 
 .button-container {
   margin-top: 10px; /* Razmak između ulaznog polja za unos linka i gumba */
+}
+textarea {
+  resize: none;
+}
+.error-message {
+  color: red;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 import {
   ref,
@@ -19,6 +19,9 @@ const UniqueCampaign = () => {
   const [textContent, setTextContent] = useState('');
   const [uploadedTextContent, setUploadedTextContent] = useState('');
   const [bannerLink, setBannerLink] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const fileInputRef = useRef(null);
+
 
   useEffect(() => {
     const campaignId = Cookies.get('campaignID');
@@ -85,6 +88,8 @@ const UniqueCampaign = () => {
         const data = await response.json();
         console.log('data text ', data.text);
         getCampaignMedia(cookieId);
+        // Isprazni tekstualni ulaz nakon uspješnog učitavanja sadržaja
+        setTextContent('');
       } else {
         const data = await response.json();
         throw new Error(data.error || 'Failed to add text content');
@@ -97,16 +102,18 @@ const UniqueCampaign = () => {
   };
 
 
-
   const uploadFile = () => {
     if (fileUpload == null || cookieId == null) return;
+    if (campaign.mediatypes.toLowerCase() === 'banner' && !bannerLink) {
+      setErrorMessage('Please enter both an image and a link.');
+      return;
+    }
     setUploading(true);
     const fileRef = ref(storage, `videos/${fileUpload.name + v4()}`);
     uploadBytes(fileRef, fileUpload)
       .then((snapshot) => {
         getDownloadURL(snapshot.ref)
           .then((url) => {
-            // Postavljanje uploadanog URL-a na null nakon uspješnog uploada
             setUploadedUrl(null);
             if (cookieId) {
               const body = {
@@ -115,7 +122,6 @@ const UniqueCampaign = () => {
                 campaign_id: cookieId,
               };
               if (campaign.mediatypes.toLowerCase() === 'banner') {
-                // Dodajemo banner_link samo ako je medij vrste "banner"
                 body.banner_link = bannerLink;
               }
               fetch('http://localhost:3000/addmediaurl', {
@@ -129,6 +135,10 @@ const UniqueCampaign = () => {
                   if (response.ok) {
                     console.log('URL added successfully');
                     getCampaignMedia(cookieId);
+                    if (fileInputRef.current) {
+                      fileInputRef.current.value = ''; // Čišćenje vrijednosti input polja
+                    }
+                    setBannerLink('');
                   } else {
                     return response.json().then((data) => {
                       throw new Error(data.message);
@@ -151,6 +161,7 @@ const UniqueCampaign = () => {
         setUploading(false);
       });
   };
+
 
 
 
@@ -231,6 +242,7 @@ const UniqueCampaign = () => {
                   <div className="upload-section">
                     <input
                       type="file"
+                      ref={fileInputRef}
                       accept="image/*"
                       onChange={(event) => {
                         setFileUpload(event.target.files[0]);
@@ -249,6 +261,7 @@ const UniqueCampaign = () => {
                   <div className="upload-section">
                     <input
                       type="file"
+                      ref={fileInputRef}
                       accept="video/*"
                       onChange={(event) => {
                         setFileUpload(event.target.files[0]);
@@ -270,6 +283,7 @@ const UniqueCampaign = () => {
                   <div className="upload-section">
                     <input
                       type="file"
+                      ref={fileInputRef}
                       accept="audio/*"
                       onChange={(event) => {
                         setFileUpload(event.target.files[0]);
@@ -332,7 +346,7 @@ const UniqueCampaign = () => {
                       disabled={uploading}
                       style={{ display: "block", margin: "auto" }}
                     >
-                      {uploading ? 'Uploading...' : 'Upload Text'}
+                      {uploading ? 'Uploading...' : 'Upload Link'}
                     </button>
                     {uploadedTextContent && (
                       <div className="text-content">
@@ -345,6 +359,7 @@ const UniqueCampaign = () => {
                     <div className="input-container">
                       <input
                         type="file"
+                        ref={fileInputRef}
                         accept="image/*"
                         onChange={(event) => {
                           setFileUpload(event.target.files[0]);
@@ -363,24 +378,35 @@ const UniqueCampaign = () => {
                         {uploading ? 'Uploading...' : 'Upload Banner'}
                       </button>
                     </div>
+                    {errorMessage && (
+                      <div className="error-message">
+                        {errorMessage}
+                      </div>
+                    )}
                   </div>
                 )}
                 <div className="media-container">
                   {media.map((item) => (
                     <div key={item.id} className="media-card" style={{ width: "250px" }}>
                       {item.type.toLowerCase() === 'banner' ? (
-                        // Ako je medijski tip "banner", koristimo <a> tag s <img> tagom unutar njega
+
                         <a href={item.banner_link} target="_blank" rel="noopener noreferrer">
                           <img src={item.url} alt={item.type} style={{ width: "100%" }} />
                         </a>
                       ) : item.type.toLowerCase() === 'text' ? (
-                        // Ako je medijski tip "text", prikažemo tekst direktno
                         <div className="text-content" style={{ overflow: "hidden", wordWrap: "break-word" }}>
                           <p>{item.text}</p>
                         </div>
-                      ) : item.type.toLowerCase() ==='video' ?(
-                        <iframe src={item.url} title={item.type} width="249" height="180"></iframe>
-                      ) : item.type.toLowerCase() ==='audio' ?(
+                      ) : item.type.toLowerCase() === 'link' ? (
+                        <div className="text-content" style={{ overflow: "hidden", wordWrap: "break-word" }}>
+                          <a href={item.text} target="_blank" rel="noopener noreferrer">{item.text}</a>
+                        </div>
+                      ) : item.type.toLowerCase() === 'video' ? (
+                        <video controls width="249" height="180">
+                          <source src={item.url} type="video/mp4" />
+                          Your browser does not support the video tag.
+                        </video>
+                      ) : item.type.toLowerCase() === 'audio' ? (
                         <iframe src={item.url} title={item.type} width="249" height="40"></iframe>
                       ) : (
                         <img src={item.url} alt={item.type} style={{ width: "100%" }} />

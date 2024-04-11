@@ -177,7 +177,6 @@ const Users = () => {
           Add User
         </button>
       </div>
-      <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -205,7 +204,6 @@ const Users = () => {
             ))}
           </tbody>
         </table>
-      </div>
 
       {isPopupOpen && selectedUser && (
         <div className="popup-background">

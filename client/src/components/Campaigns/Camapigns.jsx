@@ -252,7 +252,6 @@ const Campaigns = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -278,7 +277,6 @@ const Campaigns = () => {
             ))}
           </tbody>
         </table>
-      </div>
 
       {isPopupOpen && selectedCampaign && (
         <div className="popup-background">

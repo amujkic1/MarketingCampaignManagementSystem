@@ -133,7 +133,6 @@ const Channels = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -153,7 +152,6 @@ const Channels = () => {
             ))}
           </tbody>
         </table>
-      </div>
 
       {isPopupOpen && (
         <div className="popup-background">
