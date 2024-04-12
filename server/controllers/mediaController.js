@@ -147,5 +147,6 @@ module.exports = {
     deleteCampaignURL,
     deleteMediaURL,
     getCampaignMedia,
-    addText
+    addText,
+    updateTextMedia
 }
