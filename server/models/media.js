@@ -41,6 +41,16 @@ class Media {
         return rows[0];
     }
 
+    static async updateTextMedia(pool, id, newText){
+        const query = 'UPDATE media SET text = $2 WHERE id = $1'
+        const client = await pool.connect();
+        console.log(id);
+        const values = [id, newText];
+        const { rows } = await client.query(query, values);
+        client.release();
+        return rows[0];
+    }
+
     static async deleteMediaById(pool, id) {
         const mediaQuery = "DELETE FROM campaign_mediatypes WHERE mediatype_id = $1"
         const query = 'DELETE FROM mediatypes WHERE id = $1';

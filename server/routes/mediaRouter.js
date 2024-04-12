@@ -11,5 +11,6 @@ router.delete('/deletecampaignurl/:id', mediaController.deleteCampaignURL);
 router.delete('/deletemediaurl/:id', mediaController.deleteMediaURL);
 router.get('/campaignmedia/:campaign_id', mediaController.getCampaignMedia);
 router.post('/addtext/:campaign_id', mediaController.addText);
+router.put('/updatemedia/:id', mediaController.updateTextMedia);
 
 module.exports = router;
