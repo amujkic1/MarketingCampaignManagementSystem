@@ -7,7 +7,7 @@ async function createChannel(req, res) {
     const newChannel = await Channel.createChannel(pool, name);
     res
       .status(201)
-      .json({ message: " Successfully added channel", channel: newChannel });
+      .json({ message: "Successfully added channel", channel: newChannel });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Error while adding channel" });
