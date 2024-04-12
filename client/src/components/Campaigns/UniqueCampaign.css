@@ -128,3 +128,21 @@ textarea {
 .error-message {
   color: red;
 }
+.update-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  height: auto;
+  line-height: 1;
+  background-color: #4CAF50; /* Zelena boja pozadine */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 7px;
+  margin-left: 5px;
+}
+
+.update-button:hover {
+  background-color: #45a049; /* Tamnozelena boja pozadine na hover */
+}

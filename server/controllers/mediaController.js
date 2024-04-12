@@ -51,6 +51,20 @@ async function updateMediaById(req, res) {
     }
 }
 
+async function updateTextMedia(req, res) {
+    try {
+        const { id } = req.params;
+        console.log(id);
+        const { newText } = req.body;
+        const updatedMedia = await Media.updateTextMedia(pool, id, newText);
+    res.status(200).json({
+        message: "Media updated successfully",
+        media: updatedMedia});
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update media' });
+    }
+}
+
 async function getCampaignMedia(req, res){
     try{
        const { campaign_id } = req.params;
@@ -133,5 +147,6 @@ module.exports = {
     deleteCampaignURL,
     deleteMediaURL,
     getCampaignMedia,
-    addText
+    addText,
+    updateTextMedia
 }
