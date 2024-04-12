@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie'; // Importajte biblioteku za rad s kolačićima
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 function Home() {
@@ -38,7 +41,7 @@ function Home() {
   };
 
   return (
-    <div style={{ paddingTop: '56px' }}>
+    <div data-testid="home-component-wrapper" style={{ paddingTop: '56px' }}>
       <div className="container">
         <div className="row justify-content-center align-items-center vh-100">
             <div className='card my-5' style={{ 

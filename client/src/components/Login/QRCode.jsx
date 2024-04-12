@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie'; // Importajte biblioteku za rad s kolačićima
 import { useNavigate } from 'react-router-dom';
-import QRCode from 'qrcode.react';
-import Cookies from 'js-cookie';
 
 function QRCodeGenerator() {
   const [text, setText] = useState('');
