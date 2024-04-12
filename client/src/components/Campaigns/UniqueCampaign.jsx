@@ -200,6 +200,33 @@ const UniqueCampaign = () => {
       });
   };
 
+  const handleUpdate = async (mediaId) => {
+    try {
+      const updatedText = prompt('Enter new text:');
+      if (!updatedText) return; // Ako korisnik otkaže unos ili ne unese tekst
+
+      const response = await fetch(`http://localhost:3000/updatemedia/${mediaId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ newText: updatedText })
+      });
+
+      if (response.ok) {
+        console.log('Media updated successfully');
+        // Osvježite prikaz medija nakon ažuriranja
+        getCampaignMedia(cookieId);
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update media');
+      }
+    } catch (error) {
+      console.error('Error updating media:', error);
+    }
+  };
+
+
   return (
     <div className="unique-campaign-container">
       <table>
@@ -389,7 +416,6 @@ const UniqueCampaign = () => {
                   {media.map((item) => (
                     <div key={item.id} className="media-card" style={{ width: "250px" }}>
                       {item.type.toLowerCase() === 'banner' ? (
-
                         <a href={item.banner_link} target="_blank" rel="noopener noreferrer">
                           <img src={item.url} alt={item.type} style={{ width: "100%" }} />
                         </a>
@@ -411,7 +437,12 @@ const UniqueCampaign = () => {
                       ) : (
                         <img src={item.url} alt={item.type} style={{ width: "100%" }} />
                       )}
-                      <button className="delete-button" onClick={() => deleteMedia(item.id)}>Delete</button>
+                      <div className="button-container">
+                        <button className="delete-button" onClick={() => deleteMedia(item.id)}>Delete</button>
+                        {item.type.toLowerCase() === 'text' || item.type.toLowerCase() === 'link' ? (
+                          <button className="update-button" onClick={() => handleUpdate(item.id)}>Update</button>
+                        ) : null}
+                      </div>
                     </div>
                   ))}
                 </div>
