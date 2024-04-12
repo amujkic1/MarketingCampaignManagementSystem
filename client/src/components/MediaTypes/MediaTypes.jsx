@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Importajte biblioteku za rad s kolačićima
 import { useNavigate } from 'react-router-dom';
@@ -117,6 +117,7 @@ const MediaTypes = () => {
             value={mediaType}
             onChange={(e) => setMediaType(e.target.value)}
             disabled={isPopupOpen}
+            data-testid="media-type-select"
           >
             <option value="">Select media type</option>
             <option value="Image">Image</option>
@@ -131,6 +132,7 @@ const MediaTypes = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
+          data-testid="add-media-button"
         >
           Add
         </button>
@@ -148,8 +150,8 @@ const MediaTypes = () => {
               <tr key={index}>
                 <td>{type.name}</td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEditClick(type)}>✏️</button>
-                  <button className="btn-delete" onClick={() => deleteMediaType(type.id)}>🗑️</button>
+                  <button className="btn-edit" onClick={() => handleEditClick(type)} data-testid={`edit-media-button-${index}`}>✏️</button>
+                  <button className="btn-delete" onClick={() => deleteMediaType(type.id)} data-testid={`delete-media-button-${index}`}>🗑️</button>
                 </td>
               </tr>
             ))}
@@ -166,6 +168,7 @@ const MediaTypes = () => {
                     className="input-select"
                     value={updateMediaType}
                     onChange={(e) => setUpdateMediaType(e.target.value)}
+                    data-testid="update-media-type-select"
                   >
                     <option value="">Select media type</option>
                     <option value="Image">Image</option>
@@ -174,16 +177,14 @@ const MediaTypes = () => {
                     <option value="Link">Link</option>
                   </select>
                 </div>
-                <button
-                  className="btn-update"
-                  onClick={handleUpdateMediaType}
+                <button className="btn-update" onClick={handleUpdateMediaType} data-testid="update-media-button"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                   style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
                 >
                   Update
                 </button>
-                <button className="btn-close" onClick={handleClosePopup}></button>
+                <button className="btn-close" onClick={handleClosePopup} data-testid="close-popup-button"></button>
               </div>
             </div>
         </div>

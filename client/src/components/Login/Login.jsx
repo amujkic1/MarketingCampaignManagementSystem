@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Importajte biblioteku za rad s kolačićima
 import { useNavigate } from 'react-router-dom';
@@ -123,11 +124,11 @@ function Login() {
 
               <div className='mb-4 mx-5 w-100'>
                 <label className='form-label' htmlFor='email'>Email or phone number</label>
-                <input className='form-control' id='email' type='email' value={emailOrPhone} onChange={e => setEmailOrPhone(e.target.value)} />
+                <input className='form-control' id='email' type='email' value={emailOrPhone} onChange={e => setEmailOrPhone(e.target.value)} data-testid="email-input"/>
               </div>
               <div className='mb-4 mx-5 w-100'>
                 <label className='form-label' htmlFor='password'>Password</label>
-                <input className='form-control' id='password' type='password' value={password} onChange={e => setPassword(e.target.value)} />
+                <input className='form-control' id='password' type='password' value={password} onChange={e => setPassword(e.target.value)} data-testid="password-input"/>
               </div>
 
               {showAuthCodeInput && (
@@ -135,7 +136,9 @@ function Login() {
                   <label className='form-label' htmlFor='auth-code'>Authentication Code</label>
                   <input className='form-control' id='auth-code' type='text' value={authCode} onChange={handleAuthCodeChange} maxLength={6} />
                   <div className="text-center mt-3"> {/* Move text-center to this div */}
-                    <button className='btn btn-primary px-5' type='button' onClick={handleAuthenticate} style={{ backgroundColor: "#2B3D5B" }}>
+                    <button className='btn btn-primary px-5' type='button' onClick={handleAuthenticate} style={{ backgroundColor: "#2B3D5B" }}
+                     data-testid="login-button" >
+                  
                       Log in
                     </button>
                   </div>
@@ -146,7 +149,8 @@ function Login() {
 
 
               {!showAuthCodeInput && (
-                <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin} style={{ backgroundColor: "#2B3D5B" }}>
+                <button className='btn btn-primary mx-2 px-5' type='button' onClick={handleLogin} style={{ backgroundColor: "#2B3D5B" }}
+                data-testid="login-button">
                   Log in
                 </button>
               )}
