@@ -3,6 +3,7 @@ const Campaign = require("../models/campaign");
 const archiver = require("archiver");
 const fs = require("fs");
 const axios = require("axios");
+const mime = require("mime-types");
 
 async function createCampaign(req, res) {
   const { name, durationfrom, durationto, mediatypes, channels } = req.body;
@@ -50,6 +51,7 @@ async function getCampaignsById(req, res) {
       .json({ message: "Failed to return campaign from database" });
   }
 }
+
 async function getCampaignMedia(req, res) {
   const { id } = req.params;
   console.log(req.params);
@@ -69,22 +71,38 @@ async function getCampaignMedia(req, res) {
         let response;
         switch (media.mediatype) {
           case "Video":
+            response = await axios.get(media.url, { responseType: "stream" });
+            archive.append(response.data, { name: `${media.mediatype}.mp4` });
+            break;
           case "Audio":
+            response = await axios.get(media.url, { responseType: "stream" });
+            archive.append(response.data, { name: `${media.mediatype}.mp3` });
           case "Image":
             response = await axios.get(media.url, { responseType: "stream" });
-            archive.append(response.data, { name: media.mediatype });
+            archive.append(response.data, {
+              name: `${media.mediatype}.png`,
+            });
             break;
-          case "Text":
-            archive.append(media.url, { name: `${media.mediatype}.txt` });
-            break;
+
           case "Link":
-            archive.append(media.url, { name: `${media.mediatype}.link` });
+            archive.append(media.url, {
+              name: `${media.mediatype}.link`,
+            });
             break;
           case "Banner":
             archive.append(media.banner_link, {
               name: `${media.mediatype}.html`,
             });
             break;
+        }
+      } else if (media.mediatype == "Text") {
+        if (media.text !== null) {
+          const textContent = media.text;
+          archive.append(textContent, {
+            name: `${media.mediatype}.txt`,
+          });
+        } else {
+          console.error("Text content is null for media:", media);
         }
       }
     }
