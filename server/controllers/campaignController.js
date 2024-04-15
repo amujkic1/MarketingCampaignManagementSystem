@@ -97,7 +97,7 @@ async function getCampaignMedia(req, res) {
                 </head>
                 <body>
                   <a href="${media.banner_link}" target="_blank">
-                    <img src="${media.banner_link}" alt="Banner Image" style="display: block; max-width: 100%;" />
+                    <img src="${media.url}" alt="Banner Image" style="display: block; max-width: 100%;" />
                   </a>
                 </body>
                 </html>
