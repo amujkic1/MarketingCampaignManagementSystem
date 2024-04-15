@@ -72,34 +72,47 @@ async function getCampaignMedia(req, res) {
         switch (media.mediatype) {
           case "Video":
             response = await axios.get(media.url, { responseType: "stream" });
-            archive.append(response.data, { name: `${media.mediatype}.mp4` });
+            archive.append(response.data, {
+              name: `${media.mediatype}_${media.id}.mp4`,
+            });
             break;
           case "Audio":
             response = await axios.get(media.url, { responseType: "stream" });
-            archive.append(response.data, { name: `${media.mediatype}.mp3` });
+            archive.append(response.data, {
+              name: `${media.mediatype}_${media.id}.mp3`,
+            });
           case "Image":
             response = await axios.get(media.url, { responseType: "stream" });
             archive.append(response.data, {
-              name: `${media.mediatype}.png`,
+              name: `${media.mediatype}_${media.id}.png`,
             });
             break;
 
-          case "Link":
-            archive.append(media.url, {
-              name: `${media.mediatype}.link`,
-            });
-            break;
           case "Banner":
-            archive.append(media.banner_link, {
-              name: `${media.mediatype}.html`,
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <title>Banner</title>
+                </head>
+                <body>
+                  <a href="${media.banner_link}" target="_blank">
+                    <img src="${media.banner_link}" alt="Banner Image" style="display: block; max-width: 100%;" />
+                  </a>
+                </body>
+                </html>
+              `;
+
+            archive.append(htmlContent, {
+              name: `${media.mediatype}_${media.id}.html`,
             });
             break;
         }
-      } else if (media.mediatype == "Text") {
+      } else if (media.mediatype == "Text" || media.mediatype == "Link") {
         if (media.text !== null) {
           const textContent = media.text;
           archive.append(textContent, {
-            name: `${media.mediatype}.txt`,
+            name: `${media.mediatype}_${media.id}.txt`,
           });
         } else {
           console.error("Text content is null for media:", media);

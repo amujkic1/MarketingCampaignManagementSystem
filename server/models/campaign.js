@@ -147,17 +147,20 @@ class Campaign {
 
   static async getCampaignMedia(pool, id) {
     const allCampaignMedia =
-      "SELECT url, type, banner_link, text FROM media JOIN campaign_mediatypes ON media.campaign_id=campaign_mediatypes.campaign_id WHERE media.campaign_id=$1";
+      "SELECT url, type, banner_link, text, id FROM media JOIN campaign_mediatypes ON media.campaign_id=campaign_mediatypes.campaign_id WHERE media.campaign_id=$1";
 
     const client = await pool.connect();
     const values = [id];
+
     try {
       const result = await client.query(allCampaignMedia, values);
+
       return result.rows.map((row) => ({
         url: row.url,
         mediatype: row.type,
         banner_link: row.banner_link,
         text: row.text,
+        id: row.id,
       }));
     } catch (error) {
       console.error(error);
