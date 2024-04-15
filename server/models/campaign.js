@@ -78,7 +78,15 @@ class Campaign {
     client.release();
     return rows;
   }
-  static async updateCampaign(pool, id, name, durationfrom, durationto, mediatypes, channels) {
+  static async updateCampaign(
+    pool,
+    id,
+    name,
+    durationfrom,
+    durationto,
+    mediatypes,
+    channels
+  ) {
     try {
       let query;
       let values;
@@ -96,10 +104,10 @@ class Campaign {
       } else if (durationto) {
         query = "UPDATE campaign SET durationto=$2 WHERE id=$1 RETURNING *";
         values = [id, durationto];
-      } else if(mediatypes) {
+      } else if (mediatypes) {
         query = "UPDATE campaign SET mediatypes=$2 WHERE id=$1 RETURNING *";
         values = [id, mediatypes];
-      } else if(channels) {
+      } else if (channels) {
         query = "UPDATE campaign SET channels=$2 WHERE id=$1 RETURNING *";
         values = [id, channels];
       }
@@ -115,10 +123,10 @@ class Campaign {
   }
 
   static async deleteCampaign(pool, id) {
-
-    const mediaTypeQuery = "DELETE FROM campaign_mediatypes WHERE campaign_id = $1"
-    const channelQuery = "DELETE FROM campaign_channels WHERE campaign_id = $1"
-    const mediaQuery = "DELETE FROM media WHERE campaign_id = $1"
+    const mediaTypeQuery =
+      "DELETE FROM campaign_mediatypes WHERE campaign_id = $1";
+    const channelQuery = "DELETE FROM campaign_channels WHERE campaign_id = $1";
+    const mediaQuery = "DELETE FROM media WHERE campaign_id = $1";
     const query = "DELETE FROM campaign WHERE id = $1";
 
     const client = await pool.connect();
@@ -133,9 +141,33 @@ class Campaign {
       console.log(error);
     }
 
-
     client.release();
     return true;
+  }
+
+  static async getCampaignMedia(pool, id) {
+    const allCampaignMedia =
+      "SELECT url, type, banner_link, text, id FROM media JOIN campaign_mediatypes ON media.campaign_id=campaign_mediatypes.campaign_id WHERE media.campaign_id=$1";
+
+    const client = await pool.connect();
+    const values = [id];
+
+    try {
+      const result = await client.query(allCampaignMedia, values);
+
+      return result.rows.map((row) => ({
+        url: row.url,
+        mediatype: row.type,
+        banner_link: row.banner_link,
+        text: row.text,
+        id: row.id,
+      }));
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 }
 

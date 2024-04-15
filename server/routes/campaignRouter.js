@@ -8,4 +8,9 @@ router.get("/campaign/:id", campaignController.getCampaignsById);
 router.put("/campaign/:id", campaignController.updateCampaign);
 router.delete("/campaign/:id", campaignController.deleteCampaign);
 
+router.get(
+  "/request-campaign/:id/media/download",
+  campaignController.getCampaignMedia
+);
+
 module.exports = router;

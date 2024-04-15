@@ -1,5 +1,9 @@
 const { pool } = require("../database");
 const Campaign = require("../models/campaign");
+const archiver = require("archiver");
+const fs = require("fs");
+const axios = require("axios");
+const mime = require("mime-types");
 
 async function createCampaign(req, res) {
   const { name, durationfrom, durationto, mediatypes, channels } = req.body;
@@ -47,11 +51,97 @@ async function getCampaignsById(req, res) {
       .json({ message: "Failed to return campaign from database" });
   }
 }
+
+async function getCampaignMedia(req, res) {
+  const { id } = req.params;
+  console.log(req.params);
+  try {
+    const campaignMedia = await Campaign.getCampaignMedia(pool, id);
+    console.log(campaignMedia);
+
+    const archive = archiver("zip", { zlib: { level: 9 } });
+
+    res.attachment(`campaign_${id}_media.zip`);
+    res.status(200);
+
+    archive.pipe(res);
+
+    for (const media of campaignMedia) {
+      if (media.url) {
+        let response;
+        switch (media.mediatype) {
+          case "Video":
+            response = await axios.get(media.url, { responseType: "stream" });
+            archive.append(response.data, {
+              name: `${media.mediatype}_${media.id}.mp4`,
+            });
+            break;
+          case "Audio":
+            response = await axios.get(media.url, { responseType: "stream" });
+            archive.append(response.data, {
+              name: `${media.mediatype}_${media.id}.mp3`,
+            });
+          case "Image":
+            response = await axios.get(media.url, { responseType: "stream" });
+            archive.append(response.data, {
+              name: `${media.mediatype}_${media.id}.png`,
+            });
+            break;
+
+          case "Banner":
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <title>Banner</title>
+                </head>
+                <body>
+                  <a href="${media.banner_link}" target="_blank">
+                    <img src="${media.banner_link}" alt="Banner Image" style="display: block; max-width: 100%;" />
+                  </a>
+                </body>
+                </html>
+              `;
+
+            archive.append(htmlContent, {
+              name: `${media.mediatype}_${media.id}.html`,
+            });
+            break;
+        }
+      } else if (media.mediatype == "Text" || media.mediatype == "Link") {
+        if (media.text !== null) {
+          const textContent = media.text;
+          archive.append(textContent, {
+            name: `${media.mediatype}_${media.id}.txt`,
+          });
+        } else {
+          console.error("Text content is null for media:", media);
+        }
+      }
+    }
+
+    archive.finalize();
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Failed to return mediatypes for certain campaign" });
+  }
+}
+
 async function updateCampaign(req, res) {
   const { id } = req.params;
   const { name, durationfrom, durationto, mediatypes, channels } = req.body;
   try {
-    const campaign = await Campaign.updateCampaign(pool, id, name, durationfrom, durationto, mediatypes, channels);
+    const campaign = await Campaign.updateCampaign(
+      pool,
+      id,
+      name,
+      durationfrom,
+      durationto,
+      mediatypes,
+      channels
+    );
     res.status(200).json({ message: "Successfuly updated campaign" });
   } catch (error) {
     console.log(error);
@@ -75,4 +165,5 @@ module.exports = {
   getCampaignsById,
   updateCampaign,
   deleteCampaign,
+  getCampaignMedia,
 };
