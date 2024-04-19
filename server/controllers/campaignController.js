@@ -108,7 +108,30 @@ async function getCampaignMedia(req, res) {
             });
             break;
         }
-      } else if (media.mediatype == "Text" || media.mediatype == "Link") {
+      }
+      else if (media.mediatype == "Link"){
+        if (media.text !== null) {
+
+          const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <title>Banner</title>
+                </head>
+                <body>
+                  <a href="${media.text}" target="_blank">Link</a>
+                </body>
+                </html>
+              `;
+
+            archive.append(htmlContent, {
+              name: `${media.mediatype}_${media.id}.html`,
+           });
+        } else {
+          console.error("Text content is null for media:", media);
+        }
+      }
+      else if (media.mediatype == "Text") {
         if (media.text !== null) {
           const textContent = media.text;
           archive.append(textContent, {
