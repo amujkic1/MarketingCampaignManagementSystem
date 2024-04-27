@@ -6,6 +6,7 @@ import './Campaigns.css';
 const Campaigns = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [newName, setNewName] = useState('');
+  const [newRegion, setRegion] = useState('');
   const [channelType, setChannelType] = useState('');
   const [mediaType, setMediaType] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -16,6 +17,7 @@ const Campaigns = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [updateName, setUpdateName] = useState('');
+  const [updateRegion, setUpdateRegion] = useState('');
   const [updateChannel, setUpdateChannel] = useState('');
   const [updateMediaType, setUpdateMediaType] = useState('');
   const [updateStartDate, setUpdateStartDate] = useState('');
@@ -59,6 +61,7 @@ const Campaigns = () => {
         credentials: 'include',
         body: JSON.stringify({
           name: newName,
+          region: newRegion,
           channels: channelType,
           mediatypes: mediaType,
           durationfrom: startDate,
@@ -71,6 +74,7 @@ const Campaigns = () => {
       }
 
       setNewName('');
+      setRegion('');
       setChannelType('');
       setMediaType('');
       setStartDate('');
@@ -149,6 +153,7 @@ const Campaigns = () => {
     event.stopPropagation(); // Spriječi podizanje događaja
     setSelectedCampaign(campaign);
     setUpdateName(campaign.name);
+    setUpdateRegion(campaign.region);
     setUpdateChannel(campaign.channels);
     setUpdateMediaType(campaign.mediatypes);
     setUpdateStartDate(campaign.durationfrom);
@@ -169,6 +174,7 @@ const Campaigns = () => {
         },
         body: JSON.stringify({
           name: updateName,
+          region: updateRegion,
           channels: updateChannel,
           mediatypes: updateMediaType,
           durationfrom: updateStartDate,
@@ -189,7 +195,7 @@ const Campaigns = () => {
 
   const handleCampaignClick = (campaignId) => {
     console.log("Clicked campaign ID:", campaignId);
-    Cookies.set('campaignID', campaignId); // Spremanje ID kampanje u kolačić
+    Cookies.set('campaignID', campaignId); 
     navigate('/campaign');
   };
 
@@ -203,6 +209,13 @@ const Campaigns = () => {
             placeholder="Name"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
+          />
+          <input
+            className="input-region"
+            type="text"
+            placeholder="Region"
+            value={newRegion}
+            onChange={(e) => setRegion(e.target.value)}
           />
           <select
             className="input-select"
@@ -256,6 +269,7 @@ const Campaigns = () => {
           <thead>
             <tr>
               <th>NAME</th>
+              <th>REGION</th>
               <th>CHANNEL</th>
               <th>MEDIA TYPE</th>
               <th>DURATION</th>
@@ -266,6 +280,7 @@ const Campaigns = () => {
             {campaigns.map((campaign, index) => (
               <tr key={index} onClick={() => handleCampaignClick(campaign.id)}>
                 <td>{campaign.name}</td>
+                <td>{campaign.region}</td>
                 <td>{campaign.channels}</td>
                 <td>{campaign.mediatypes}</td>
                 <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
@@ -289,6 +304,13 @@ const Campaigns = () => {
                     placeholder="Name"
                     value={updateName}
                     onChange={(e) => setUpdateName(e.target.value)}
+                  />
+                  <input
+                    className="input-region"
+                    type="text"
+                    placeholder="Region"
+                    value={updateRegion}
+                    onChange={(e) => setUpdateRegion(e.target.value)}
                   />
                   <select
                     className="input-select"
