@@ -6,11 +6,12 @@ const axios = require("axios");
 const mime = require("mime-types");
 
 async function createCampaign(req, res) {
-  const { name, durationfrom, durationto, mediatypes, channels } = req.body;
+  const { name, region, durationfrom, durationto, mediatypes, channels } = req.body;
   try {
     const newCampaign = await Campaign.createCampaign(
       pool,
       name,
+      region,
       durationfrom,
       durationto,
       mediatypes,
@@ -154,12 +155,13 @@ async function getCampaignMedia(req, res) {
 
 async function updateCampaign(req, res) {
   const { id } = req.params;
-  const { name, durationfrom, durationto, mediatypes, channels } = req.body;
+  const { name, region, durationfrom, durationto, mediatypes, channels } = req.body;
   try {
     const campaign = await Campaign.updateCampaign(
       pool,
       id,
       name,
+      region,
       durationfrom,
       durationto,
       mediatypes,
