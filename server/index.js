@@ -31,12 +31,20 @@ app.use(express.static("public"));
   credentials: true
 }));*/
 
-app.use(
+/*app.use(
   cors({
     origin: "https://marketing-campaign-management-system-client.vercel.app",
     credentials: true,
   })
+);*/
+
+app.use(
+  cors({
+    origin: ["https://marketing-campaign-management-system-client.vercel.app", "https://channels-managament-system.vercel.app/"],
+    credentials: true,
+  })
 );
+
 
 app.use("/user", authRouter);
 app.use("/qrimage", authRouter);
