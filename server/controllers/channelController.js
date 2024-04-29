@@ -53,9 +53,9 @@ async function updateChannel(req, res) {
   }
 }
 async function getAllCampaignsForChannel(req, res) {
-  const { id } = req.params
+  const { name } = req.params
   try {
-    const allCampaigns = await Channel.getAllCampaignsForChannel(pool, id);
+    const allCampaigns = await Channel.getAllCampaignsForChannel(pool, name);
     res.status(200).json(allCampaigns);
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve all campaigns for a channel' });
