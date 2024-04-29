@@ -56,11 +56,11 @@ class Channel {
     return rows[0];
   }
 
-  static async getAllCampaignsForChannel(pool, id) {
+  static async getAllCampaignsForChannel(pool, name) {
     const query = "SELECT campaign.* FROM campaign JOIN campaign_channels ON campaign.id = campaign_channels.campaign_id"
-                + " JOIN channels ON campaign_channels.channel_id = channels.id WHERE channels.id = $1"
+                + " JOIN channels ON campaign_channels.channel_id = channels.id WHERE channels.name = $1"
     const client = await pool.connect();
-    const values = [id];
+    const values = [name];
     const { rows } = await client.query(query, values);
     client.release();
     return rows;
