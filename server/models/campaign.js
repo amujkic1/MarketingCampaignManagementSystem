@@ -80,6 +80,7 @@ class Campaign {
     client.release();
     return rows;
   }
+
   static async updateCampaign(
     pool,
     id,
@@ -88,9 +89,11 @@ class Campaign {
     durationfrom,
     durationto,
     mediatypes,
-    channels
+    channels,
+    oldChannel
   ) {
     try {
+      
       let query;
       let values;
 
@@ -115,10 +118,34 @@ class Campaign {
         values = [id, channels];
       }
 
+      const channelQuery = "SELECT id FROM channels WHERE name = $1"
+      const channelValues = [channels]   
+
+      const oldChannelQuery = "SELECT id FROM channels WHERE name = $1"
+      const oldChannelValues = [oldChannel]
+      
       const client = await pool.connect();
-      const { rows } = await client.query(query, values);
+      const { rows } = await client.query(query, values); 
+      
+      const { rows: channelRows } = await client.query(channelQuery, channelValues); 
+      const channelId = channelRows[0].id;
+
+      const { rows: oldChannelRows } = await client.query(oldChannelQuery, oldChannelValues);
+      const oldChannelId = oldChannelRows[0].id;
+
+      const deleteOldChannelQuery = "DELETE FROM campaign_channels WHERE campaign_id = $1 AND channel_id = $2";
+      const insertNewChannelQuery = "INSERT INTO campaign_channels (campaign_id, channel_id) VALUES ($1, $2)";
+
+      await client.query(deleteOldChannelQuery, [id, oldChannelId]);
+
+      await client.query(insertNewChannelQuery, [id, channelId]);
+
+      console.log(channelId);
+      console.log(oldChannelId);
+
       client.release();
       return rows[0];
+
     } catch (error) {
       console.error("Error updating campaign:", error);
       throw error;

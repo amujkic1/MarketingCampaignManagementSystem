@@ -155,7 +155,8 @@ async function getCampaignMedia(req, res) {
 
 async function updateCampaign(req, res) {
   const { id } = req.params;
-  const { name, region, durationfrom, durationto, mediatypes, channels } = req.body;
+  const { name, region, durationfrom, durationto, mediatypes, channels, oldChannel } = req.body;
+  //console.log('old channel ', oldChannel);
   try {
     const campaign = await Campaign.updateCampaign(
       pool,
@@ -165,7 +166,8 @@ async function updateCampaign(req, res) {
       durationfrom,
       durationto,
       mediatypes,
-      channels
+      channels,
+      oldChannel
     );
     res.status(200).json({ message: "Successfuly updated campaign" });
   } catch (error) {
