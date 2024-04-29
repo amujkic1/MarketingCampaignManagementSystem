@@ -52,6 +52,15 @@ async function updateChannel(req, res) {
     res.status(500).json({ message: "Failed to update channel" });
   }
 }
+async function getAllCampaignsForChannel(req, res) {
+  const { id } = req.params
+  try {
+    const allCampaigns = await Channel.getAllCampaignsForChannel(pool, id);
+    res.status(200).json(allCampaigns);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve all campaigns for a channel' });
+  }
+}
 
 module.exports = {
   createChannel,
@@ -59,4 +68,5 @@ module.exports = {
   getChannelById,
   deleteChannel,
   updateChannel,
+  getAllCampaignsForChannel
 };
