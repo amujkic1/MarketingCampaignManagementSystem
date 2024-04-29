@@ -3,7 +3,9 @@ import './Channels.css';
 
 const Channels = () => {
   const [types, setTypes] = useState([]);
+  const [name, setName] = useState([]);
   const [addMediaType, setAddMediaType] = useState('');
+  const [updateName, setUpdateName] = useState('');
   const [updateMediaType, setUpdateMediaType] = useState('');
   const [isHovered, setIsHovered] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -41,7 +43,7 @@ const Channels = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: addMediaType }),
+        body: JSON.stringify({ name: addMediaType, channel: name }),
       });
 
       if (!response.ok) {
@@ -77,6 +79,7 @@ const Channels = () => {
   const handleEditClick = (channel) => {
     setSelectedChannel(channel);
     setUpdateMediaType(channel.name);
+    setUpdateName(channel.channel);
     setIsPopupOpen(true);
   };
 
@@ -91,7 +94,7 @@ const Channels = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: updateMediaType }),
+        body: JSON.stringify({ name: updateMediaType, channel: updateName }),
       });
 
       if (!response.ok) {
@@ -109,6 +112,13 @@ const Channels = () => {
     <div className="task-manager-container">
       <div className="form-container">
         <div className="input-wrapper">
+        <input
+            className="input-name"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <select
             className="input-select"
             value={addMediaType}
@@ -136,7 +146,8 @@ const Channels = () => {
         <table>
           <thead>
             <tr>
-              <th>CHANNEL</th>
+              <th>TYPE</th>
+              <th>NAME</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
@@ -144,6 +155,7 @@ const Channels = () => {
             {types.map((type, index) => (
               <tr key={index}>
                 <td>{type.name}</td>
+                <td>{type.channel}</td>
                 <td>
                   <button className="btn-edit" onClick={() => handleEditClick(type)}>✏️</button>
                   <button className="btn-delete" onClick={() => deleteChannel(type.id)}>🗑️</button>
@@ -158,6 +170,13 @@ const Channels = () => {
             <div className="popup-content">
               <div className="form-container">
                 <div className="input-wrapper">
+                <input
+                    className="input-name"
+                    type="text"
+                    placeholder="Name"
+                    value={updateName}
+                    onChange={(e) => setUpdateName(e.target.value)}
+                  />
                   <select
                     className="input-select"
                     value={updateMediaType}
