@@ -22,6 +22,7 @@ const Campaigns = () => {
   const [updateMediaType, setUpdateMediaType] = useState('');
   const [updateStartDate, setUpdateStartDate] = useState('');
   const [updateEndDate, setUpdateEndDate] = useState('');
+  const [oldChannel, setOldChannel] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const Campaigns = () => {
 
   const getAllCampaigns = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ const Campaigns = () => {
 
   const createCampaign = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +88,7 @@ const Campaigns = () => {
 
   const getAllChannels = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +110,7 @@ const Campaigns = () => {
 
   const getAllMedia = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/media', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +133,7 @@ const Campaigns = () => {
   const deleteCampaign = async (event, id) => {
     event.stopPropagation(); // Spriječi podizanje događaja
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -158,6 +159,7 @@ const Campaigns = () => {
     setUpdateMediaType(campaign.mediatypes);
     setUpdateStartDate(campaign.durationfrom);
     setUpdateEndDate(campaign.durationto);
+    setOldChannel(campaign.channels);
     setIsPopupOpen(true);
   };
 
@@ -167,7 +169,7 @@ const Campaigns = () => {
 
   const handleUpdateCampaign = async () => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${selectedCampaign.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${selectedCampaign.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -178,7 +180,8 @@ const Campaigns = () => {
           channels: updateChannel,
           mediatypes: updateMediaType,
           durationfrom: updateStartDate,
-          durationto: updateEndDate
+          durationto: updateEndDate,
+          oldChannel: oldChannel
         }),
       });
 

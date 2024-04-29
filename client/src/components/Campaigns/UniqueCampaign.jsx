@@ -42,7 +42,7 @@ const UniqueCampaign = () => {
 
   const getCampaignById = async (id) => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const UniqueCampaign = () => {
     try {
       setUploading(true);
 
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/addtext/${cookieId}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/addtext/${cookieId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -124,7 +124,7 @@ const UniqueCampaign = () => {
               if (campaign.mediatypes.toLowerCase() === 'banner') {
                 body.banner_link = bannerLink;
               }
-              fetch('https://marketing-campaign-management-system-server.vercel.app/addmediaurl', {
+              fetch('https://marketing-campaign-management-system-server\.vercel\.app/addmediaurl', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ const UniqueCampaign = () => {
 
   const getCampaignMedia = async (campaignId) => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaignmedia/${campaignId}`);
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaignmedia/${campaignId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch campaign media');
       }
@@ -181,7 +181,7 @@ const UniqueCampaign = () => {
   };
 
   const deleteMedia = (mediaId) => {
-    fetch(`https://marketing-campaign-management-system-server.vercel.app/deletemediaurl/${mediaId}`, {
+    fetch(`https://marketing-campaign-management-system-server\.vercel\.app/deletemediaurl/${mediaId}`, {
       method: 'DELETE',
     })
       .then(response => {
@@ -205,7 +205,7 @@ const UniqueCampaign = () => {
       const updatedText = prompt('Enter new text:');
       if (!updatedText) return; // Ako korisnik otkaže unos ili ne unese tekst
 
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/updatemedia/${mediaId}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/updatemedia/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

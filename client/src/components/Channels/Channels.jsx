@@ -17,7 +17,7 @@ const Channels = () => {
 
   const getAllChannels = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ const Channels = () => {
 
   const addChannel = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ const Channels = () => {
 
   const deleteChannel = async (id) => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/channel/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/channel/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const Channels = () => {
 
   const handleUpdateChannel = async () => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/channel/${selectedChannel.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/channel/${selectedChannel.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
