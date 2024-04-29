@@ -2,9 +2,9 @@ const Channel = require("../models/channel");
 const { pool } = require("../database");
 
 async function createChannel(req, res) {
-  const { name } = req.body;
+  const { name, channel } = req.body;
   try {
-    const newChannel = await Channel.createChannel(pool, name);
+    const newChannel = await Channel.createChannel(pool, name, channel);
     res
       .status(201)
       .json({ message: " Successfully added channel", channel: newChannel });
@@ -41,11 +41,12 @@ async function deleteChannel(req, res) {
     res.status(500).json("Failed to delete channel");
   }
 }
+
 async function updateChannel(req, res) {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, channel } = req.body;
   try {
-    const newChannel = await Channel.updateChannel(pool, name, id);
+    const newChannel = await Channel.updateChannel(pool, name, channel, id);
     res.status(200).json({ message: "Updated channel", channel: newChannel });
   } catch (error) {
     console.log(error);
