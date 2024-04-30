@@ -40,7 +40,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: ["https://marketing-campaign-management-system-client.vercel.app", "https://channels-managament-system.vercel.app"],
+    origin: ["https://marketing-campaign-management-system-client.vercel.app", "https://channels-managament-system.vercel.app", "http://localhost:5173"],
     credentials: true,
   })
 );
