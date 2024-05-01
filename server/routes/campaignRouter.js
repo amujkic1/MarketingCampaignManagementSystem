@@ -13,4 +13,6 @@ router.get(
   campaignController.getCampaignMedia
 );
 
+router.post("/campaign/assigngroup", campaignController.assignGroup);
+
 module.exports = router;

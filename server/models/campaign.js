@@ -18,8 +18,6 @@ class Campaign {
     const client = await pool.connect();
     const query =
       "INSERT INTO campaign (name, region, durationfrom, durationto,mediatypes, channels) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
-    console.log(channelName);
-    console.log(mediatypesName);
     const channels = `SELECT id FROM channels WHERE name='${channelName}' `;
     const mediatypes = `SELECT id FROM mediatypes WHERE name='${mediatypesName}'`;
 
@@ -28,9 +26,6 @@ class Campaign {
 
     const channelId = channelResult.rows[0].id;
     const mediatypesId = mediatypesResult.rows[0].id;
-
-    console.log(channelId);
-    console.log(mediatypesId);
 
     const values = [
       name,
@@ -57,9 +52,6 @@ class Campaign {
       mediatypesCampaign,
       campaignMediaTypesValues
     );
-
-    console.log(campaignChannelRows);
-    console.log(campaignMediaTypesRows);
 
     return rows[0];
   }
@@ -198,6 +190,33 @@ class Campaign {
     } finally {
       client.release();
     }
+  }
+
+  static async assignGroup(pool, region_name, campaign_name) {
+
+    try{
+      const groupIdQuery = "select id from groups where name = $1"
+      const client = await pool.connect();
+      const groupValues = [region_name];
+      const { rows: groupRows } = await client.query(groupIdQuery, groupValues);
+      const groupId = groupRows[0];
+
+      const campaignQuery = "select id from campaign where name = $1"
+      const campaignValues = [campaign_name];
+      const { rows: campaignRows } = await client.query(campaignQuery, campaignValues);
+      const campId = campaignRows[0];
+      
+      const assignQuery = "update campaign set groupid = $2 where id = $1";
+      const assignValues = [campId.id, groupId.id];
+      await client.query(assignQuery, assignValues);    
+      
+      client.release();
+  
+  
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 }
 

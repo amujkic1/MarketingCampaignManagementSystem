@@ -186,6 +186,16 @@ async function deleteCampaign(req, res) {
   }
 }
 
+async function assignGroup(req, res) {
+  try{
+    const { region_name, campaign_name } = req.body;
+    await Campaign.assignGroup(pool, region_name, campaign_name);
+    res.status(200).json({ message: "Group assigned successfully" });
+  } catch(error) {
+    res.status(500).json({ error: "Failed to assign group" });
+  }
+}
+
 module.exports = {
   createCampaign,
   getCampaigns,
@@ -193,4 +203,5 @@ module.exports = {
   updateCampaign,
   deleteCampaign,
   getCampaignMedia,
+  assignGroup
 };

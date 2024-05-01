@@ -15,6 +15,7 @@ import Campaigns from "./components/Campaigns/Camapigns.jsx";
 import Users from "./components/Users/Users.jsx";
 import AuthGuard from "./components/Auth/AuthGuard.jsx";
 import UniqueCampaign from "./components/Campaigns/UniqueCampaign.jsx";
+import Groups from "./components/Groups/Groups.jsx";
 
 function App() {
   return (
@@ -64,6 +65,12 @@ function App() {
           <Route path="/campaign" element={<AuthGuard roles={['admin']}>
             <Navbar />
             <UniqueCampaign />
+          </AuthGuard>
+          } />
+
+          <Route path="/groups" element={<AuthGuard roles={['admin']}>
+            <Navbar />
+            <Groups />
           </AuthGuard>
           } />
          
