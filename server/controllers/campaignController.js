@@ -199,8 +199,9 @@ async function assignGroup(req, res) {
 
   async function getCampaignsByGroup(req, res) {
     try{
-      const { group_id } = req.body;
-      const campaigns = await Campaign.getCampaignsByGroup(pool, group_id);  
+      const { group_id, channel } = req.body;
+      console.log(req.body);
+      const campaigns = await Campaign.getCampaignsByGroup(pool, group_id, channel);  
       res.status(200).json(campaigns);
     } catch(error) {
       res.status(500).json({ error: "Failed to get campaigns" });

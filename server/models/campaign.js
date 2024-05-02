@@ -212,8 +212,8 @@ class Campaign {
 
       console.log('id kampanje kod assign group', campId);
       
-      const assignQuery = "update campaign set groupid = $2 where id = $1";
-      const assignValues = [campId.id, groupId.id];
+      const assignQuery = "update campaign set groupid = $2, region = $3 where id = $1";
+      const assignValues = [campId.id, groupId.id, region_name];
       await client.query(assignQuery, assignValues);    
       
       client.release();
@@ -225,13 +225,18 @@ class Campaign {
 
   }
 
-  static async getCampaignsByGroup(pool, groupId) {
-    const query = "SELECT * FROM campaign WHERE groupid = $1";
-    const values = [groupId];
-    const client = await pool.connect();
-    const { rows } = await client.query(query, values);
-    client.release();
-    return rows;
+  static async getCampaignsByGroup(pool, groupId, channel) {
+    try{
+      const query = "SELECT * FROM campaign WHERE groupid = $1 and channels = $2";
+      const values = [groupId, channel];
+      const client = await pool.connect();
+      const { rows } = await client.query(query, values);
+      client.release();
+      return rows;
+    } catch(error) {
+      console.log(error);
+    }
+    
   }
 
 }
