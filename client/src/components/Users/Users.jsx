@@ -23,7 +23,7 @@ const Users = () => {
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/users', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/users', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ const Users = () => {
 
   const createUser = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/users', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/users', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const Users = () => {
 
   const deleteUser = async (id) => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server\\.vercel\\.app/users/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/users/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const Users = () => {
       // Hash the new password before saving
       const hashedPassword = await bcrypt.hash(updatePasswordVisible, 10);
 
-      const response = await fetch(`https://marketing-campaign-management-system-server\\.vercel\\.app/users/${selectedUser.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/users/${selectedUser.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
