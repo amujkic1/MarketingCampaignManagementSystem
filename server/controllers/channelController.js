@@ -53,6 +53,7 @@ async function updateChannel(req, res) {
     res.status(500).json({ message: "Failed to update channel" });
   }
 }
+
 async function getAllCampaignsForChannel(req, res) {
   const { name } = req.params
   try {
@@ -63,11 +64,37 @@ async function getAllCampaignsForChannel(req, res) {
   }
 }
 
+async function getChannelsByType(req, res) {
+  const { type } = req.params;
+  try {
+    const channels = await Channel.getChannelsByType(pool, type);
+    res.status(200).json(channels);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to get channels by type' });
+  }
+}
+
+async function addChannelsToGroup(req, res) {
+  try{
+    
+    const { group_id, channel_ids } = req.body;
+    console.log('usli u controller ', req.body);
+    await Promise.all(channel_ids.map(async (channel_id) => {
+      await Channel.addChannelToGroup(pool, group_id, channel_id);
+    }));
+    res.status(200).json({ message: "Channels added successfully" });
+  } catch(error) {
+    res.status(500).json({ error: "Failed to add channles to group" });
+  }
+}
+
 module.exports = {
   createChannel,
   getChannels,
   getChannelById,
   deleteChannel,
   updateChannel,
-  getAllCampaignsForChannel
+  getAllCampaignsForChannel,
+  getChannelsByType,
+  addChannelsToGroup
 };

@@ -10,6 +10,7 @@ const mediaRouter = require("./routes/mediaRouter");
 const userRouter = require("./routes/userRouter");
 const companyRouter = require("./routes/companyRouter");
 const superAdminRouter = require("./routes/superAdminRouter.js");
+const groupRouter = require("./routes/groupRouter.js");
 const bodyParser = require("body-parser");
 const { Pool } = require("pg");
 const app = express();
@@ -53,6 +54,7 @@ app.use("/getUser", authRouter);
 app.use("/", channelRouter);
 app.use("/", campaignRouter);
 app.use("/", companyRouter);
+app.use("/", groupRouter);
 
 //za super admina
 app.use("/super", superAdminRouter);

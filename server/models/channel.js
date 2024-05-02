@@ -64,6 +64,30 @@ class Channel {
     client.release();
     return rows;
   }
+
+  static async getChannelsByType(pool, type) {
+    const query = "SELECT * FROM channels WHERE name = $1";
+    const client = await pool.connect();
+    const values = [type];
+    const { rows } = await client.query(query, values);
+    client.release();
+    return rows;
+  }
+
+  static async addChannelToGroup(pool, groupId, channelId ) {
+    try{
+      console.log('usli u bazuuuuuuuuuuuuuuuuuuuuuu', groupId, channelId);
+      const query = "UPDATE channels SET group_id = $1 WHERE id = $2"
+      const client = await pool.connect();
+      const values = [groupId, channelId];
+      const { rows } = await client.query(query, values);
+      client.release();
+      return rows;  
+    } catch(error) {
+      console.log(error);
+    }
+  }
+
 }
 
 module.exports = Channel;
