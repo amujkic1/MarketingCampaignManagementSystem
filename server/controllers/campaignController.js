@@ -156,7 +156,6 @@ async function getCampaignMedia(req, res) {
 async function updateCampaign(req, res) {
   const { id } = req.params;
   const { name, region, durationfrom, durationto, mediatypes, channels, oldChannel } = req.body;
-  //console.log('old channel ', oldChannel);
   try {
     const campaign = await Campaign.updateCampaign(
       pool,
@@ -187,14 +186,17 @@ async function deleteCampaign(req, res) {
 }
 
 async function assignGroup(req, res) {
-  try{
-    const { region_name, campaign_name } = req.body;
-    await Campaign.assignGroup(pool, region_name, campaign_name);
+  try {
+    const { region_name, campaign_names } = req.body; 
+    const assignments = await Promise.all(campaign_names.map(async (campaign_name) => {
+      await Campaign.assignGroup(pool, region_name, campaign_name);
+    }));
     res.status(200).json({ message: "Group assigned successfully" });
-  } catch(error) {
+  } catch (error) {
     res.status(500).json({ error: "Failed to assign group" });
   }
 }
+
 
 module.exports = {
   createCampaign,

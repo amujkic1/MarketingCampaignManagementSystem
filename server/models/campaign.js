@@ -194,6 +194,8 @@ class Campaign {
 
   static async assignGroup(pool, region_name, campaign_name) {
 
+    console.log('region name u assign group ', region_name);
+    console.log('campaign name u assign group ', campaign_name);
     try{
       const groupIdQuery = "select id from groups where name = $1"
       const client = await pool.connect();
@@ -201,10 +203,14 @@ class Campaign {
       const { rows: groupRows } = await client.query(groupIdQuery, groupValues);
       const groupId = groupRows[0];
 
+      console.log('id grupe kod assign group', groupId);
+
       const campaignQuery = "select id from campaign where name = $1"
       const campaignValues = [campaign_name];
       const { rows: campaignRows } = await client.query(campaignQuery, campaignValues);
       const campId = campaignRows[0];
+
+      console.log('id kampanje kod assign group', campId);
       
       const assignQuery = "update campaign set groupid = $2 where id = $1";
       const assignValues = [campId.id, groupId.id];
