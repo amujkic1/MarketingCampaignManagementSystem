@@ -10,6 +10,19 @@ const Groups = () => {
     const [selectedRegion, setSelectedRegion] = useState('');
     const [groupName, setGroupName] = useState('');
 
+    const fetchRegions = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/groups');
+            if (!response.ok) {
+                throw new Error('Failed to fetch regions');
+            }
+            const data = await response.json();
+            setRegions(data);
+        } catch (error) {
+            console.error('Error fetching regions:', error);
+        }
+    };
+
     useEffect(() => {
         const fetchChannels = async () => {
             try {
@@ -39,20 +52,7 @@ const Groups = () => {
         };
         fetchCampaigns();
 
-        const fetchRegions = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/groups');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch regions');
-                }
-                const data = await response.json();
-                setRegions(data);
-            } catch (error) {
-                console.error('Error fetching regions:', error);
-            }
-        };
-        fetchRegions();
-
+        fetchRegions(); 
     }, []);
 
     const handleCreateGroup = async () => {
@@ -72,11 +72,13 @@ const Groups = () => {
             }
             const data = await response.json();
             console.log(data);
+
+            fetchRegions();
         } catch (error) {
             console.error('Error creating group:', error);
         }
     };
-    
+
     const handleAssignGroup = async () => {
         try {
             const response = await fetch('http://localhost:3000/campaign/assigngroup', {
