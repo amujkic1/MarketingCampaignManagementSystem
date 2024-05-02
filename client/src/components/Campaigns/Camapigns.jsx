@@ -33,7 +33,7 @@ const Campaigns = () => {
 
   const getAllCampaigns = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/campaign', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ const Campaigns = () => {
 
   const createCampaign = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/campaign', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const Campaigns = () => {
 
   const getAllChannels = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const Campaigns = () => {
 
   const getAllMedia = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/media', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ const Campaigns = () => {
   const deleteCampaign = async (event, id) => {
     event.stopPropagation(); // Spriječi podizanje događaja
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server\\.vercel\\.app/campaign/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ const Campaigns = () => {
 
   const handleUpdateCampaign = async () => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server\\.vercel\\.app/campaign/${selectedCampaign.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${selectedCampaign.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
