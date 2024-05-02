@@ -224,6 +224,16 @@ class Campaign {
     }
 
   }
+
+  static async getCampaignsByGroup(pool, groupId) {
+    const query = "SELECT * FROM campaign WHERE groupid = $1";
+    const values = [groupId];
+    const client = await pool.connect();
+    const { rows } = await client.query(query, values);
+    client.release();
+    return rows;
+  }
+
 }
 
 module.exports = Campaign;

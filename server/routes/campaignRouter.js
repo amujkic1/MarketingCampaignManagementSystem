@@ -14,5 +14,6 @@ router.get(
 );
 
 router.post("/campaign/assigngroup", campaignController.assignGroup);
+router.post("/campaign/regiongroups", campaignController.getCampaignsByGroup);
 
 module.exports = router;
