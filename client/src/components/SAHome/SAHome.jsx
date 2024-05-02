@@ -12,7 +12,7 @@ function SAHome() {
   const fetchCompanies = () => {
     const username = encodeURIComponent(Cookies.get('uname'));
 
-    fetch('http://localhost:3000/admincompanies', {
+    fetch('https://marketing-campaign-management-system-server\.vercel\.app/admincompanies', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

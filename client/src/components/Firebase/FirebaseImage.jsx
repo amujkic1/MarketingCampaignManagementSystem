@@ -22,7 +22,7 @@ function FirebaseImage() {
     uploadBytes(fileRef, fileUpload).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
 
-        fetch('http://localhost:3000/addmediaurl', {
+        fetch('https://marketing-campaign-management-system-server\.vercel\.app/addmediaurl', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
