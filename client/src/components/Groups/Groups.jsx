@@ -42,8 +42,7 @@ const Groups = () => {
             } catch (error) {
                 console.error('Error fetching channels:', error);
             }
-        };        
-        fetchChannels();
+        };
 
         const fetchCampaigns = async () => {
             try {
@@ -57,9 +56,9 @@ const Groups = () => {
                 console.error('Error fetching campaigns:', error);
             }
         };
-        fetchCampaigns();
 
-        fetchRegions(); 
+        fetchCampaigns();
+        fetchRegions();
     }, [selectedChannel]);
 
     const handleCreateGroup = async () => {
@@ -78,7 +77,7 @@ const Groups = () => {
                 throw new Error('Failed to create group');
             }
             const data = await response.json();
-    
+
             const groupId = data.group.id;
     
             const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel/addtogroup', {
@@ -95,13 +94,16 @@ const Groups = () => {
                 throw new Error('Failed to add channels to group');
             }
             console.log('Channels added to group successfully');
-    
-            fetchRegions();
+
+            // Resetting input fields after successful group creation
+            setGroupName('');
+            setSelectedChannel('');
+            setSelectedChannelIds([]);
+            alert('Group successfully created!');
         } catch (error) {
             console.error('Error creating group:', error);
         }
     };
-    
 
     const handleAssignGroup = async () => {
         try {
@@ -120,10 +122,15 @@ const Groups = () => {
             }
             const data = await response.json();
             console.log(data);
+
+            // Resetting input fields after successful group assignment
+            setSelectedCampaign([]);
+            setSelectedRegion('');
+            alert('Group successfully assigned to campaign!');
         } catch (error) {
             console.error('Error assigning region:', error);
         }
-    };    
+    };
 
     return (
         <div className="groups-container">
@@ -149,30 +156,33 @@ const Groups = () => {
                         <option value="Display">Display</option>
                     </select>
 
-                    <div className="checkbox-container">
-                        <span>Select channels:</span>
-                        {channels.map(channel => (
-                            <div key={channel.id} className="checkbox-item">
-                                <input
-                                    type="checkbox"
-                                    id={channel.id}
-                                    value={channel.id}
-                                    checked={selectedChannelIds.includes(channel.id)}
-                                    onChange={(e) => {
-                                        const isChecked = e.target.checked;
-                                        if (isChecked) {
-                                            setSelectedChannelIds(prev => [...prev, channel.id]);
-                                        } else {
-                                            setSelectedChannelIds(prev => prev.filter(item => item !== channel.id));
-                                        }
-                                    }}
-                                />
-                                <label htmlFor={channel.id}>{channel.channel}</label>
-                            </div>
-                        ))}
-                    </div>
-
+                    {selectedChannel && (
+                        <div className="checkbox-container">
+                            <span>Select channels:</span>
+                            {channels.map(channel => (
+                                <div key={channel.id} className="checkbox-item">
+                                    <input
+                                        type="checkbox"
+                                        id={channel.id}
+                                        value={channel.id}
+                                        checked={selectedChannelIds.includes(channel.id)}
+                                        onChange={(e) => {
+                                            const isChecked = e.target.checked;
+                                            if (isChecked) {
+                                                setSelectedChannelIds(prev => [...prev, channel.id]);
+                                            } else {
+                                                setSelectedChannelIds(prev => prev.filter(item => item !== channel.id));
+                                            }
+                                        }}
+                                    />
+                                    <label htmlFor={channel.id}>{channel.channel}</label>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div className='button-div'>
                     <button className='btn-group' onClick={handleCreateGroup}>Create Group</button>
+                    </div>
                     <div className="checkbox-container">
                         <span>Select campaign:</span>
                         {campaigns.map(campaign => (
@@ -206,7 +216,9 @@ const Groups = () => {
                             <option key={region.id} value={region.name}>{region.name}</option>
                         ))}
                     </select>
+                    <div className='button-div'>
                     <button className='btn-group' onClick={handleAssignGroup}>Assign Group</button>
+                    </div>
                 </div>
             </div>
         </div>
