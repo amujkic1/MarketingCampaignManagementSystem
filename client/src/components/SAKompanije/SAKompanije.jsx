@@ -28,7 +28,7 @@ function SAKompanije() {
         phone: phone
       };
   
-      const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/super/admin', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/super/admin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ function SAKompanije() {
       const niche = document.getElementById("niche").value;
       const headquarters = document.getElementById("headquarters").value;
 
-      const companyResponse = await fetch("https://marketing-campaign-management-system-server\\.vercel\\.app/super/company", {
+      const companyResponse = await fetch("https://marketing-campaign-management-system-server\.vercel\.app/super/company", {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

@@ -13,7 +13,7 @@ const Groups = () => {
 
     const fetchRegions = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/groups');
+            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/groups');
             if (!response.ok) {
                 throw new Error('Failed to fetch regions');
             }
@@ -27,19 +27,18 @@ const Groups = () => {
     useEffect(() => {
         const fetchChannels = async () => {
             try {
-                if (selectedChannel) {
-                    const response = await fetch(`https://marketing-campaign-management-system-server\\.vercel\\.app/getchannel/${selectedChannel}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    });
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch channels');
-                    }
-                    const data = await response.json();
-                    setChannels(data);
+                console.log('fetching channels');
+                const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/getchannel/${selectedChannel}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch channels');
                 }
+                const data = await response.json();
+                setChannels(data);
             } catch (error) {
                 console.error('Error fetching channels:', error);
             }
@@ -47,7 +46,7 @@ const Groups = () => {
 
         const fetchCampaigns = async () => {
             try {
-                const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/campaign');
+                const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign');
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns');
                 }
@@ -64,7 +63,7 @@ const Groups = () => {
 
     const handleCreateGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/group', {
+            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/group', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -80,8 +79,8 @@ const Groups = () => {
             const data = await response.json();
 
             const groupId = data.group.id;
-
-            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/channel/addtogroup', {
+    
+            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel/addtogroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -108,7 +107,7 @@ const Groups = () => {
 
     const handleAssignGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\\.vercel\\.app/campaign/assigngroup', {
+            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign/assigngroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
