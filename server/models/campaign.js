@@ -9,7 +9,6 @@ class Campaign {
   static async createCampaign(
     pool,
     name,
-    region,
     durationfrom,
     durationto,
     mediatypesName,
@@ -17,7 +16,7 @@ class Campaign {
   ) {
     const client = await pool.connect();
     const query =
-      "INSERT INTO campaign (name, region, durationfrom, durationto,mediatypes, channels) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
+      "INSERT INTO campaign (name, durationfrom, durationto,mediatypes, channels) VALUES ($1, $2, $3, $4, $5) RETURNING *";
     const channels = `SELECT id FROM channels WHERE name='${channelName}' `;
     const mediatypes = `SELECT id FROM mediatypes WHERE name='${mediatypesName}'`;
 
@@ -29,7 +28,6 @@ class Campaign {
 
     const values = [
       name,
-      region,
       durationfrom,
       durationto,
       mediatypesName,
@@ -77,7 +75,6 @@ class Campaign {
     pool,
     id,
     name,
-    region,
     durationfrom,
     durationto,
     mediatypes,
@@ -89,10 +86,10 @@ class Campaign {
       let query;
       let values;
 
-      if (name && region && durationfrom && durationto && mediatypes && channels) {
+      if (name && durationfrom && durationto && mediatypes && channels) {
         query =
-          "UPDATE campaign SET name=$2, region=$3, durationfrom=$4, durationto=$5, mediatypes=$6, channels=$7 WHERE id=$1 RETURNING *";
-        values = [id, name, region, durationfrom, durationto, mediatypes, channels];
+          "UPDATE campaign SET name=$2, durationfrom=$3, durationto=$4, mediatypes=$5, channels=$6 WHERE id=$1 RETURNING *";
+        values = [id, name, durationfrom, durationto, mediatypes, channels];
       } else if (name) {
         query = "UPDATE campaign SET name=$2 WHERE id=$1 RETURNING *";
         values = [id, name];
