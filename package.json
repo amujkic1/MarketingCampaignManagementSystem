@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "sinon": "^17.0.2"
+  }
+}
