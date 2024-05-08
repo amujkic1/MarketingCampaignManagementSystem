@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie'; // Importajte biblioteku za rad s kolačićima
+import { useNavigate } from 'react-router-dom';
 import './Groups.css';
 
 const Groups = () => {

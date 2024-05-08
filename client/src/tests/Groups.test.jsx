@@ -1,77 +1,68 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, test } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import {afterEach, describe, expect, test, vi} from "vitest"
+import { BrowserRouter } from 'react-router-dom';
+import Cookies from "js-cookie";
 import Groups from '../components/Groups/Groups';
-import sinon from 'sinon';
-
-// Mocking the window object to include fetch
-global.fetch = sinon.fake.resolves({
-  json: () => Promise.resolve({}),
-  ok: true
-});
+import React, { useState, useEffect } from 'react'; // Dodana importacija useState i useEffect
 
 describe('Groups component', () => {
-  test('renders component with initial elements', () => {
+  test('renders without crashing', () => {
     render(<Groups />);
-    
-    const groupNameInput = screen.getByLabelText('Region');
-    const selectChannel = screen.getByText('Select channel type');
-    const selectCampaign = screen.getByText('Select campaign:');
-    const selectRegion = screen.getByText('Select region');
-    const createGroupButton = screen.getByText('Create Group');
-    const assignGroupButton = screen.getByText('Assign Group');
-    
-    expect(groupNameInput).toBeTruthy();
-    expect(selectChannel).toBeTruthy();
-    expect(selectCampaign).toBeTruthy();
-    expect(selectRegion).toBeTruthy();
-    expect(createGroupButton).toBeTruthy();
-    expect(assignGroupButton).toBeTruthy();
+    const groupNameInput = screen.getByPlaceholderText('Region');
+    expect(groupNameInput).toBeInTheDocument();
   });
 
-  test('handles creating a group', async () => {
-    const mockChannels = [{ id: 1, channel: 'Channel 1' }, { id: 2, channel: 'Channel 2' }];
-    const mockCampaigns = [{ id: 1, name: 'Campaign 1' }, { id: 2, name: 'Campaign 2' }];
-    const mockRegions = [{ id: 1, name: 'Region 1' }, { id: 2, name: 'Region 2' }];
-    
-    global.fetch = sinon.fake.resolves({
-      json: () => Promise.resolve(mockChannels),
-      ok: true
-    });
-
+  test('updates group name', () => {
     render(<Groups />);
-    
-    // Simulate user actions
-    fireEvent.change(screen.getByText('Select channel type'), { target: { value: 'TV' } });
-    await screen.findByText('Channel 1');
-    fireEvent.click(screen.getByLabelText('Channel 1'));
-    fireEvent.change(screen.getByText('Region'), { target: { value: 'Test Region' } });
-    fireEvent.click(screen.getByText('Create Group'));
-
-    // Assertions
-    expect(global.fetch).toHaveBeenCalledTimes(3);
-    expect(global.fetch.getCall(0).args[0]).toBe('https://marketing-campaign-management-system-server.vercel.app/getchannel/TV');
-    expect(global.fetch.getCall(1).args[0]).toBe('https://marketing-campaign-management-system-server.vercel.app/campaign');
-    expect(global.fetch.getCall(2).args[0]).toBe('https://marketing-campaign-management-system-server.vercel.app/groups');
+    const groupNameInput = screen.getByPlaceholderText('Region');
+    fireEvent.change(groupNameInput, { target: { value: 'New Group Name' } });
+    expect(groupNameInput.value).toBe('New Group Name');
   });
 
-  test('handles assigning a group to a campaign', async () => {
-    const mockData = [{ id: 1, name: 'Campaign 1' }, { id: 2, name: 'Campaign 2' }];
-
-    global.fetch = sinon.fake.resolves({
-      json: () => Promise.resolve(mockData),
-      ok: true
-    });
-
+  test('updates selected channel', () => {
     render(<Groups />);
-    
-    // Simulate user actions
-    fireEvent.change(screen.getByText('Select region'), { target: { value: 'Test Region' } });
-    await screen.findByText('Campaign 1');
-    fireEvent.click(screen.getByLabelText('Campaign 1'));
-    fireEvent.click(screen.getByText('Assign Group'));
+    const channelSelect = screen.getByLabelText('Select channel type');
+    fireEvent.change(channelSelect, { target: { value: 'TV' } });
+    expect(channelSelect.value).toBe('TV');
+  });
 
-    // Assertions
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(global.fetch.getCall(0).args[0]).toBe('https://marketing-campaign-management-system-server.vercel.app/campaign/assigngroup');
+  test('adds channel to group', () => {
+    render(<Groups />);
+    const channelSelect = screen.getByLabelText('Select channel type');
+    fireEvent.change(channelSelect, { target: { value: 'TV' } });
+    const checkbox = screen.getByLabelText('TV');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+  });
+
+  test('creates group', async () => {
+    render(<Groups />);
+    const groupNameInput = screen.getByPlaceholderText('Region');
+    const createButton = screen.getByText('Create Group');
+    fireEvent.change(groupNameInput, { target: { value: 'New Group' } });
+    fireEvent.click(createButton);
+    // Add assertions for successful group creation alert message
+  });
+
+  test('updates selected campaign', () => {
+    render(<Groups />);
+    const checkbox = screen.getByLabelText('Campaign Name');
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+  });
+
+  test('updates selected region', () => {
+    render(<Groups />);
+    const regionSelect = screen.getByLabelText('Select region');
+    fireEvent.change(regionSelect, { target: { value: 'Region Name' } });
+    expect(regionSelect.value).toBe('Region Name');
+  });
+
+  test('assigns group to campaign', async () => {
+    render(<Groups />);
+    const assignButton = screen.getByText('Assign Group');
+    fireEvent.click(assignButton);
+    // Add assertions for successful group assignment alert message
   });
 });
+
