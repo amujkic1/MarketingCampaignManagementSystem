@@ -14,7 +14,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/logout', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/logout', {
         method: 'POST',
         credentials: 'include', // Uključuje kolačiće u zahtjevu
         headers: {
@@ -63,6 +63,9 @@ const Navbar = () => {
               <Link to="/campaigns" data-testid="a-campaigns">Campaigns</Link>
             </li>
             <li>
+              <Link to="/groups">Groups</Link>
+              </li>
+              <li>
               <Link to="/firebase" data-testid="a-firebase">Upload</Link>
             </li>
           </>

@@ -15,7 +15,7 @@ const MediaTypes = () => {
 
   const getAllMedia = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/media', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const MediaTypes = () => {
 
   const addMediaType = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/media', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const MediaTypes = () => {
 
   const deleteMediaType = async (id) => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/media/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/media/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const MediaTypes = () => {
 
   const handleUpdateMediaType = async () => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/media/${selectedMediaType.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/media/${selectedMediaType.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -117,9 +117,11 @@ const MediaTypes = () => {
           >
             <option value="">Select media type</option>
             <option value="Image">Image</option>
-            <option value="Image with text">Image with text</option>
             <option value="Video">Video</option>
             <option value="Link">Link</option>
+            <option value="Audio">Audio</option>
+            <option value="Text">Text</option>
+            <option value="Banner">Banner</option>
           </select>
         </div>
         <button
@@ -132,7 +134,7 @@ const MediaTypes = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
+  
         <table>
           <thead>
             <tr>
@@ -152,8 +154,7 @@ const MediaTypes = () => {
             ))}
           </tbody>
         </table>
-      </div>
-
+ 
       {isPopupOpen && (
         <div className="popup-background">
             <div className="popup-content">
@@ -166,9 +167,11 @@ const MediaTypes = () => {
                   >
                     <option value="">Select media type</option>
                     <option value="Image">Image</option>
-                    <option value="Image with text">Image with text</option>
                     <option value="Video">Video</option>
                     <option value="Link">Link</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Text">Text</option>
+                    <option value="Banner">Banner</option>
                   </select>
                 </div>
                 <button

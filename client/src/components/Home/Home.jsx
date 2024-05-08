@@ -13,7 +13,7 @@ function Home() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/users');
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/users');
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -26,7 +26,7 @@ function Home() {
 
   const fetchCampaigns = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign');
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign');
       if (!response.ok) {
         throw new Error('Failed to fetch campaigns');
       }
@@ -53,7 +53,7 @@ function Home() {
                 <p className="text-muted text-center mb-5">Explore the possibilities with us!</p>
 
                 {/* Tablica s korisnicima */}
-                <div className="table-responsive mb-4" style={{ maxWidth: '100%', width: '100%' }}> {/* Promijenjena maksimalna širina */}
+                <div className="table-responsive mb-4" style={{ maxWidth: '100%', width: '100%' }}> 
                   <h3 className="text-center mb-3">Users</h3>
                   <table className="table table-striped">
                     <thead>

@@ -8,4 +8,12 @@ router.get("/campaign/:id", campaignController.getCampaignsById);
 router.put("/campaign/:id", campaignController.updateCampaign);
 router.delete("/campaign/:id", campaignController.deleteCampaign);
 
+router.get(
+  "/request-campaign/:id/media/download",
+  campaignController.getCampaignMedia
+);
+
+router.post("/campaign/assigngroup", campaignController.assignGroup);
+router.post("/campaign/regiongroups", campaignController.getCampaignsByGroup);
+
 module.exports = router;

@@ -3,7 +3,9 @@ import './Channels.css';
 
 const Channels = () => {
   const [types, setTypes] = useState([]);
+  const [name, setName] = useState([]);
   const [addMediaType, setAddMediaType] = useState('');
+  const [updateName, setUpdateName] = useState('');
   const [updateMediaType, setUpdateMediaType] = useState('');
   const [isHovered, setIsHovered] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -15,7 +17,7 @@ const Channels = () => {
 
   const getAllChannels = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -36,12 +38,12 @@ const Channels = () => {
 
   const addChannel = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: addMediaType }),
+        body: JSON.stringify({ name: addMediaType, channel: name }),
       });
 
       if (!response.ok) {
@@ -57,7 +59,7 @@ const Channels = () => {
 
   const deleteChannel = async (id) => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/channel/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/channel/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -77,6 +79,7 @@ const Channels = () => {
   const handleEditClick = (channel) => {
     setSelectedChannel(channel);
     setUpdateMediaType(channel.name);
+    setUpdateName(channel.channel);
     setIsPopupOpen(true);
   };
 
@@ -86,12 +89,12 @@ const Channels = () => {
 
   const handleUpdateChannel = async () => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/channel/${selectedChannel.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/channel/${selectedChannel.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: updateMediaType }),
+        body: JSON.stringify({ name: updateMediaType, channel: updateName }),
       });
 
       if (!response.ok) {
@@ -109,6 +112,13 @@ const Channels = () => {
     <div className="task-manager-container">
       <div className="form-container">
         <div className="input-wrapper">
+        <input
+            className="input-name"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <select
             className="input-select"
             value={addMediaType}
@@ -133,11 +143,11 @@ const Channels = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
         <table>
           <thead>
             <tr>
-              <th>CHANNEL</th>
+              <th>TYPE</th>
+              <th>NAME</th>
               <th>ACTIONS</th>
             </tr>
           </thead>
@@ -145,6 +155,7 @@ const Channels = () => {
             {types.map((type, index) => (
               <tr key={index}>
                 <td>{type.name}</td>
+                <td>{type.channel}</td>
                 <td>
                   <button className="btn-edit" onClick={() => handleEditClick(type)}>✏️</button>
                   <button className="btn-delete" onClick={() => deleteChannel(type.id)}>🗑️</button>
@@ -153,13 +164,19 @@ const Channels = () => {
             ))}
           </tbody>
         </table>
-      </div>
 
       {isPopupOpen && (
         <div className="popup-background">
             <div className="popup-content">
               <div className="form-container">
                 <div className="input-wrapper">
+                <input
+                    className="input-name"
+                    type="text"
+                    placeholder="Name"
+                    value={updateName}
+                    onChange={(e) => setUpdateName(e.target.value)}
+                  />
                   <select
                     className="input-select"
                     value={updateMediaType}

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import './Campaigns.css';
 
 const Campaigns = () => {
@@ -18,6 +20,8 @@ const Campaigns = () => {
   const [updateMediaType, setUpdateMediaType] = useState('');
   const [updateStartDate, setUpdateStartDate] = useState('');
   const [updateEndDate, setUpdateEndDate] = useState('');
+  const [oldChannel, setOldChannel] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllChannels();
@@ -27,7 +31,7 @@ const Campaigns = () => {
 
   const getAllCampaigns = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -48,7 +52,7 @@ const Campaigns = () => {
 
   const createCampaign = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +84,7 @@ const Campaigns = () => {
 
   const getAllChannels = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +106,7 @@ const Campaigns = () => {
 
   const getAllMedia = async () => {
     try {
-      const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/media', {
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/media', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -122,9 +126,10 @@ const Campaigns = () => {
     }
   };
 
-  const deleteCampaign = async (id) => {
+  const deleteCampaign = async (event, id) => {
+    event.stopPropagation(); 
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -141,13 +146,15 @@ const Campaigns = () => {
     }
   };
 
-  const handleEditClick = (campaign) => {
+  const handleEditClick = (event, campaign) => {
+    event.stopPropagation(); // Spriječi podizanje događaja
     setSelectedCampaign(campaign);
     setUpdateName(campaign.name);
     setUpdateChannel(campaign.channels);
     setUpdateMediaType(campaign.mediatypes);
     setUpdateStartDate(campaign.durationfrom);
     setUpdateEndDate(campaign.durationto);
+    setOldChannel(campaign.channels);
     setIsPopupOpen(true);
   };
 
@@ -157,7 +164,7 @@ const Campaigns = () => {
 
   const handleUpdateCampaign = async () => {
     try {
-      const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/campaign/${selectedCampaign.id}`, {
+      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/campaign/${selectedCampaign.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +174,8 @@ const Campaigns = () => {
           channels: updateChannel,
           mediatypes: updateMediaType,
           durationfrom: updateStartDate,
-          durationto: updateEndDate
+          durationto: updateEndDate,
+          oldChannel: oldChannel
         }),
       });
 
@@ -180,6 +188,12 @@ const Campaigns = () => {
     } catch (error) {
       console.error('Error updating campaign:', error);
     }
+  };
+
+  const handleCampaignClick = (campaignId) => {
+    console.log("Clicked campaign ID:", campaignId);
+    Cookies.set('campaignID', campaignId); 
+    navigate('/campaign');
   };
 
   return (
@@ -241,7 +255,6 @@ const Campaigns = () => {
           Add
         </button>
       </div>
-      <div className="table-container">
         <table>
           <thead>
             <tr>
@@ -254,20 +267,19 @@ const Campaigns = () => {
           </thead>
           <tbody>
             {campaigns.map((campaign, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={() => handleCampaignClick(campaign.id)}>
                 <td>{campaign.name}</td>
                 <td>{campaign.channels}</td>
                 <td>{campaign.mediatypes}</td>
                 <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
                 <td>
-                  <button className="btn-edit" onClick={() => handleEditClick(campaign)}>✏️</button>
-                  <button className="btn-delete" onClick={() => deleteCampaign(campaign.id)}>🗑️</button>
+                  <button className="btn-edit" onClick={(e) => handleEditClick(e, campaign)}>✏️</button>
+                  <button className="btn-delete" onClick={(e) => deleteCampaign(e, campaign.id)}>🗑️</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
 
       {isPopupOpen && selectedCampaign && (
         <div className="popup-background">
