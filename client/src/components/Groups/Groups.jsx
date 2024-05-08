@@ -13,7 +13,7 @@ const Groups = () => {
 
     const fetchRegions = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/groups');
+            const response = await fetch('http://localhost:3000/groups');
             if (!response.ok) {
                 throw new Error('Failed to fetch regions');
             }
@@ -28,7 +28,7 @@ const Groups = () => {
         const fetchChannels = async () => {
             try {
                 console.log('fetching channels');
-                const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/getchannel/${selectedChannel}`, {
+                const response = await fetch(`http://localhost:3000/getchannel/${selectedChannel}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -46,7 +46,7 @@ const Groups = () => {
 
         const fetchCampaigns = async () => {
             try {
-                const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign');
+                const response = await fetch('http://localhost:3000/campaign');
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns');
                 }
@@ -63,7 +63,7 @@ const Groups = () => {
 
     const handleCreateGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/group', {
+            const response = await fetch('http://localhost:3000/group', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ const Groups = () => {
 
             const groupId = data.group.id;
     
-            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel/addtogroup', {
+            const addChannelsResponse = await fetch('http://localhost:3000/channel/addtogroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -107,7 +107,7 @@ const Groups = () => {
 
     const handleAssignGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign/assigngroup', {
+            const response = await fetch('http://localhost:3000/campaign/assigngroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

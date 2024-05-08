@@ -110,7 +110,7 @@ const Users = () => {
       // Hash the new password before saving
       const hashedPassword = await bcrypt.hash(updatePasswordVisible, 10);
 
-      const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/users/${selectedUser.id}`, {
+      const response = await fetch(`http://localhost:3000/users/${selectedUser.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
