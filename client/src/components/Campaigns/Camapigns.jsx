@@ -148,20 +148,22 @@ const Campaigns = () => {
   };
 
   const handleEditClick = (event, campaign) => {
+
+    console.log('handle edit click');
+
     event.stopPropagation();
   
     setSelectedCampaign(campaign);
     setUpdateName(campaign.name);
     setUpdateChannel(campaign.channels);
-    setUpdateMediaType(campaign.mediatypes); // Postavljamo updateMediaType na trenutni media tip kampanje
+    setUpdateMediaType(campaign.mediatypes); 
     setUpdateStartDate(campaign.durationfrom);
     setUpdateEndDate(campaign.durationto);
     setOldChannel(campaign.channels);
   
-    // Postavljamo filtrirane opcije medija na osnovu kanala za uređivanje kampanje
     if (campaign.channels === "TV") {
       setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
-      setUpdateMediaType("Video"); // Opciono postavljamo 'Video' kao podrazumevani media tip za 'TV'
+      setUpdateMediaType("Video"); 
     } else if (campaign.channels === "Display") {
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
     } else if (campaign.channels === "Web-site") {
@@ -213,31 +215,56 @@ const Campaigns = () => {
   };
 
   const handleChannelChange = (e) => {
+    console.log('handle channel change');
     const selectedChannel = e.target.value;
     setChannelType(selectedChannel);
 
-    // Filter media options based on the selected channel
     if (selectedChannel === "TV") {
       setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
-      setMediaType("Video"); // Optionally set 'Video' as the default media type when 'TV' is selected
+      setMediaType("Video"); 
     } else if (selectedChannel === "Display") {
       setFilteredMediaOptions(mediaOptions);
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
-      setMediaType(''); // Reset media type selection when changing channel
+      setMediaType(''); 
     } else if (selectedChannel === "Web-site") {
       setFilteredMediaOptions(mediaOptions);
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
-      setMediaType(''); // Reset media type selection when changing channel
+      setMediaType(''); 
     } else if (selectedChannel === "Radio") {
       setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
-      setMediaType("Audio"); // Optionally set 'Video' as the default media type when 'TV' is selected
+      setMediaType("Audio"); 
     } else if (selectedChannel === "Billboard") {
       setFilteredMediaOptions(mediaOptions);
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
-      setMediaType(''); // Reset media type selection when changing channel
+      setMediaType(''); 
     }
   };
 
+  const handleChannelChangePopup = (e) => {
+    const selectedChannel = e.target.value;
+    setUpdateChannel(selectedChannel);
+  
+    if (selectedChannel === "TV") {
+      setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
+      setUpdateMediaType("Video"); 
+    } else if (selectedChannel === "Display") {
+      setFilteredMediaOptions(mediaOptions);
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
+      setUpdateMediaType(''); 
+    } else if (selectedChannel === "Web-site") {
+      setFilteredMediaOptions(mediaOptions);
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
+      setUpdateMediaType(''); 
+    } else if (selectedChannel === "Radio") {
+      setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
+      setUpdateMediaType("Audio"); 
+    } else if (selectedChannel === "Billboard") {
+      setFilteredMediaOptions(mediaOptions);
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
+      setUpdateMediaType(''); 
+    }
+  };
+  
   return (
     <div className="campaigns-container">
       <div className="form-container">
@@ -334,19 +361,24 @@ const Campaigns = () => {
                   value={updateName}
                   onChange={(e) => setUpdateName(e.target.value)}
                 />
+
                 <select
                   className="input-select"
                   value={updateChannel}
-                  onChange={(e) => setUpdateChannel(e.target.value)}
+                  onChange={(e) => {
+                    setUpdateChannel(e.target.value);
+                    handleChannelChangePopup(e); 
+                  }}
                 >
                   <option value="">Select channel</option>
                   {channelOptions.map((channel, index) => (
                     <option key={index} value={channel}>{channel}</option>
                   ))}
                 </select>
+                
                 <select
                   className="input-select"
-                  value={updateMediaType} // Koristimo updateMediaType umesto mediaType
+                  value={updateMediaType} 
                   onChange={(e) => setUpdateMediaType(e.target.value)}
                 >
                   <option value="">Select media type</option>
