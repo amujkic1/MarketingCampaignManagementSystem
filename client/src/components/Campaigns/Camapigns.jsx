@@ -13,11 +13,12 @@ const Campaigns = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [channelOptions, setChannelOptions] = useState([]);
   const [mediaOptions, setMediaOptions] = useState([]);
+  const [filteredMediaOptions, setFilteredMediaOptions] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [updateName, setUpdateName] = useState('');
   const [updateChannel, setUpdateChannel] = useState('');
-  const [updateMediaType, setUpdateMediaType] = useState('');
+  const [updateMediaType, setUpdateMediaType] = useState('');  
   const [updateStartDate, setUpdateStartDate] = useState('');
   const [updateEndDate, setUpdateEndDate] = useState('');
   const [oldChannel, setOldChannel] = useState('');
@@ -127,7 +128,7 @@ const Campaigns = () => {
   };
 
   const deleteCampaign = async (event, id) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
     try {
       const response = await fetch(`http://localhost:3000/campaign/${id}`, {
         method: 'DELETE',
@@ -147,17 +148,33 @@ const Campaigns = () => {
   };
 
   const handleEditClick = (event, campaign) => {
-    event.stopPropagation(); // Spriječi podizanje događaja
+    event.stopPropagation();
+  
     setSelectedCampaign(campaign);
     setUpdateName(campaign.name);
     setUpdateChannel(campaign.channels);
-    setUpdateMediaType(campaign.mediatypes);
+    setUpdateMediaType(campaign.mediatypes); // Postavljamo updateMediaType na trenutni media tip kampanje
     setUpdateStartDate(campaign.durationfrom);
     setUpdateEndDate(campaign.durationto);
     setOldChannel(campaign.channels);
+  
+    // Postavljamo filtrirane opcije medija na osnovu kanala za uređivanje kampanje
+    if (campaign.channels === "TV") {
+      setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
+      setUpdateMediaType("Video"); // Opciono postavljamo 'Video' kao podrazumevani media tip za 'TV'
+    } else if (campaign.channels === "Display") {
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
+    } else if (campaign.channels === "Web-site") {
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
+    } else if (campaign.channels === "Radio") {
+      setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
+    } else if (campaign.channels === "Billboard") {
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
+    }
+  
     setIsPopupOpen(true);
   };
-
+  
   const handleClosePopup = () => {
     setIsPopupOpen(false);
   };
@@ -191,9 +208,34 @@ const Campaigns = () => {
   };
 
   const handleCampaignClick = (campaignId) => {
-    console.log("Clicked campaign ID:", campaignId);
-    Cookies.set('campaignID', campaignId); 
+    Cookies.set('campaignID', campaignId);
     navigate('/campaign');
+  };
+
+  const handleChannelChange = (e) => {
+    const selectedChannel = e.target.value;
+    setChannelType(selectedChannel);
+
+    // Filter media options based on the selected channel
+    if (selectedChannel === "TV") {
+      setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
+      setMediaType("Video"); // Optionally set 'Video' as the default media type when 'TV' is selected
+    } else if (selectedChannel === "Display") {
+      setFilteredMediaOptions(mediaOptions);
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
+      setMediaType(''); // Reset media type selection when changing channel
+    } else if (selectedChannel === "Web-site") {
+      setFilteredMediaOptions(mediaOptions);
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
+      setMediaType(''); // Reset media type selection when changing channel
+    } else if (selectedChannel === "Radio") {
+      setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
+      setMediaType("Audio"); // Optionally set 'Video' as the default media type when 'TV' is selected
+    } else if (selectedChannel === "Billboard") {
+      setFilteredMediaOptions(mediaOptions);
+      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
+      setMediaType(''); // Reset media type selection when changing channel
+    }
   };
 
   return (
@@ -210,7 +252,7 @@ const Campaigns = () => {
           <select
             className="input-select"
             value={channelType}
-            onChange={(e) => setChannelType(e.target.value)}
+            onChange={handleChannelChange}
           >
             <option value="">Select channel</option>
             {channelOptions.map((channel, index) => (
@@ -223,7 +265,7 @@ const Campaigns = () => {
             onChange={(e) => setMediaType(e.target.value)}
           >
             <option value="">Select media type</option>
-            {mediaOptions.map((media, index) => (
+            {filteredMediaOptions.map((media, index) => (
               <option key={index} value={media}>{media}</option>
             ))}
           </select>
@@ -235,7 +277,6 @@ const Campaigns = () => {
             min={new Date().toISOString().split('T')[0]}
             onChange={(e) => setStartDate(e.target.value)}
           />
-
           <input
             className="input-date"
             type="date"
@@ -255,93 +296,93 @@ const Campaigns = () => {
           Add
         </button>
       </div>
-        <table>
-          <thead>
-            <tr>
-              <th>NAME</th>
-              <th>CHANNEL</th>
-              <th>MEDIA TYPE</th>
-              <th>DURATION</th>
-              <th>ACTIONS</th>
+      <table>
+        <thead>
+          <tr>
+            <th>NAME</th>
+            <th>CHANNEL</th>
+            <th>MEDIA TYPE</th>
+            <th>DURATION</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {campaigns.map((campaign, index) => (
+            <tr key={index} onClick={() => handleCampaignClick(campaign.id)}>
+              <td>{campaign.name}</td>
+              <td>{campaign.channels}</td>
+              <td>{campaign.mediatypes}</td>
+              <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
+              <td>
+                <button className="btn-edit" onClick={(e) => handleEditClick(e, campaign)}>✏️</button>
+                <button className="btn-delete" onClick={(e) => deleteCampaign(e, campaign.id)}>🗑️</button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {campaigns.map((campaign, index) => (
-              <tr key={index} onClick={() => handleCampaignClick(campaign.id)}>
-                <td>{campaign.name}</td>
-                <td>{campaign.channels}</td>
-                <td>{campaign.mediatypes}</td>
-                <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
-                <td>
-                  <button className="btn-edit" onClick={(e) => handleEditClick(e, campaign)}>✏️</button>
-                  <button className="btn-delete" onClick={(e) => deleteCampaign(e, campaign.id)}>🗑️</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          ))}
+        </tbody>
+      </table>
 
       {isPopupOpen && selectedCampaign && (
         <div className="popup-background">
-            <div className="popup-content">
-              <div className="form-container">
-                <div className="input-wrapper">
-                  <input
-                    className="input-name"
-                    type="text"
-                    placeholder="Name"
-                    value={updateName}
-                    onChange={(e) => setUpdateName(e.target.value)}
-                  />
-                  <select
-                    className="input-select"
-                    value={updateChannel}
-                    onChange={(e) => setUpdateChannel(e.target.value)}
-                  >
-                    <option value="">Select channel</option>
-                    {channelOptions.map((channel, index) => (
-                      <option key={index} value={channel}>{channel}</option>
-                    ))}
-                  </select>
-                  <select
-                    className="input-select"
-                    value={updateMediaType}
-                    onChange={(e) => setUpdateMediaType(e.target.value)}
-                  >
-                    <option value="">Select media type</option>
-                    {mediaOptions.map((media, index) => (
-                      <option key={index} value={media}>{media}</option>
-                    ))}
-                  </select>
-                  <input
-                    className="input-date"
-                    type="date"
-                    placeholder="Start Date"
-                    value={updateStartDate}
-                    min={new Date().toISOString().split('T')[0]}
-                    onChange={(e) => setUpdateStartDate(e.target.value)}
-                  />
-                  <input
-                    className="input-date"
-                    type="date"
-                    placeholder="End Date"
-                    value={updateEndDate}
-                    min={new Date().toISOString().split('T')[0]}
-                    onChange={(e) => setUpdateEndDate(e.target.value)}
-                  />
-                </div>
-                <button
-                  className="btn-update"
-                  onClick={handleUpdateCampaign}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
+          <div className="popup-content">
+            <div className="form-container">
+              <div className="input-wrapper">
+                <input
+                  className="input-name"
+                  type="text"
+                  placeholder="Name"
+                  value={updateName}
+                  onChange={(e) => setUpdateName(e.target.value)}
+                />
+                <select
+                  className="input-select"
+                  value={updateChannel}
+                  onChange={(e) => setUpdateChannel(e.target.value)}
                 >
-                  Update
-                </button>
-                <button className="btn-close" onClick={handleClosePopup}></button>
+                  <option value="">Select channel</option>
+                  {channelOptions.map((channel, index) => (
+                    <option key={index} value={channel}>{channel}</option>
+                  ))}
+                </select>
+                <select
+                  className="input-select"
+                  value={updateMediaType} // Koristimo updateMediaType umesto mediaType
+                  onChange={(e) => setUpdateMediaType(e.target.value)}
+                >
+                  <option value="">Select media type</option>
+                  {filteredMediaOptions.map((media, index) => (
+                    <option key={index} value={media}>{media}</option>
+                  ))}
+                </select>
+                <input
+                  className="input-date"
+                  type="date"
+                  placeholder="Start Date"
+                  value={updateStartDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setUpdateStartDate(e.target.value)}
+                />
+                <input
+                  className="input-date"
+                  type="date"
+                  placeholder="End Date"
+                  value={updateEndDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setUpdateEndDate(e.target.value)}
+                />
               </div>
+              <button
+                className="btn-update"
+                onClick={handleUpdateCampaign}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
+              >
+                Update
+              </button>
+              <button className="btn-close" onClick={handleClosePopup}></button>
             </div>
+          </div>
         </div>
       )}
     </div>
