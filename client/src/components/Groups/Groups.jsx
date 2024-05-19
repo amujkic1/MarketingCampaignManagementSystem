@@ -107,6 +107,7 @@ const Groups = () => {
             setGroupName('');
             setSelectedChannel('');
             setSelectedChannelIds([]);
+            fetchRegions();
             alert('Group successfully created!');
         } catch (error) {
             console.error('Error creating group:', error);
