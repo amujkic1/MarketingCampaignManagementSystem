@@ -13,7 +13,7 @@ const Groups = () => {
 
     const fetchRegions = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/groups');
+            const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/groups');
             if (!response.ok) {
                 throw new Error('Failed to fetch regions');
             }
@@ -25,28 +25,9 @@ const Groups = () => {
     };
 
     useEffect(() => {
-        const fetchChannels = async () => {
-            try {
-                console.log('fetching channels');
-                const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/getchannel/${selectedChannel}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                });
-                if (!response.ok) {
-                    throw new Error('Failed to fetch channels');
-                }
-                const data = await response.json();
-                setChannels(data);
-            } catch (error) {
-                console.error('Error fetching channels:', error);
-            }
-        };
-
         const fetchCampaigns = async () => {
             try {
-                const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign');
+                const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign');
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns');
                 }
@@ -59,11 +40,38 @@ const Groups = () => {
 
         fetchCampaigns();
         fetchRegions();
+    }, []);
+
+    useEffect(() => {
+        const fetchChannels = async () => {
+            if (selectedChannel) {
+                try {
+                    console.log('fetching channels');
+                    const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/getchannel/${selectedChannel}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch channels');
+                    }
+                    const data = await response.json();
+                    setChannels(data);
+                } catch (error) {
+                    console.error('Error fetching channels:', error);
+                }
+            } else {
+                setChannels([]);
+            }
+        };
+
+        fetchChannels();
     }, [selectedChannel]);
 
     const handleCreateGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/group', {
+            const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/group', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -79,8 +87,8 @@ const Groups = () => {
             const data = await response.json();
 
             const groupId = data.group.id;
-    
-            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel/addtogroup', {
+
+            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel/addtogroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -107,7 +115,7 @@ const Groups = () => {
 
     const handleAssignGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign/assigngroup', {
+            const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign/assigngroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -159,29 +167,33 @@ const Groups = () => {
                     {selectedChannel && (
                         <div className="checkbox-container">
                             <span>Select channels:</span>
-                            {channels.map(channel => (
-                                <div key={channel.id} className="checkbox-item">
-                                    <input
-                                        type="checkbox"
-                                        id={channel.id}
-                                        value={channel.id}
-                                        checked={selectedChannelIds.includes(channel.id)}
-                                        onChange={(e) => {
-                                            const isChecked = e.target.checked;
-                                            if (isChecked) {
-                                                setSelectedChannelIds(prev => [...prev, channel.id]);
-                                            } else {
-                                                setSelectedChannelIds(prev => prev.filter(item => item !== channel.id));
-                                            }
-                                        }}
-                                    />
-                                    <label htmlFor={channel.id}>{channel.channel}</label>
-                                </div>
-                            ))}
+                            {channels.length === 0 ? (
+                                <p>No channels available</p>
+                            ) : (
+                                channels.map(channel => (
+                                    <div key={channel.id} className="checkbox-item">
+                                        <input
+                                            type="checkbox"
+                                            id={channel.id}
+                                            value={channel.id}
+                                            checked={selectedChannelIds.includes(channel.id)}
+                                            onChange={(e) => {
+                                                const isChecked = e.target.checked;
+                                                if (isChecked) {
+                                                    setSelectedChannelIds(prev => [...prev, channel.id]);
+                                                } else {
+                                                    setSelectedChannelIds(prev => prev.filter(item => item !== channel.id));
+                                                }
+                                            }}
+                                        />
+                                        <label htmlFor={channel.id}>{channel.channel}</label>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     )}
                     <div className='button-div'>
-                    <button className='btn-group' onClick={handleCreateGroup}>Create Group</button>
+                        <button className='btn-group' onClick={handleCreateGroup}>Create Group</button>
                     </div>
                     <div className="checkbox-container">
                         <span>Select campaign:</span>
@@ -217,7 +229,7 @@ const Groups = () => {
                         ))}
                     </select>
                     <div className='button-div'>
-                    <button className='btn-group' onClick={handleAssignGroup}>Assign Group</button>
+                        <button className='btn-group' onClick={handleAssignGroup}>Assign Group</button>
                     </div>
                 </div>
             </div>
