@@ -11,8 +11,17 @@ function Login() {
   const [authCode, setAuthCode] = useState('');
   const navigate = useNavigate();
 
+
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
   const handleLogin = () => {
 
+    if (!isValidEmail(emailOrPhone)) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
     fetch('https://marketing-campaign-management-system-server\.vercel\.app/login', {
       method: 'POST',
       headers: {

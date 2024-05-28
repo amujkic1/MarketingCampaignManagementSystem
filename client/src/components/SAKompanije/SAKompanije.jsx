@@ -14,20 +14,39 @@ function SAKompanije() {
   const [adminCreated, setAdminCreated] = useState(false); // Dodato stanje za označavanje da li je admin kreiran
   const navigate = useNavigate();
 
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+  const isValidPhone = (phone) => {
+    return /^\d+$/.test(phone);
+  }
+  
+  
   const handleAdminCreate = async () => {
     try {
       const username = document.getElementById("adminUsername").value;
       const password = document.getElementById("adminPassword").value;
       const email = document.getElementById("adminEmail").value;
       const phone = document.getElementById("adminPhone").value;
-  
+
+      // Validacija email adrese
+      if (!isValidEmail(email)) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+
+      if (!isValidPhone(phone)) {
+        alert('Please enter a valid phone number.');
+        return;
+      }
+
       const requestBody = {
         username: username,
         password: password,
         email: email,
         phone: phone
       };
-  
+
       const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/super/admin', {
         method: 'POST',
         headers: {
@@ -35,18 +54,18 @@ function SAKompanije() {
         },
         body: JSON.stringify(requestBody)
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Admin creation successful:', data);
-  
+
         setAdministrator(username); // Set administrator state to the entered username
         setAdminCreated(true); // Postavljamo stanje da je admin kreiran
-  
+
         // Enable input for administrator and disable admin info fields
         setAdminInputEnabled(false);
         setShowAdminInfo(false);
-  
+
         // Clear admin input fields
         document.getElementById("adminEmail").value = "";
         document.getElementById("adminUsername").value = "";
@@ -61,7 +80,7 @@ function SAKompanije() {
       alert('Error creating admin.');
     }
   };
-  
+
 
   const handleCreateCompany = async () => {
     try {
@@ -91,7 +110,7 @@ function SAKompanije() {
       <div className="homeContainer">
         <div className="cardA my-5" style={{ background: "#DDDEE5", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
           <div className="card-body-all">
-          <h2 style={{ fontFamily: 'Calibri, sans-serif' }}>Create company</h2>
+            <h2 style={{ fontFamily: 'Calibri, sans-serif' }}>Create company</h2>
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">

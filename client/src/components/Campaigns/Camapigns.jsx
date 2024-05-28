@@ -191,8 +191,8 @@ const Campaigns = () => {
     setSelectedCampaign(campaign);
     setUpdateChannel('');
     setUpdateMediaType('');
-    setUpdateStartDate('');
-    setUpdateEndDate('');
+    setUpdateStartDate(campaign.durationfrom);
+    setUpdateEndDate(campaign.durationto);
     setIsAddChannelPopupOpen(true);
   };
 
@@ -499,7 +499,7 @@ const Campaigns = () => {
                   value={updateStartDate || selectedCampaign.durationfrom}
                   min={new Date().toISOString().split('T')[0]}
                   onChange={(e) => setUpdateStartDate(e.target.value)}
-                  disabled={updateStartDate ? false : true} // Onemogućuje uređivanje ako updateStartDate nije postavljen
+                  disabled={true} // Onemogućuje uređivanje ako updateStartDate nije postavljen
                 />
                 <input
                   className="input-date"
@@ -508,7 +508,7 @@ const Campaigns = () => {
                   value={updateEndDate || selectedCampaign.durationto}
                   min={new Date().toISOString().split('T')[0]}
                   onChange={(e) => setUpdateEndDate(e.target.value)}
-                  disabled={updateEndDate ? false : true} // Onemogućuje uređivanje ako updateEndDate nije postavljen
+                  disabled={true} // Onemogućuje uređivanje ako updateEndDate nije postavljen
                 />
 
 
