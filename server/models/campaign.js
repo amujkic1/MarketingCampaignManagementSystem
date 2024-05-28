@@ -189,38 +189,38 @@ class Campaign {
     }
   }
 
-  static async assignGroup(pool, region_name, campaign_name) {
-
+  static async assignGroup(pool, region_name, campaign_name, channels) {
     console.log('region name u assign group ', region_name);
     console.log('campaign name u assign group ', campaign_name);
-    try{
-      const groupIdQuery = "select id from groups where name = $1"
+    console.log('channels u assign group ', channels);
+  
+    try {
       const client = await pool.connect();
+  
+      const groupIdQuery = "SELECT id FROM groups WHERE name = $1";
       const groupValues = [region_name];
       const { rows: groupRows } = await client.query(groupIdQuery, groupValues);
       const groupId = groupRows[0];
-
+  
       console.log('id grupe kod assign group', groupId);
-
-      const campaignQuery = "select id from campaign where name = $1"
-      const campaignValues = [campaign_name];
+  
+      const campaignQuery = "SELECT id FROM campaign WHERE name = $1 AND channels = $2";
+      const campaignValues = [campaign_name, channels];
       const { rows: campaignRows } = await client.query(campaignQuery, campaignValues);
       const campId = campaignRows[0];
-
+  
       console.log('id kampanje kod assign group', campId);
-      
-      const assignQuery = "update campaign set groupid = $2, region = $3 where id = $1";
+  
+      const assignQuery = "UPDATE campaign SET groupid = $2, region = $3 WHERE id = $1";
       const assignValues = [campId.id, groupId.id, region_name];
-      await client.query(assignQuery, assignValues);    
-      
+      await client.query(assignQuery, assignValues);
+  
       client.release();
-  
-  
     } catch (error) {
       console.log(error);
     }
-
   }
+  
 
   static async getCampaignsByGroup(pool, groupId, channel) {
     try{

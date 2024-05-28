@@ -186,14 +186,26 @@ async function deleteCampaign(req, res) {
 async function assignGroup(req, res) {
   try {
     const { region_name, campaign_names } = req.body; 
-    const assignments = await Promise.all(campaign_names.map(async (campaign_name) => {
-      await Campaign.assignGroup(pool, region_name, campaign_name);
+    console.log('region ', region_name);
+    console.log('campaigns', campaign_names);
+
+    if (!Array.isArray(campaign_names)) {
+      return res.status(400).json({ error: "campaign_names must be an array" });
+    }
+
+    const assignments = await Promise.all(campaign_names.map(async (campaign) => {
+      const campaignName = campaign.match(/^(.+?) \((.+?)\)$/)[1];
+      const channels = campaign.match(/^(.+?) \((.+?)\)$/)[2];
+      await Campaign.assignGroup(pool, region_name, campaignName, channels);
     }));
+
     res.status(200).json({ message: "Group assigned successfully" });
   } catch (error) {
+    console.error("Unexpected error: ", error);
     res.status(500).json({ error: "Failed to assign group" });
   }
 }
+
 
   async function getCampaignsByGroup(req, res) {
     try{
