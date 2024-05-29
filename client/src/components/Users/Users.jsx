@@ -41,8 +41,16 @@ const Users = () => {
     }
   };
 
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
   const createUser = async () => {
     try {
+    if (!isValidEmail(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
       const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/users', {
         method: 'POST',
         headers: {
