@@ -6,14 +6,14 @@ const Groups = () => {
     const [campaigns, setCampaigns] = useState([]);
     const [regions, setRegions] = useState([]);
     const [selectedChannel, setSelectedChannel] = useState('');
-    const [selectedCampaign, setSelectedCampaign] = useState([]);
+    const [selectedCampaigns, setSelectedCampaigns] = useState([]);
     const [selectedRegion, setSelectedRegion] = useState('');
     const [groupName, setGroupName] = useState('');
     const [selectedChannelIds, setSelectedChannelIds] = useState([]);
 
     const fetchRegions = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/groups');
+            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/groups');
             if (!response.ok) {
                 throw new Error('Failed to fetch regions');
             }
@@ -27,7 +27,7 @@ const Groups = () => {
     useEffect(() => {
         const fetchCampaigns = async () => {
             try {
-                const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign');
+                const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign');
                 if (!response.ok) {
                     throw new Error('Failed to fetch campaigns');
                 }
@@ -47,7 +47,7 @@ const Groups = () => {
             if (selectedChannel) {
                 try {
                     console.log('fetching channels');
-                    const response = await fetch(`https://marketing-campaign-management-system-server.vercel.app/getchannel/${selectedChannel}`, {
+                    const response = await fetch(`https://marketing-campaign-management-system-server\.vercel\.app/getchannel/${selectedChannel}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ const Groups = () => {
 
     const handleCreateGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/group', {
+            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/group', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ const Groups = () => {
 
             const groupId = data.group.id;
 
-            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server.vercel.app/channel/addtogroup', {
+            const addChannelsResponse = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/channel/addtogroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -116,28 +116,37 @@ const Groups = () => {
 
     const handleAssignGroup = async () => {
         try {
-            const response = await fetch('https://marketing-campaign-management-system-server.vercel.app/campaign/assigngroup', {
+            const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign/assigngroup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     region_name: selectedRegion,
-                    campaign_names: selectedCampaign
+                    campaign_names: selectedCampaigns.map(campaign => `${campaign.name} (${campaign.channels})`)
                 })
             });
             if (!response.ok) {
                 throw new Error('Failed to assign region');
             }
             const data = await response.json();
-            console.log(data);
+            console.log('assign response', data);
 
             // Resetting input fields after successful group assignment
-            setSelectedCampaign([]);
+            setSelectedCampaigns([]);
             setSelectedRegion('');
             alert('Group successfully assigned to campaign!');
         } catch (error) {
             console.error('Error assigning region:', error);
+        }
+    };
+
+    const handleCampaignChange = (campaign, isChecked) => {
+        const campaignIdentifier = `${campaign.name}-${campaign.channels}`;
+        if (isChecked) {
+            setSelectedCampaigns(prev => [...prev, { name: campaign.name, channels: campaign.channels }]);
+        } else {
+            setSelectedCampaigns(prev => prev.filter(c => `${c.name}-${c.channels}` !== campaignIdentifier));
         }
     };
 
@@ -204,17 +213,12 @@ const Groups = () => {
                                     type="checkbox"
                                     id={campaign.id}
                                     value={campaign.name}
-                                    checked={selectedCampaign.includes(campaign.name)}
-                                    onChange={(e) => {
-                                        const isChecked = e.target.checked;
-                                        if (isChecked) {
-                                            setSelectedCampaign(prev => [...prev, campaign.name]);
-                                        } else {
-                                            setSelectedCampaign(prev => prev.filter(item => item !== campaign.name));
-                                        }
-                                    }}
+                                    checked={selectedCampaigns.some(c => c.name === campaign.name && c.channels === campaign.channels)}
+                                    onChange={(e) => handleCampaignChange(campaign, e.target.checked)}
                                 />
-                                <label htmlFor={campaign.id}>{campaign.name}</label>
+                                <label htmlFor={campaign.id}>
+                                    {campaign.name} ({campaign.channels})
+                                </label>
                             </div>
                         ))}
                     </div>

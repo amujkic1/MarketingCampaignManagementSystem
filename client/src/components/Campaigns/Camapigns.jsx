@@ -15,10 +15,11 @@ const Campaigns = () => {
   const [mediaOptions, setMediaOptions] = useState([]);
   const [filteredMediaOptions, setFilteredMediaOptions] = useState([]);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isAddChannelPopupOpen, setIsAddChannelPopupOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [updateName, setUpdateName] = useState('');
   const [updateChannel, setUpdateChannel] = useState('');
-  const [updateMediaType, setUpdateMediaType] = useState('');  
+  const [updateMediaType, setUpdateMediaType] = useState('');
   const [updateStartDate, setUpdateStartDate] = useState('');
   const [updateEndDate, setUpdateEndDate] = useState('');
   const [oldChannel, setOldChannel] = useState('');
@@ -45,11 +46,33 @@ const Campaigns = () => {
       }
 
       const campaignData = await response.json();
-      setCampaigns(campaignData);
+
+      // Sortiranje kampanja po imenu (abecedno)
+      const sortedCampaigns = campaignData.sort((a, b) => a.name.localeCompare(b.name));
+
+      // Prati ime poslednje obrađene kampanje
+      let lastCampaignName = '';
+
+      // Ažuriraj stanje kampanja sa sortiranim podacima
+      setCampaigns(
+        sortedCampaigns.map((campaign, index) => {
+          // Proveri da li je ovo prva kampanja sa imenom koja dolazi po redu
+          const isFirstCampaignWithThisName = index === 0 || campaign.name !== sortedCampaigns[index - 1].name;
+
+          // Ako je ovo prva kampanja sa imenom koja dolazi po redu, vrati objekat kampanje sa imenom
+          // U suprotnom, vrati objekat kampanje bez imena
+          return {
+            ...campaign,
+            name: isFirstCampaignWithThisName ? campaign.name : '',
+          };
+        })
+      );
     } catch (error) {
       console.error('Error fetching campaigns:', error);
     }
   };
+
+
 
   const createCampaign = async () => {
     try {
@@ -149,36 +172,36 @@ const Campaigns = () => {
 
   const handleEditClick = (event, campaign) => {
 
-    console.log('handle edit click');
-
     event.stopPropagation();
-  
     setSelectedCampaign(campaign);
     setUpdateName(campaign.name);
     setUpdateChannel(campaign.channels);
-    setUpdateMediaType(campaign.mediatypes); 
+    setUpdateMediaType(campaign.mediatypes);
     setUpdateStartDate(campaign.durationfrom);
     setUpdateEndDate(campaign.durationto);
     setOldChannel(campaign.channels);
-  
-    if (campaign.channels === "TV") {
-      setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
-      setUpdateMediaType("Video"); 
-    } else if (campaign.channels === "Display") {
-      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
-    } else if (campaign.channels === "Web-site") {
-      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
-    } else if (campaign.channels === "Radio") {
-      setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
-    } else if (campaign.channels === "Billboard") {
-      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
-    }
-  
+
+    filterMediaOptions(campaign.channels);
+
     setIsPopupOpen(true);
   };
-  
+
+  const handleAddChannelClick = (event, campaign) => {
+    event.stopPropagation();
+    setSelectedCampaign(campaign);
+    setUpdateChannel('');
+    setUpdateMediaType('');
+    setUpdateStartDate(campaign.durationfrom);
+    setUpdateEndDate(campaign.durationto);
+    setIsAddChannelPopupOpen(true);
+  };
+
   const handleClosePopup = () => {
     setIsPopupOpen(false);
+  };
+
+  const handleCloseAddChannelPopup = () => {
+    setIsAddChannelPopupOpen(false);
   };
 
   const handleUpdateCampaign = async () => {
@@ -209,62 +232,69 @@ const Campaigns = () => {
     }
   };
 
+  const handleAddChannel = async () => {
+    try {
+
+
+      const response = await fetch('https://marketing-campaign-management-system-server\.vercel\.app/campaign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: selectedCampaign.name,
+          channels: updateChannel,
+          mediatypes: updateMediaType,
+          durationfrom: updateStartDate,
+          durationto: updateEndDate,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add channel to campaign');
+      }
+
+      setIsAddChannelPopupOpen(false);
+      getAllCampaigns();
+    } catch (error) {
+      console.error('Error adding channel to campaign:', error);
+    }
+  };
+
+
   const handleCampaignClick = (campaignId) => {
     Cookies.set('campaignID', campaignId);
     navigate('/campaign');
   };
 
   const handleChannelChange = (e) => {
-    console.log('handle channel change');
     const selectedChannel = e.target.value;
     setChannelType(selectedChannel);
-
-    if (selectedChannel === "TV") {
-      setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
-      setMediaType("Video"); 
-    } else if (selectedChannel === "Display") {
-      setFilteredMediaOptions(mediaOptions);
-      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
-      setMediaType(''); 
-    } else if (selectedChannel === "Web-site") {
-      setFilteredMediaOptions(mediaOptions);
-      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
-      setMediaType(''); 
-    } else if (selectedChannel === "Radio") {
-      setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
-      setMediaType("Audio"); 
-    } else if (selectedChannel === "Billboard") {
-      setFilteredMediaOptions(mediaOptions);
-      setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
-      setMediaType(''); 
-    }
+    filterMediaOptions(selectedChannel);
   };
 
   const handleChannelChangePopup = (e) => {
     const selectedChannel = e.target.value;
     setUpdateChannel(selectedChannel);
-  
+    filterMediaOptions(selectedChannel);
+  };
+
+  const filterMediaOptions = (selectedChannel) => {
     if (selectedChannel === "TV") {
       setFilteredMediaOptions(mediaOptions.filter(media => media === "Video"));
-      setUpdateMediaType("Video"); 
+      setUpdateMediaType("Video");
     } else if (selectedChannel === "Display") {
-      setFilteredMediaOptions(mediaOptions);
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text"].includes(media)));
-      setUpdateMediaType(''); 
     } else if (selectedChannel === "Web-site") {
-      setFilteredMediaOptions(mediaOptions);
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Link", "Audio", "Banner"].includes(media)));
-      setUpdateMediaType(''); 
     } else if (selectedChannel === "Radio") {
       setFilteredMediaOptions(mediaOptions.filter(media => media === "Audio"));
-      setUpdateMediaType("Audio"); 
+      setUpdateMediaType("Audio");
     } else if (selectedChannel === "Billboard") {
-      setFilteredMediaOptions(mediaOptions);
       setFilteredMediaOptions(mediaOptions.filter(media => ["Video", "Image", "Text", "Audio"].includes(media)));
-      setUpdateMediaType(''); 
     }
   };
-  
+
   return (
     <div className="campaigns-container">
       <div className="form-container">
@@ -341,11 +371,16 @@ const Campaigns = () => {
               <td>{campaign.mediatypes}</td>
               <td>{`${campaign.durationfrom} - ${campaign.durationto}`}</td>
               <td>
+                {campaign.name && ( // Provjeravamo da li je ime kampanje dostupno za prikaz
+                  <button className="btn-edit" onClick={(e) => handleAddChannelClick(e, campaign)}>Dodaj kanal</button>
+                )}
                 <button className="btn-edit" onClick={(e) => handleEditClick(e, campaign)}>✏️</button>
                 <button className="btn-delete" onClick={(e) => deleteCampaign(e, campaign.id)}>🗑️</button>
               </td>
             </tr>
           ))}
+
+
         </tbody>
       </table>
 
@@ -367,7 +402,7 @@ const Campaigns = () => {
                   value={updateChannel}
                   onChange={(e) => {
                     setUpdateChannel(e.target.value);
-                    handleChannelChangePopup(e); 
+                    handleChannelChangePopup(e);
                   }}
                 >
                   <option value="">Select channel</option>
@@ -375,10 +410,10 @@ const Campaigns = () => {
                     <option key={index} value={channel}>{channel}</option>
                   ))}
                 </select>
-                
+
                 <select
                   className="input-select"
-                  value={updateMediaType} 
+                  value={updateMediaType}
                   onChange={(e) => setUpdateMediaType(e.target.value)}
                 >
                   <option value="">Select media type</option>
@@ -402,6 +437,7 @@ const Campaigns = () => {
                   min={new Date().toISOString().split('T')[0]}
                   onChange={(e) => setUpdateEndDate(e.target.value)}
                 />
+
               </div>
               <button
                 className="btn-update"
@@ -413,6 +449,80 @@ const Campaigns = () => {
                 Update
               </button>
               <button className="btn-close" onClick={handleClosePopup}></button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isAddChannelPopupOpen && selectedCampaign && (
+        <div className="popup-background">
+          <div className="popup-content">
+            <div className="form-container">
+              <h2>Add New Channel </h2>
+              <div className="input-wrapper">
+                <input
+                  className="input-name"
+                  type="text"
+                  placeholder="Name"
+                  value={updateName || (selectedCampaign && selectedCampaign.name)}
+                  onChange={(e) => setUpdateName(e.target.value)}
+                  disabled
+                />
+                <select
+                  className="input-select"
+                  value={updateChannel}
+                  onChange={(e) => {
+                    setUpdateChannel(e.target.value);
+                    handleChannelChangePopup(e);
+                  }}
+                >
+                  <option value="">Select channel</option>
+                  {channelOptions.map((channel, index) => (
+                    <option key={index} value={channel}>{channel}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="input-select"
+                  value={updateMediaType}
+                  onChange={(e) => setUpdateMediaType(e.target.value)}
+                >
+                  <option value="">Select media type</option>
+                  {filteredMediaOptions.map((media, index) => (
+                    <option key={index} value={media}>{media}</option>
+                  ))}
+                </select>
+                <input
+                  className="input-date"
+                  type="date"
+                  placeholder="Start Date"
+                  value={updateStartDate || selectedCampaign.durationfrom}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setUpdateStartDate(e.target.value)}
+                  disabled={true} // Onemogućuje uređivanje ako updateStartDate nije postavljen
+                />
+                <input
+                  className="input-date"
+                  type="date"
+                  placeholder="End Date"
+                  value={updateEndDate || selectedCampaign.durationto}
+                  min={new Date().toISOString().split('T')[0]}
+                  onChange={(e) => setUpdateEndDate(e.target.value)}
+                  disabled={true} // Onemogućuje uređivanje ako updateEndDate nije postavljen
+                />
+
+
+              </div>
+              <button
+                className="btn-update"
+                onClick={handleAddChannel}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                style={{ backgroundColor: isHovered ? '#415981' : '#2B3D5B' }}
+              >
+                Add Channel
+              </button>
+              <button className="btn-close" onClick={handleCloseAddChannelPopup}></button>
             </div>
           </div>
         </div>
