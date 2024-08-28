@@ -21,5 +21,19 @@ Below you can see all the team members who worked on this project.
 - [Dino Bajramović](mailto:dbajramovi3@etf.unsa.ba)
 - [Sead Fejzagić](mailto:sfejzagic1@etf.unsa.ba)
 
+## Live Demo
+
+You can view the live version of the website [here](https://marketing-campaign-management-system-client.vercel.app/).
+
+### Test Login Credentials
+
+To explore the features that require authentication, you can use the following test account:
+
+- **Email:** user@gmail.com
+- **Password:** Password123!
+
+Please note that this is a demo account, and any data entered will not be saved permanently.
+
+
 ## Notice
 This project is a part of coursework for **Software Engineering 23/24** at the Faculty of Electrical Engineering Sarajevo.
