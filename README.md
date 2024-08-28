@@ -29,7 +29,7 @@ You can view the live version of the website [here](https://marketing-campaign-m
 
 To explore the features that require authentication, you can use the following test account:
 
-- **Email:** user@gmail.com
+- **Email:** user@example.com
 - **Password:** Password123!
 
 Please note that this is a demo account, and any data entered will not be saved permanently.
